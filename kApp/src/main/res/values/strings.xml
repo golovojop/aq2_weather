@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">kWeather</string>
+    <string name="app_name" translatable="false">kWeather</string>
+    <string name="app_header">Weather</string>
 </resources>
