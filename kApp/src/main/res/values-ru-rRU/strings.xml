@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_header">Погода</string>
+    <string name="forecastMoscow">Москва\nНебольшая облачность</string>
+    <string name="forecastSpb">Санкт-Петербург\nПасмурно, без осадков</string>
+    <string name="forecastSochi">Сочи\nЯсно</string>
 </resources>

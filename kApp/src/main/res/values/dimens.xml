@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="imgWidth">64dp</dimen>
+    <dimen name="imgHeight">64dp</dimen>
+
+    <dimen name="topMargin">12dp</dimen>
+    <dimen name="leftMargin">12dp</dimen>
+    <dimen name="endMargin">12dp</dimen>
+
+    <dimen name="celsius">36sp</dimen>
+    <dimen name="cityForecast">12sp</dimen>
+</resources>
