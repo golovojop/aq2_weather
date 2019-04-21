@@ -10,7 +10,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         logI("onCreate")
-
     }
 
     override fun onPause() {
@@ -21,25 +20,21 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         logI("onDestroy")
-
     }
 
     override fun onStart() {
         super.onStart()
         logI("onStart")
-
     }
 
     override fun onResume() {
         super.onResume()
         logI("onResume")
-
     }
 
     override fun onStop() {
         super.onStop()
         logI("onStop")
-
     }
 
     fun logI(message: String) {

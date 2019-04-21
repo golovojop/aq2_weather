@@ -17,35 +17,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         logI("onStart");
-
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         logI("onStop");
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         logI("onDestroy");
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         logI("onPause");
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         logI("onResume");
-
     }
 
     private void logI(String message) {
