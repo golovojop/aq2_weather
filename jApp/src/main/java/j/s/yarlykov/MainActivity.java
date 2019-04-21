@@ -3,6 +3,7 @@ package j.s.yarlykov;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,5 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private void logI(String message) {
         final String tag = "jWeather";
         Log.i(tag, this.getClass().getSimpleName() + ": " + message);
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+
     }
 }

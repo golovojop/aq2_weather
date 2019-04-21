@@ -3,6 +3,7 @@ package k.s.yarlykov
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     fun logI(message: String) {
         val tag = "kWeather"
         Log.i(tag, MainActivity::class.java.simpleName + ": " + message)
+        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
 }
