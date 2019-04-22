@@ -23,6 +23,11 @@ class MainActivity : AppCompatActivity() {
         logI("onDestroy")
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        logI("onRestart")
+    }
+
     override fun onStart() {
         super.onStart()
         logI("onStart")
@@ -43,5 +48,4 @@ class MainActivity : AppCompatActivity() {
         Log.i(tag, MainActivity::class.java.simpleName + ": " + message)
         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
-
 }

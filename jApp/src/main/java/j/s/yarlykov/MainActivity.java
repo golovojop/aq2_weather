@@ -15,6 +15,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        logI("onRestart");
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         logI("onStart");
@@ -48,6 +54,5 @@ public class MainActivity extends AppCompatActivity {
         final String tag = "jWeather";
         Log.i(tag, this.getClass().getSimpleName() + ": " + message);
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-
     }
 }
