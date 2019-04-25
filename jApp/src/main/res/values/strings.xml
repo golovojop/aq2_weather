@@ -13,5 +13,11 @@
     <string name="infoPressure">mb</string>
     <string name="infoHumidity" translatable="false">%</string>
 
+    <string name="yourCity">Your city</string>
+    <string name="headerWind">Wind</string>
+    <string name="headerHumidity">Humidity</string>
+    <string name="headerPressure">Pressure</string>
+
+
     <string name="toolCity">Moscow</string>
 </resources>

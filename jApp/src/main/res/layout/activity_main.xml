@@ -4,22 +4,115 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/topMargin"
-    android:orientation="vertical"
+    android:orientation="horizontal"
+    android:background="@drawable/bg"
     tools:context=".ui.MainActivity">
-    <EditText
-        android:id="@+id/et_city"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/endMargin"
-        android:layout_marginEnd="@dimen/endMargin"
-        android:inputType="text"/>
-    <Button
-        android:id="@+id/bt_request"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/endMargin"
-        android:layout_marginEnd="@dimen/endMargin"
-        android:text="@string/getForecast"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical">
+        <EditText
+            android:id="@+id/et_city"
+            android:background="@drawable/tv_border"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/endMargin"
+            android:layout_marginEnd="@dimen/endMargin"
+            android:drawableEnd="@drawable/ic_search_black_24dp"
+            android:hint="@string/yourCity"
+            android:inputType="text"/>
+        <TableLayout
+            android:id="@+id/tablelayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="48dp"
+            android:layout_marginStart="@dimen/endMargin"
+            android:layout_marginEnd="@dimen/endMargin">
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+                <TextView
+                    tools:text="Wind"
+                    android:text="Wind"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+                <TextView
+                    tools:text="Humidity"
+                    android:text="Humidity"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+                <TextView
+                    tools:text="Pressure"
+                    android:text="Pressure"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+            </TableRow>
+
+            <TableRow>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/topMargin"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="@dimen/iconSize"
+                        android:layout_height="@dimen/iconSize"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/icon_wind"/>
+                    <CheckBox
+                        android:id="@+id/chb_wind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/topMargin"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="@dimen/iconSize"
+                        android:layout_height="@dimen/iconSize"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/icon_humidity"/>
+                    <CheckBox
+                        android:id="@+id/chb_humidity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/topMargin"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="@dimen/iconSize"
+                        android:layout_height="@dimen/iconSize"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/icon_pressure2"/>
+                    <CheckBox
+                        android:id="@+id/chb_pressure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </TableRow>
+
+        </TableLayout>
+        <Button
+            android:id="@+id/bt_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="@dimen/endMargin"
+            android:layout_marginEnd="@dimen/endMargin"
+            android:text="@string/getForecast"/>
+    </LinearLayout>
 </LinearLayout>

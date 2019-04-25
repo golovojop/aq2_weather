@@ -9,5 +9,10 @@
     <string name="infoWind">м/с</string>
     <string name="infoPressure">мм рт.ст.</string>
 
+    <string name="yourCity">Ваш город</string>
+    <string name="headerWind">Ветер</string>
+    <string name="headerHumidity">Влажность</string>
+    <string name="headerPressure">Давление</string>
+
     <string name="toolCity">Москва</string>
 </resources>
