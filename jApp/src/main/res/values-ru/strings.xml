@@ -4,4 +4,10 @@
     <string name="forecastMoscow">Москва\nНебольшая облачность</string>
     <string name="forecastSpb">Санкт-Петербург\nПасмурно, без осадков</string>
     <string name="forecastSochi">Сочи\nЯсно</string>
+    <string name="getForecast">Отправить запрос</string>
+
+    <string name="infoWind">м/с</string>
+    <string name="infoPressure">мм рт.ст.</string>
+
+    <string name="toolCity">Москва</string>
 </resources>

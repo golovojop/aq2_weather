@@ -1,108 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/topMargin"
     android:orientation="vertical"
-    tools:context=".MainActivity">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_header"
-        tools:text="@string/app_header"
-        android:layout_gravity="top|center_horizontal"
-        android:layout_marginTop="12dp"
-        android:textSize="24sp"/>
-
-    <LinearLayout
+    tools:context=".ui.MainActivity">
+    <EditText
+        android:id="@+id/et_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/topMargin"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="@dimen/imgWidth"
-            android:layout_height="@dimen/imgHeight"
-            android:layout_marginStart="@dimen/leftMargin"
-            android:layout_marginEnd="@dimen/endMargin"
-            android:src="@drawable/sun"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/temperature12"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/leftMargin"
-            android:layout_marginEnd="@dimen/endMargin"
-            tools:text="@string/temperature12"
-            android:textSize="@dimen/celsius"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/forecastMoscow"
-            android:layout_gravity="center_vertical"
-            tools:text="@string/forecastMoscow"
-            android:textSize="@dimen/cityForecast"/>
-    </LinearLayout>
-
-    <LinearLayout
+        android:layout_marginStart="@dimen/endMargin"
+        android:layout_marginEnd="@dimen/endMargin"
+        android:inputType="text"/>
+    <Button
+        android:id="@+id/bt_request"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/topMargin"
-
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="@dimen/imgWidth"
-            android:layout_height="@dimen/imgHeight"
-            android:layout_marginStart="@dimen/leftMargin"
-            android:layout_marginEnd="@dimen/endMargin"
-            android:src="@drawable/cloud2"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/temperature09"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/leftMargin"
-            android:layout_marginEnd="@dimen/endMargin"
-            tools:text="@string/temperature09"
-            android:textSize="@dimen/celsius"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/forecastSpb"
-            android:layout_gravity="center_vertical"
-            tools:text="@string/forecastSpb"
-            android:textSize="@dimen/cityForecast"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/topMargin"
-
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="@dimen/imgWidth"
-            android:layout_height="@dimen/imgHeight"
-            android:layout_marginStart="@dimen/leftMargin"
-            android:layout_marginEnd="@dimen/endMargin"
-            android:src="@drawable/sunny"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/temperature21"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/leftMargin"
-            android:layout_marginEnd="@dimen/endMargin"
-            tools:text="@string/temperature21"
-            android:textSize="@dimen/celsius"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/forecastSochi"
-            android:layout_gravity="center_vertical"
-            tools:text="@string/forecastSochi"
-            android:textSize="@dimen/cityForecast"/>
-    </LinearLayout>
+        android:layout_marginStart="@dimen/endMargin"
+        android:layout_marginEnd="@dimen/endMargin"
+        android:text="@string/getForecast"/>
 
 </LinearLayout>
