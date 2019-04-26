@@ -32,6 +32,9 @@ public class CityForecast extends Forecast {
         return EMPTY_VAL;
     }
 
+    /**
+     * TODO: Удалить не требуемые данные
+     */
     public CityForecast clearUnused(Set<MeteoData> interestingSet) {
         if(!interestingSet.contains(MeteoData.WIND)) {
             wind = EMPTY_VAL;

@@ -23,7 +23,7 @@ public class ForecastActivity extends AppCompatActivity {
     private TextView tvCity, tvTemperature, tvWind, tvHumidity, tvPressure;
     private ImageView ivSky;
 
-    public static void startActivity(Context context, CityForecast forecast) {
+    public static void start(Context context, CityForecast forecast) {
         Intent intent = new Intent(context, ForecastActivity.class);
         intent.putExtra(EXTRA_FORECAST, forecast);
         context.startActivity(intent);
@@ -75,7 +75,6 @@ public class ForecastActivity extends AppCompatActivity {
         fmt.close();
 
         // TODO: Wind
-
         if(forecast.getWind() != CityForecast.EMPTY_VAL) {
             fmt = new Formatter();
             fmt.format("%2d %s", forecast.getWind(), getResources().getString(R.string.infoWind));

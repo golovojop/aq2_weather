@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String city = et.getText().toString();
-                Utils.logI(this, city);
 
                 if(city != null && city.length() > 1) {
                     Set<CityForecast.MeteoData> meteoData = new HashSet<>();
@@ -51,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                     if(chbHumidity.isChecked()) meteoData.add(MeteoData.HUMIDITY);
                     if(chbPressure.isChecked()) meteoData.add(MeteoData.PRESSURE);
 
-                    ForecastActivity.startActivity(MainActivity.this, provider.getForecastCustom(city, meteoData));
+                    ForecastActivity.start(MainActivity.this, provider.getForecastCustom(city, meteoData));
                 } else {
                     Utils.logI(this, "Empty or incorrect request");
                 }
