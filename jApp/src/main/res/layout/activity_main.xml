@@ -19,8 +19,8 @@
             android:background="@drawable/tv_border"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/endMargin"
-            android:layout_marginEnd="@dimen/endMargin"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
             android:drawableEnd="@drawable/ic_search_black_24dp"
             android:hint="@string/yourCity"
             android:inputType="text"/>
@@ -37,18 +37,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
                 <TextView
+                    android:text="@string/headerWind"
                     tools:text="Wind"
-                    android:text="Wind"
                     android:gravity="center"
                     android:layout_weight="1"/>
                 <TextView
+                    android:text="@string/headerHumidity"
                     tools:text="Humidity"
-                    android:text="Humidity"
                     android:gravity="center"
                     android:layout_weight="1"/>
                 <TextView
+                    android:text="@string/headerPressure"
                     tools:text="Pressure"
-                    android:text="Pressure"
                     android:gravity="center"
                     android:layout_weight="1"/>
             </TableRow>
@@ -67,6 +67,7 @@
                         android:src="@drawable/icon_wind"/>
                     <CheckBox
                         android:id="@+id/chb_wind"
+                        android:theme="@style/MeteoCheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -83,6 +84,7 @@
                         android:src="@drawable/icon_humidity"/>
                     <CheckBox
                         android:id="@+id/chb_humidity"
+                        android:theme="@style/MeteoCheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -99,8 +101,9 @@
                         android:src="@drawable/icon_pressure2"/>
                     <CheckBox
                         android:id="@+id/chb_pressure"
+                        android:theme="@style/MeteoCheckBox"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
 
             </TableRow>
@@ -110,9 +113,12 @@
             android:id="@+id/bt_request"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="24dp"
-            android:layout_marginStart="@dimen/endMargin"
-            android:layout_marginEnd="@dimen/endMargin"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="56dp"
+            android:textColor="#ffffff"
+            android:background="@drawable/request_button"
             android:text="@string/getForecast"/>
     </LinearLayout>
 </LinearLayout>

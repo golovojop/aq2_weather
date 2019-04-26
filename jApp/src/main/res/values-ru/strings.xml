@@ -14,5 +14,7 @@
     <string name="headerHumidity">Влажность</string>
     <string name="headerPressure">Давление</string>
 
+    <string name="noData">добавьте в запрос</string>
+
     <string name="toolCity">Москва</string>
 </resources>

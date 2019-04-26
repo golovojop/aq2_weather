@@ -1,12 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Weather</string>
     <string name="app_header">Weather</string>
-     <string name="temperature09" translatable="false">+9\u2103</string>
-    <string name="temperature12" translatable="false">+12\u2103</string>
-    <string name="temperature21" translatable="false">+21\u2103</string>
-    <string name="forecastMoscow">Moscow\nBecoming cloudy</string>
-    <string name="forecastSpb">Saint Petersburg\nMostly cloudy, no rain</string>
-    <string name="forecastSochi">Sochi\nSunny</string>
     <string name="getForecast">Request</string>
 
     <string name="infoWind">m/s</string>
@@ -18,6 +12,7 @@
     <string name="headerHumidity">Humidity</string>
     <string name="headerPressure">Pressure</string>
 
+    <string name="noData">add to request</string>
 
     <string name="toolCity">Moscow</string>
 </resources>
