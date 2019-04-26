@@ -3,6 +3,9 @@ package j.s.yarlykov.data.domain;
 import java.io.Serializable;
 
 public class Forecast implements Serializable {
+
+    public static final int EMPTY_VAL = -1;
+
     protected int imgId;
     protected int temperature;
     protected int wind;
@@ -17,17 +20,15 @@ public class Forecast implements Serializable {
         this.pressureMm = Math.abs(pressureMm);
     }
 
-    private float mmToMb(float mm) {
+    protected float mmToMb(float mm) {
         return mm * 1.333f;
     }
-    private float mbToMm(float mb) {
-        return mb * 750.063783f;
+    protected float mbToMm(float mb) {
+        return mb * 0.75006f;
     }
-
     public int getImgId() {
         return imgId;
     }
-
     public int getTemperature() {
         return temperature;
     }

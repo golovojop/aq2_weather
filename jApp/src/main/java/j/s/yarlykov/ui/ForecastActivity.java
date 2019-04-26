@@ -18,10 +18,10 @@ public class ForecastActivity extends AppCompatActivity {
 
     public static final String EXTRA_FORECAST = ForecastActivity.class.getSimpleName() + ".extra.FORECAST";
 
+    private String NO_DATA;
     private CityForecast forecast;
     private TextView tvCity, tvTemperature, tvWind, tvHumidity, tvPressure;
     private ImageView ivSky;
-
 
     public static void startActivity(Context context, CityForecast forecast) {
         Intent intent = new Intent(context, ForecastActivity.class);
@@ -47,6 +47,7 @@ public class ForecastActivity extends AppCompatActivity {
      * TODO: Find views
      */
     private void initView() {
+        NO_DATA = getResources().getString(R.string.noData);
         ivSky = findViewById(R.id.iv_sky);
         tvCity = findViewById(R.id.tv_city);
         tvTemperature = findViewById(R.id.tv_temperature);
@@ -65,7 +66,7 @@ public class ForecastActivity extends AppCompatActivity {
 
         //TODO: City (Uppercase first letter)
         String city = forecast.getCity();
-        tvCity.setText(city.substring(0, 1).toUpperCase() + city.substring(1));
+        tvCity.setText(city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase());
 
         // TODO: Temperature
         Formatter fmt = new Formatter();
@@ -74,24 +75,36 @@ public class ForecastActivity extends AppCompatActivity {
         fmt.close();
 
         // TODO: Wind
-        fmt = new Formatter();
-        fmt.format("%2d %s", forecast.getWind(), getResources().getString(R.string.infoWind));
-        tvWind.setText(fmt.toString());
-        fmt.close();
+
+        if(forecast.getWind() != CityForecast.EMPTY_VAL) {
+            fmt = new Formatter();
+            fmt.format("%2d %s", forecast.getWind(), getResources().getString(R.string.infoWind));
+            tvWind.setText(fmt.toString());
+            fmt.close();
+        } else {
+            tvWind.setText(NO_DATA);
+        }
 
         // TODO: Humidity
-        fmt = new Formatter();
-        fmt.format("%2d %%", forecast.getHumidity());
-        tvHumidity.setText(fmt.toString());
-        fmt.close();
+        if(forecast.getHumidity() != CityForecast.EMPTY_VAL) {
+            fmt = new Formatter();
+            fmt.format("%2d %%", forecast.getHumidity());
+            tvHumidity.setText(fmt.toString());
+            fmt.close();
+        } else {
+            tvHumidity.setText(NO_DATA);
+        }
 
         // TODO: Pressure
-        fmt = new Formatter();
         Locale current = getResources().getConfiguration().locale;
         boolean isRu = current.getCountry() == "RU";
-        fmt.format("%4d %s", (int) forecast.getPressure(isRu), getResources().getString(R.string.infoPressure));
-        tvPressure.setText(fmt.toString());
-        fmt.close();
+        if(forecast.getPressure(isRu) != CityForecast.EMPTY_VAL) {
+            fmt = new Formatter();
+            fmt.format("%4d %s", (int) forecast.getPressure(isRu), getResources().getString(R.string.infoPressure));
+            tvPressure.setText(fmt.toString());
+            fmt.close();
+        } else {
+            tvPressure.setText(NO_DATA);
+        }
     }
-
 }

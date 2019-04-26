@@ -3,10 +3,12 @@ package j.s.yarlykov.data.provider;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.data.domain.Forecast;
+import static j.s.yarlykov.data.domain.CityForecast.*;
 
 public class ForecastProvider {
 
@@ -19,11 +21,24 @@ public class ForecastProvider {
             new Forecast(R.drawable.cloud1, 11, 6, 64, 742)
             );
     /**
-     * TODO: Получить прогноз для города city
+     * TODO: Получить полный прогноз для города city
      */
-    public CityForecast getForecastByCity(String city) {
+    public CityForecast getForecastFull(String city) {
+        return new CityForecast(city, forecasts.get(index()));
+    }
+
+    /**
+     * TODO: Получить прогноз с интересующими данными
+     */
+    public CityForecast getForecastCustom(String city, Set<MeteoData> request){
+        return new CityForecast(city, forecasts.get(index())).clearUnused(request);
+    }
+
+    /**
+     * TODO: Сгенерить рандомный индекс массива
+     */
+    private int index(){
         Random randomForecast = new Random();
-        int i = randomForecast.nextInt(forecasts.size());
-        return new CityForecast(city, forecasts.get(i));
+        return randomForecast.nextInt(forecasts.size());
     }
 }
