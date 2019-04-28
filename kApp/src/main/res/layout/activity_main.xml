@@ -15,12 +15,12 @@
         android:layout_weight="1"
         android:layout_gravity="center_vertical">
         <EditText
-            android:id="@+id/et_city"
+            android:id="@+id/etCity"
             android:background="@drawable/tv_border"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="@dimen/cityEditTextMargin"
+            android:layout_marginEnd="@dimen/cityEditTextMargin"
             android:drawableEnd="@drawable/ic_search_black_24dp"
             android:hint="@string/yourCity"
             android:inputType="text"/>
@@ -29,7 +29,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="@dimen/tableLayoutTopMargin"
             android:layout_marginStart="@dimen/endMargin"
             android:layout_marginEnd="@dimen/endMargin">
             <TableRow
@@ -38,20 +38,21 @@
                 android:layout_gravity="center">
                 <TextView
                     android:text="@string/headerWind"
-                    tools:text="Wind"
+                    tools:text="@string/headerWind"
                     android:gravity="center"
                     android:layout_weight="1"/>
                 <TextView
                     android:text="@string/headerHumidity"
-                    tools:text="Humidity"
+                    tools:text="@string/headerHumidity"
                     android:gravity="center"
                     android:layout_weight="1"/>
                 <TextView
                     android:text="@string/headerPressure"
-                    tools:text="Pressure"
+                    tools:text="@string/headerPressure"
                     android:gravity="center"
                     android:layout_weight="1"/>
             </TableRow>
+
             <TableRow>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -65,10 +66,10 @@
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/icon_wind"/>
                     <CheckBox
-                        android:id="@+id/chb_wind"
-                        android:theme="@style/MeteoCheckBox"
+                        android:id="@+id/chbWind"
+                        android:theme="@style/MeteoOptionCheckBox"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -82,10 +83,10 @@
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/icon_humidity"/>
                     <CheckBox
-                        android:id="@+id/chb_humidity"
-                        android:theme="@style/MeteoCheckBox"
+                        android:id="@+id/chbHumidity"
+                        android:theme="@style/MeteoOptionCheckBox"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -99,22 +100,22 @@
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/icon_pressure2"/>
                     <CheckBox
-                        android:id="@+id/chb_pressure"
-                        android:theme="@style/MeteoCheckBox"
+                        android:id="@+id/chbPressure"
+                        android:theme="@style/MeteoOptionCheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
             </TableRow>
         </TableLayout>
         <Button
-            android:id="@+id/bt_request"
+            android:id="@+id/btnRequest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="36dp"
-            android:layout_marginStart="56dp"
-            android:layout_marginEnd="56dp"
-            android:textColor="#ffffff"
+            android:layout_marginTop="@dimen/requestButtonMagrinTop"
+            android:layout_marginStart="@dimen/requestButtonMagrinStartEnd"
+            android:layout_marginEnd="@dimen/requestButtonMagrinStartEnd"
+            android:textColor="@android:color/white"
             android:background="@drawable/request_button"
             android:text="@string/getForecast"/>
     </LinearLayout>

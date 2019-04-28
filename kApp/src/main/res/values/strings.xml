@@ -13,6 +13,8 @@
     <string name="headerPressure">Pressure</string>
 
     <string name="noData">add to request</string>
+    <string name="incorrectRequest" translatable="false">Empty or incorrect request</string>
 
     <string name="toolCity">Moscow</string>
+    <string name="toolTemperature" translatable="false">12</string>
 </resources>

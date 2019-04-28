@@ -13,26 +13,29 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initView()
+        initViews()
+        setOnClickRequestButton()
     }
 
-    fun initView() {
-        chb_wind.setChecked(true)
-        chb_humidity.setChecked(true)
-        chb_pressure.setChecked(true)
+    private fun initViews() {
+        chbWind.isChecked = true
+        chbHumidity.isChecked = true
+        chbPressure.isChecked = true
+    }
 
-        bt_request.setOnClickListener{ button ->
-            val city: String? = et_city.text.toString()
+    private fun setOnClickRequestButton() {
+        btnRequest.setOnClickListener{ button ->
+            val city: String = etCity.text.toString()
 
-            if(city != null && city.length > 1) {
-                val meteoData: MutableSet<CityForecast.Companion.MeteoData> = mutableSetOf()
+            if(city.length > 1) {
+                val requiredMeteoData: MutableSet<CityForecast.Companion.MeteoData> = mutableSetOf()
 
-                if(chb_wind.isChecked()) meteoData.add(CityForecast.Companion.MeteoData.WIND)
-                if(chb_humidity.isChecked()) meteoData.add(CityForecast.Companion.MeteoData.HUMIDITY)
-                if(chb_pressure.isChecked()) meteoData.add(CityForecast.Companion.MeteoData.PRESSURE)
+                if(chbWind.isChecked) requiredMeteoData.add(CityForecast.Companion.MeteoData.WIND)
+                if(chbHumidity.isChecked) requiredMeteoData.add(CityForecast.Companion.MeteoData.HUMIDITY)
+                if(chbPressure.isChecked) requiredMeteoData.add(CityForecast.Companion.MeteoData.PRESSURE)
 
-                ForecastActivity.start(button.context, ForecastProvider.getForecastCustom(city, meteoData))
-            } else Utils.logI(button.context, "Empty or incorrect request")
+                ForecastActivity.start(button.context, ForecastProvider.getForecastCustom(city, requiredMeteoData))
+            } else Utils.logI(button.context, getString(R.string.incorrectRequest))
         }
     }
 }

@@ -29,16 +29,12 @@ class ForecastActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast)
         forecast = intent.getSerializableExtra(EXTRA_FORECAST) as CityForecast
-        initView()
+        NO_DATA = getResources().getString(R.string.noData)
     }
 
     override fun onResume() {
         super.onResume()
         renderForecast()
-    }
-
-    fun initView() {
-        NO_DATA = getResources().getString(R.string.noData)
     }
 
     fun renderForecast() {
