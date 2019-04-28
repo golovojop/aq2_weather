@@ -34,6 +34,7 @@ public class ForecastActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
         forecast = (CityForecast) getIntent().getSerializableExtra(EXTRA_FORECAST);
+        NO_DATA = getResources().getString(R.string.noData);
         initView();
     }
 
@@ -47,7 +48,6 @@ public class ForecastActivity extends AppCompatActivity {
      * TODO: Find views
      */
     private void initView() {
-        NO_DATA = getResources().getString(R.string.noData);
         ivSky = findViewById(R.id.iv_sky);
         tvCity = findViewById(R.id.tv_city);
         tvTemperature = findViewById(R.id.tv_temperature);

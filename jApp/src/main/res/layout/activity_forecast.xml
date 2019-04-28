@@ -37,7 +37,7 @@
             android:layout_marginStart="@dimen/leftMargin"
             android:layout_marginEnd="@dimen/endMargin"
             android:textSize="@dimen/celsius"
-            tools:text="@string/temperature12"/>
+            tools:text="@string/toolTemperature"/>
         <ImageView
             android:id="@+id/iv_sky"
             android:layout_width="@dimen/imgWidth"
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="left"
+            android:gravity="start"
             android:layout_marginStart="@dimen/leftMargin"
             android:layout_marginEnd="@dimen/endMargin"
             android:textSize="20sp"
@@ -86,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="left"
+            android:gravity="start"
             android:layout_marginStart="@dimen/leftMargin"
             android:layout_marginEnd="@dimen/endMargin"
             android:textSize="20sp"
@@ -109,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="left"
+            android:gravity="start"
             android:layout_marginStart="@dimen/leftMargin"
             android:layout_marginEnd="@dimen/endMargin"
             android:textSize="20sp"

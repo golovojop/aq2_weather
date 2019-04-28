@@ -15,47 +15,57 @@ import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.data.provider.ForecastProvider;
 import j.s.yarlykov.util.Utils;
+
 import static j.s.yarlykov.data.domain.CityForecast.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    ForecastProvider provider = new ForecastProvider();
+    CheckBox chbWind, chbHumidity, chbPressure;
+    Button btnRequest;
+    EditText etCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
+        initViews();
+        setOnClickRequestButton();
     }
 
-    private void initView() {
-        final Button btn = findViewById(R.id.bt_request);
-        final EditText et = findViewById(R.id.et_city);
-        final CheckBox chbWind = findViewById(R.id.chb_wind);
-        final CheckBox chbHumidity = findViewById(R.id.chb_humidity);
-        final CheckBox chbPressure = findViewById(R.id.chb_pressure);
+    private void initViews() {
+        btnRequest = findViewById(R.id.btnRequest);
+        etCity = findViewById(R.id.etCity);
+        chbWind = findViewById(R.id.chbWind);
+        chbHumidity = findViewById(R.id.chbHumidity);
+        chbPressure = findViewById(R.id.chbPressure);
+
         chbWind.setChecked(true);
         chbHumidity.setChecked(true);
         chbPressure.setChecked(true);
+    }
 
-        btn.setOnClickListener(new View.OnClickListener() {
+    private void setOnClickRequestButton() {
+
+        btnRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String city = et.getText().toString();
+                String city = etCity.getText().toString();
+                ForecastProvider provider = ForecastProvider.getInstance();
 
-                if(city != null && city.length() > 1) {
-                    Set<CityForecast.MeteoData> meteoData = new HashSet<>();
+                if (city.length() > 1) {
+                    Set<CityForecast.MeteoData> requiredMeteoData = new HashSet<>();
 
-                    if(chbWind.isChecked()) meteoData.add(MeteoData.WIND);
-                    if(chbHumidity.isChecked()) meteoData.add(MeteoData.HUMIDITY);
-                    if(chbPressure.isChecked()) meteoData.add(MeteoData.PRESSURE);
+                    if (chbWind.isChecked()) requiredMeteoData.add(MeteoData.WIND);
+                    if (chbHumidity.isChecked()) requiredMeteoData.add(MeteoData.HUMIDITY);
+                    if (chbPressure.isChecked()) requiredMeteoData.add(MeteoData.PRESSURE);
 
-                    ForecastActivity.start(MainActivity.this, provider.getForecastCustom(city, meteoData));
+                    ForecastActivity.start(
+                            MainActivity.this,
+                            provider.getForecastCustom(city, requiredMeteoData));
                 } else {
-                    Utils.logI(this, "Empty or incorrect request");
+                    Utils.logI(this, getString(R.string.incorrectRequest));
                 }
             }
         });
     }
-
 }
