@@ -37,29 +37,22 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
                 <TextView
+                    style="@style/TableColumnHeader"
                     android:text="@string/headerWind"
-                    tools:text="@string/headerWind"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
+                    tools:text="@string/headerWind"/>
                 <TextView
+                    style="@style/TableColumnHeader"
                     android:text="@string/headerHumidity"
-                    tools:text="@string/headerHumidity"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
+                    tools:text="@string/headerHumidity"/>
                 <TextView
+                    style="@style/TableColumnHeader"
                     android:text="@string/headerPressure"
-                    tools:text="@string/headerPressure"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
+                    tools:text="@string/headerPressure"/>
             </TableRow>
 
             <TableRow>
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/topMargin"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                    style="@style/TableCellStyle">
                     <ImageView
                         android:layout_width="@dimen/iconSize"
                         android:layout_height="@dimen/iconSize"
@@ -72,11 +65,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/topMargin"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                    style="@style/TableCellStyle">
                     <ImageView
                         android:layout_width="@dimen/iconSize"
                         android:layout_height="@dimen/iconSize"
@@ -89,11 +78,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/topMargin"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                    style="@style/TableCellStyle">
                     <ImageView
                         android:layout_width="@dimen/iconSize"
                         android:layout_height="@dimen/iconSize"
