@@ -35,7 +35,8 @@ public class ForecastProvider {
     }
 
     /**
-     * TODO: Получить полный прогноз для города city
+     * TODO: Получить полный прогноз для города city.
+     * TODO: Использовался в первом ДЗ.
      */
     public CityForecast getForecastFull(String city) {
         return new CityForecast(city, forecasts.get(index()));
@@ -46,6 +47,16 @@ public class ForecastProvider {
      */
     public CityForecast getForecastCustom(String city, Set<MeteoData> request){
         return new CityForecast(city, forecasts.get(index())).clearUnused(request);
+    }
+
+    /**
+     * TODO: Получить прогноз по номеру. Номер "сворачивается", если
+     * TODO: превышает размер списка прогнозов.
+     */
+    public Forecast getForecastByIndex(int num) {
+        int index = Math.abs(num);
+        if (index >= forecasts.size()) index = forecasts.size() % index;
+        return forecasts.get(index);
     }
 
     /**

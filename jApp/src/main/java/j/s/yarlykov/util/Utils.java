@@ -6,6 +6,6 @@ public class Utils {
 
     public static void logI(Object obj, String message) {
         final String tag = "jWeather";
-        Log.d(tag, obj.getClass().getSimpleName() + ": " + message);
+        Log.i(tag, obj.getClass().getSimpleName() + ": " + message);
     }
 }

@@ -1,5 +1,6 @@
 package j.s.yarlykov.data.domain;
 
+import java.util.Locale;
 import java.util.Set;
 
 public class CityForecast extends Forecast {
@@ -46,5 +47,10 @@ public class CityForecast extends Forecast {
             pressureMm = EMPTY_VAL;
         }
         return this;
+    }
+
+    public String toString(){
+        return String.format(Locale.US,"City %s, t=%d, w=%d, h=%d, p=%.02f",
+                city, temperature, wind, humidity, pressureMm);
     }
 }
