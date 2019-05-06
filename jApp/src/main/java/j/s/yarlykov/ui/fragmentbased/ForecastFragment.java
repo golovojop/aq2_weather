@@ -23,7 +23,6 @@ public class ForecastFragment extends Fragment {
 
     private TextView tvCity, tvTemperature, tvWind, tvHumidity, tvPressure;
     private ImageView ivSky;
-    private String NO_DATA;
 
     public static ForecastFragment create(int index, CityForecast forecast) {
         ForecastFragment fragment = new ForecastFragment();
@@ -40,14 +39,12 @@ public class ForecastFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.city_forecast_fragment, container, false);
-        return view;
+        return inflater.inflate(R.layout.city_forecast_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        NO_DATA = getResources().getString(R.string.noData);
         initViews(view);
         renderForecast(getForecast());
     }
@@ -69,37 +66,35 @@ public class ForecastFragment extends Fragment {
         tvPressure = parent.findViewById(R.id.tv_pressure);
     }
 
-    /**
-     * TODO: Отрисовать прогноз на экране
-     */
+    // Отрисовать прогноз на экране
     private void renderForecast(CityForecast forecast) {
 
-        // TODO: Weather image
+        // Set Weather image
         ivSky.setImageResource(forecast.getImgId());
 
-        //TODO: City (Uppercase first letter)
+        //Set City (Uppercase first letter)
         String city = forecast.getCity();
         tvCity.setText(city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase());
 
-        // TODO: Temperature
+        // Set Temperature
         Formatter fmt = new Formatter();
         fmt.format("%+2d \u2103", forecast.getTemperature());
         tvTemperature.setText(fmt.toString());
         fmt.close();
 
-        // TODO: Wind
+        // Set Wind
         fmt = new Formatter();
         fmt.format("%2d %s", forecast.getWind(), getResources().getString(R.string.infoWind));
         tvWind.setText(fmt.toString());
         fmt.close();
 
-        // TODO: Humidity
+        // Set Humidity
         fmt = new Formatter();
         fmt.format("%2d %%", forecast.getHumidity());
         tvHumidity.setText(fmt.toString());
         fmt.close();
 
-        // TODO: Pressure
+        // Set Pressure
         Locale current = getResources().getConfiguration().locale;
         boolean isRu = current.getCountry() == "RU";
         fmt = new Formatter();
@@ -107,5 +102,4 @@ public class ForecastFragment extends Fragment {
         tvPressure.setText(fmt.toString());
         fmt.close();
     }
-
 }

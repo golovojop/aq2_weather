@@ -28,11 +28,9 @@ public class ForecastActivityFr extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast_fr);
-        logI(this, "onCreate.");
 
         // Продолжать работать только в портретной ориентации
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            logI(this, "onCreate. Configuration.ORIENTATION_LANDSCAPE");
             finish();
             return;
         }

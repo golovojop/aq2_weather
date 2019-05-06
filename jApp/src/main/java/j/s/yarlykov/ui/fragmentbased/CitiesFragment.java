@@ -79,13 +79,13 @@ public class CitiesFragment extends ListFragment {
         TypedArray images = getResources().obtainTypedArray(R.array.armsImages);
         String[] cities = getResources().getStringArray(R.array.cities);
 
-        Map<String, Object> m;
+        Map<String, Object> map;
 
         for(int i = 0; i < cities.length; i++) {
-            m = new HashMap<>();
-            m.put(KEY_IMAGE_ID, images.getResourceId(i, 0));
-            m.put(KEY_CITY, cities[i]);
-            data.add(m);
+            map = new HashMap<>();
+            map.put(KEY_IMAGE_ID, images.getResourceId(i, 0));
+            map.put(KEY_CITY, cities[i]);
+            data.add(map);
         }
         images.recycle();
 
@@ -126,13 +126,13 @@ public class CitiesFragment extends ListFragment {
 
             if(forecastFragment == null || forecastFragment.getIndex() != selectedPosition) {
                 forecastFragment = ForecastFragment.create(selectedPosition, forecast);
-            }
 
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.forecastContainer, forecastFragment);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.addToBackStack(String.format("%s", forecastFragment.hashCode()));
-            ft.commit();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.forecastContainer, forecastFragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(String.format("%s", forecastFragment.hashCode()));
+                ft.commit();
+            }
         } else {
             ForecastActivityFr.start(getContext(), forecast);
         }
