@@ -7,7 +7,7 @@ import java.util.*
 
 object ForecastProvider {
 
-    val forecasts = listOf(
+    private val forecasts = listOf(
         Forecast(R.drawable.rain, 12, 10, 89, 750),
         Forecast(R.drawable.sunny, 25, 5, 73, 771),
         Forecast(R.drawable.sun, 18, 4, 85, 769),
@@ -18,6 +18,11 @@ object ForecastProvider {
 
     fun getForecastFull(city: String) = CityForecast(city, forecasts.get(index()))
     fun getForecastCustom(city: String, request: Set<CityForecast.Companion.MeteoData>) = CityForecast(city, forecasts.get(index())).apply { clearUnused(request) }
+    fun getForecastByIndex(num: Int): Forecast {
+        var index = Math.abs(num)
+        if (index >= forecasts.size) index = forecasts.size % index
+        return forecasts[index]
+    }
 
     private fun index(): Int {
         val randomForecast = Random()

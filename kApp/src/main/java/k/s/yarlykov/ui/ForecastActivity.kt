@@ -39,26 +39,26 @@ class ForecastActivity : AppCompatActivity() {
 
     fun renderForecast() {
 
-        // TODO: Weather image
+        // Set Weather image
         iv_sky.setImageResource(forecast.imgId)
 
-        //TODO: City (Uppercase first letter)
+        //Set City (Uppercase first letter)
         tv_city.setText(forecast.city.capitalize())
 
-        // TODO: Temperature
+        // Set Temperature
         tv_temperature.setText(String.format("%+2d \u2103", forecast.temperature))
 
-        // TODO: Wind
+        // Set Wind
         if (forecast.wind != EMPTY_VAL) {
             tv_wind.setText(String.format("%2d %s", forecast.wind, getResources().getString(R.string.infoWind)))
         } else tv_wind.setText(NO_DATA)
 
-        // TODO: Humidity
+        // Set Humidity
         if (forecast.humidity != EMPTY_VAL) {
             tv_humidity.setText(String.format("%2d %%", forecast.humidity))
         } else tv_humidity.setText(NO_DATA)
 
-        // TODO: Pressure
+        // Set Pressure
         if (forecast.pressureMm != EMPTY_VAL) {
             val current = resources.configuration.locale
             val isRu = current.country === "RU"
