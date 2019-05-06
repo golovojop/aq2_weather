@@ -10,7 +10,6 @@ import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.ui.ForecastActivity;
 
-import static j.s.yarlykov.util.Utils.logI;
 
 public class ForecastActivityFr extends AppCompatActivity {
 

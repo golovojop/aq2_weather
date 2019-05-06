@@ -30,13 +30,13 @@ import j.s.yarlykov.data.provider.ForecastProvider;
 
 public class CitiesFragment extends ListFragment {
 
-    boolean isLandscape;
-    int selectedPosition = 0;
-    final String selectedPositionKey = "SelectedCity";
-    ListView listView;
+    private boolean isLandscape;
+    private int selectedPosition = 0;
+    private final String selectedPositionKey = "SelectedCity";
+    private ListView listView;
 
-    final String KEY_IMAGE_ID = "image";
-    final String KEY_CITY = "city";
+    private final String KEY_IMAGE_ID = "image";
+    private final String KEY_CITY = "city";
 
     @Nullable
     @Override

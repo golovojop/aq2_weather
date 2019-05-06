@@ -19,9 +19,9 @@ import static j.s.yarlykov.data.domain.CityForecast.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    CheckBox chbWind, chbHumidity, chbPressure;
-    Button btnRequest;
-    EditText etCity;
+    private CheckBox chbWind, chbHumidity, chbPressure;
+    private Button btnRequest;
+    private EditText etCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
