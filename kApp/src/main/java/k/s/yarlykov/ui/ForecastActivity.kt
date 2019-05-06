@@ -40,29 +40,29 @@ class ForecastActivity : AppCompatActivity() {
     fun renderForecast() {
 
         // Set Weather image
-        iv_sky.setImageResource(forecast.imgId)
+        ivSkyA.setImageResource(forecast.imgId)
 
         //Set City (Uppercase first letter)
-        tv_city.setText(forecast.city.capitalize())
+        tvCityA.setText(forecast.city.capitalize())
 
         // Set Temperature
-        tv_temperature.setText(String.format("%+2d \u2103", forecast.temperature))
+        tvTemperatureA.setText(String.format("%+2d \u2103", forecast.temperature))
 
         // Set Wind
         if (forecast.wind != EMPTY_VAL) {
-            tv_wind.setText(String.format("%2d %s", forecast.wind, getResources().getString(R.string.infoWind)))
-        } else tv_wind.setText(NO_DATA)
+            tvWindA.setText(String.format("%2d %s", forecast.wind, getResources().getString(R.string.infoWind)))
+        } else tvWindA.setText(NO_DATA)
 
         // Set Humidity
         if (forecast.humidity != EMPTY_VAL) {
-            tv_humidity.setText(String.format("%2d %%", forecast.humidity))
-        } else tv_humidity.setText(NO_DATA)
+            tvHumidityA.setText(String.format("%2d %%", forecast.humidity))
+        } else tvHumidityA.setText(NO_DATA)
 
         // Set Pressure
         if (forecast.pressureMm != EMPTY_VAL) {
             val current = resources.configuration.locale
             val isRu = current.country === "RU"
-            tv_pressure.setText(String.format("%4d %s", forecast.getPressure(isRu), getResources().getString(R.string.infoPressure)))
-        } else tv_pressure.setText(NO_DATA)
+            tvPressureA.setText(String.format("%4d %s", forecast.getPressure(isRu), getResources().getString(R.string.infoPressure)))
+        } else tvPressureA.setText(NO_DATA)
     }
 }

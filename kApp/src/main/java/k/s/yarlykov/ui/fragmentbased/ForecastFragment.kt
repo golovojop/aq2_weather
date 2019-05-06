@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import k.s.yarlykov.R
 import k.s.yarlykov.data.domain.CityForecast
+import kotlinx.android.synthetic.main.activity_forecast.*
 import kotlinx.android.synthetic.main.city_forecast_fragment.*
 
 class ForecastFragment : Fragment() {
@@ -25,7 +26,8 @@ class ForecastFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.city_forecast_fragment, container, false)
     }
 
@@ -43,23 +45,23 @@ class ForecastFragment : Fragment() {
 
     fun renderForecast(forecast: CityForecast) {
         // Set Weather image
-        iv_sky.setImageResource(forecast.imgId)
+        ivSkyF.setImageResource(forecast.imgId)
 
         // Set City (Uppercase first letter)
-        tv_city.setText(forecast.city.capitalize())
+        tvCityF.setText(forecast.city.capitalize())
 
         // Set Temperature
-        tv_temperature.setText(String.format("%+2d \u2103", forecast.temperature))
+        tvTemperatureF.setText(String.format("%+2d \u2103", forecast.temperature))
 
         // Set Wind
-        tv_wind.setText(String.format("%2d %s", forecast.wind, getResources().getString(R.string.infoWind)))
+        tvWindF.setText(String.format("%2d %s", forecast.wind, getResources().getString(R.string.infoWind)))
 
         // Set Humidity
-        tv_humidity.setText(String.format("%2d %%", forecast.humidity))
+        tvHumidityF.setText(String.format("%2d %%", forecast.humidity))
 
         // Set Pressure
         val current = resources.configuration.locale
         val isRu = current.country === "RU"
-        tv_pressure.setText(String.format("%4d %s", forecast.getPressure(isRu), getResources().getString(R.string.infoPressure)))
+        tvPressureF.setText(String.format("%4d %s", forecast.getPressure(isRu), getResources().getString(R.string.infoPressure)))
     }
 }

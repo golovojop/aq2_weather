@@ -16,8 +16,13 @@ object ForecastProvider {
         Forecast(R.drawable.cloud1, 11, 6, 64, 742)
     )
 
+    // Метод использовался в ДЗ урока 2. Может быть полезен в будущем
     fun getForecastFull(city: String) = CityForecast(city, forecasts.get(index()))
-    fun getForecastCustom(city: String, request: Set<CityForecast.Companion.MeteoData>) = CityForecast(city, forecasts.get(index())).apply { clearUnused(request) }
+
+    // Выборочные данные из прогноза
+    fun getForecastCustom(city: String, request: Set<CityForecast.Companion.MeteoData>) =
+            CityForecast(city, forecasts.get(index())).apply { clearUnused(request) }
+    // По индексу из списка
     fun getForecastByIndex(num: Int): Forecast {
         var index = Math.abs(num)
         if (index >= forecasts.size) index = forecasts.size % index

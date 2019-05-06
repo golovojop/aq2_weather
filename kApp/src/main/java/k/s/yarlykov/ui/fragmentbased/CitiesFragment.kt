@@ -18,12 +18,12 @@ import java.util.HashMap
 
 class CitiesFragment : ListFragment() {
 
-    internal val selectedPositionKey = "SelectedCity"
-    internal val KEY_IMAGE_ID = "image"
-    internal val KEY_CITY = "city"
+    private  val selectedPositionKey = "SelectedCity"
+    private  val KEY_IMAGE_ID = "image"
+    private  val KEY_CITY = "city"
 
-    var isLandscape: Boolean = false
-    var selectedPosition: Int = 0
+    private var isLandscape: Boolean = false
+    private var selectedPosition: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.cities_list_fragment, container, false)
@@ -101,13 +101,13 @@ class CitiesFragment : ListFragment() {
             var forecastFragment = fragmentManager!!
                     .findFragmentById(R.id.forecastContainer) as ForecastFragment?
 
-            if (forecastFragment == null || forecastFragment!!.getIndex() != selectedPosition) {
+            if (forecastFragment == null || forecastFragment.getIndex() != selectedPosition) {
                 forecastFragment = ForecastFragment.create(selectedPosition, forecast)
 
                 val ft = fragmentManager!!.beginTransaction()
-                ft.replace(R.id.forecastContainer, forecastFragment!!)
+                ft.replace(R.id.forecastContainer, forecastFragment)
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                ft.addToBackStack(String.format("%s", forecastFragment!!.hashCode()))
+                ft.addToBackStack(String.format("%s", forecastFragment.hashCode()))
                 ft.commit()
             }
         } else {
