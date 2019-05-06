@@ -11,10 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Formatter;
-import java.util.Locale;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
+
+import static j.s.yarlykov.util.Utils.isRu;
 
 public class ForecastFragment extends Fragment {
 
@@ -95,10 +96,8 @@ public class ForecastFragment extends Fragment {
         fmt.close();
 
         // Set Pressure
-        Locale current = getResources().getConfiguration().locale;
-        boolean isRu = current.getCountry() == "RU";
         fmt = new Formatter();
-        fmt.format("%4d %s", (int) forecast.getPressure(isRu), getResources().getString(R.string.infoPressure));
+        fmt.format("%4d %s", (int) forecast.getPressure(isRu()), getResources().getString(R.string.infoPressure));
         tvPressure.setText(fmt.toString());
         fmt.close();
     }
