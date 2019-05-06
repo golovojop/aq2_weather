@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_forecast.*;
 import k.s.yarlykov.R
 import k.s.yarlykov.data.domain.CityForecast
 import k.s.yarlykov.data.domain.Forecast.Companion.EMPTY_VAL
+import k.s.yarlykov.util.Utils.isRu
 
 class ForecastActivity : AppCompatActivity() {
 
@@ -43,26 +44,24 @@ class ForecastActivity : AppCompatActivity() {
         ivSkyA.setImageResource(forecast.imgId)
 
         //Set City (Uppercase first letter)
-        tvCityA.setText(forecast.city.capitalize())
+        tvCityA.text = (forecast.city.capitalize())
 
         // Set Temperature
-        tvTemperatureA.setText(String.format("%+2d \u2103", forecast.temperature))
+        tvTemperatureA.text = (String.format("%+2d \u2103", forecast.temperature))
 
         // Set Wind
         if (forecast.wind != EMPTY_VAL) {
-            tvWindA.setText(String.format("%2d %s", forecast.wind, getResources().getString(R.string.infoWind)))
-        } else tvWindA.setText(NO_DATA)
+            tvWindA.text = (String.format("%2d %s", forecast.wind, getResources().getString(R.string.infoWind)))
+        } else tvWindA.text = (NO_DATA)
 
         // Set Humidity
         if (forecast.humidity != EMPTY_VAL) {
-            tvHumidityA.setText(String.format("%2d %%", forecast.humidity))
-        } else tvHumidityA.setText(NO_DATA)
+            tvHumidityA.text = (String.format("%2d %%", forecast.humidity))
+        } else tvHumidityA.text = (NO_DATA)
 
         // Set Pressure
         if (forecast.pressureMm != EMPTY_VAL) {
-            val current = resources.configuration.locale
-            val isRu = current.country === "RU"
-            tvPressureA.setText(String.format("%4d %s", forecast.getPressure(isRu), getResources().getString(R.string.infoPressure)))
-        } else tvPressureA.setText(NO_DATA)
+            tvPressureA.text = (String.format("%4d %s", forecast.getPressure(isRu()), getResources().getString(R.string.infoPressure)))
+        } else tvPressureA.text = (NO_DATA)
     }
 }

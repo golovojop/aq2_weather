@@ -59,12 +59,10 @@ class CitiesFragment : ListFragment() {
         val images = resources.obtainTypedArray(R.array.armsImages)
         val cities = resources.getStringArray(R.array.cities)
 
-        var map: MutableMap<String, Any>
-
-        for (i in cities.indices) {
-            map = HashMap()
-            map[KEY_IMAGE_ID] = images.getResourceId(i, 0)
-            map[KEY_CITY] = cities[i]
+        for ((i, city) in cities.withIndex()) {
+            val map = mapOf(
+                    KEY_IMAGE_ID to images.getResourceId(i, 0),
+                    KEY_CITY to city)
             data.add(map)
         }
         images.recycle()
@@ -72,16 +70,14 @@ class CitiesFragment : ListFragment() {
         val from = arrayOf(KEY_IMAGE_ID, KEY_CITY)
         val to = intArrayOf(R.id.ivArms, R.id.tvCity)
 
-        val sAdapter = SimpleAdapter(
+        listAdapter = SimpleAdapter(
                 activity,
                 data,
                 R.layout.cities_list_item,
                 from,
                 to)
 
-        listAdapter = sAdapter
-
-        listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             selectedPosition = position
             showForecast()
         }

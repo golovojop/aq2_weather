@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import k.s.yarlykov.R
 import k.s.yarlykov.data.domain.CityForecast
-import kotlinx.android.synthetic.main.activity_forecast.*
+import k.s.yarlykov.util.Utils.isRu
 import kotlinx.android.synthetic.main.city_forecast_fragment.*
 
 class ForecastFragment : Fragment() {
@@ -48,20 +48,18 @@ class ForecastFragment : Fragment() {
         ivSkyF.setImageResource(forecast.imgId)
 
         // Set City (Uppercase first letter)
-        tvCityF.setText(forecast.city.capitalize())
+        tvCityF.text = forecast.city.capitalize()
 
         // Set Temperature
-        tvTemperatureF.setText(String.format("%+2d \u2103", forecast.temperature))
+        tvTemperatureF.text = String.format("%+2d \u2103", forecast.temperature)
 
         // Set Wind
-        tvWindF.setText(String.format("%2d %s", forecast.wind, getResources().getString(R.string.infoWind)))
+        tvWindF.text = String.format("%2d %s", forecast.wind, getResources().getString(R.string.infoWind))
 
         // Set Humidity
-        tvHumidityF.setText(String.format("%2d %%", forecast.humidity))
+        tvHumidityF.text = String.format("%2d %%", forecast.humidity)
 
         // Set Pressure
-        val current = resources.configuration.locale
-        val isRu = current.country === "RU"
-        tvPressureF.setText(String.format("%4d %s", forecast.getPressure(isRu), getResources().getString(R.string.infoPressure)))
+        tvPressureF.text = String.format("%4d %s", forecast.getPressure(isRu()), getResources().getString(R.string.infoPressure))
     }
 }
