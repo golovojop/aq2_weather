@@ -2,12 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <fragment
+    <FrameLayout
         android:layout_width="0px"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:name="k.s.yarlykov.ui.fragmentbased.CitiesFragment"
-        android:id="@+id/cities"/>
+        android:id="@+id/mainFrame"/>
     <FrameLayout
         android:id="@+id/forecastContainer"
         android:layout_width="0px"

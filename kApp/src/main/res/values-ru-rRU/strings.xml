@@ -16,6 +16,8 @@
     <string name="toolCity">Москва</string>
     <string name="empty">Список городов пуст</string>
 
+    <string name="about">О программе</string>
+
     <string-array name="cities">
         <item>Москва</item>
         <item>Санкт Петербург</item>
