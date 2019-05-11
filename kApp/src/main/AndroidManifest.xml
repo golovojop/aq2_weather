@@ -19,6 +19,7 @@
         <activity android:name=".ui.ForecastActivity" />
         <activity android:name=".ui.MainActivity" />
         <activity android:name=".ui.fragmentbased.ForecastActivityFr" />
+        <activity android:name=".ui.fragmentbased.InfoActivityFr" />
     </application>
 
 </manifest>
