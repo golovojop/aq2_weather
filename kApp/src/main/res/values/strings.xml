@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name" translatable="false">kWeather</string>
     <string name="app_header">kWeather</string>
+    <string name="app_info_header" translatable="false">Weather Application</string>
+    <string name="app_copyright" translatable="false">2019 GeekBrains</string>
     <string name="getForecast">Request</string>
 
     <string name="infoWind">m/s</string>
@@ -19,6 +21,9 @@
     <string name="toolTemperature" translatable="false">12</string>
 
     <string name="empty">Cities list is empty</string>
+
+    <string name="about">About</string>
+    <string name="version">Version</string>
 
     <string-array name="cities">
         <item>Moscow</item>
