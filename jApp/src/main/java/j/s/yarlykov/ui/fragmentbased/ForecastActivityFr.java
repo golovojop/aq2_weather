@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
@@ -13,7 +15,7 @@ import j.s.yarlykov.ui.ForecastActivity;
 
 public class ForecastActivityFr extends AppCompatActivity {
 
-    public static final String EXTRA_FORECAST = ForecastActivity.class.getSimpleName() + ".extra.FORECAST";
+    public static final String EXTRA_FORECAST = ForecastActivityFr.class.getSimpleName() + ".extra.FORECAST";
 
     private CityForecast forecast;
 
@@ -43,5 +45,24 @@ public class ForecastActivityFr extends AppCompatActivity {
                     .beginTransaction()
                     .replace(R.id.forecastContainer, forecastFragment).commit();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.actionAbout:
+                InfoActivityFr.start(this);
+                break;
+            default:
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
