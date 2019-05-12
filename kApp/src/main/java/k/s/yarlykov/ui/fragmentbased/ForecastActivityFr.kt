@@ -9,7 +9,6 @@ import android.view.Menu
 import android.view.MenuItem
 import k.s.yarlykov.R
 import k.s.yarlykov.data.domain.CityForecast
-import k.s.yarlykov.util.Utils.logI
 
 class ForecastActivityFr : AppCompatActivity() {
 
@@ -27,7 +26,6 @@ class ForecastActivityFr : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        logI(this, "onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast_fr)
 
@@ -38,7 +36,6 @@ class ForecastActivityFr : AppCompatActivity() {
         }
 
         if(savedInstanceState == null) {
-            logI(this, "onCreate. savedInstanceState == null")
             forecast = intent.getSerializableExtra(EXTRA_FORECAST) as CityForecast
 
             val forecastFragment = ForecastFragment.create(0, forecast)
@@ -50,13 +47,11 @@ class ForecastActivityFr : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        logI(this, "onCreateOptionsMenu")
-        menuInflater.inflate(k.s.yarlykov.R.menu.fragment_menu, menu)
+        menuInflater.inflate(k.s.yarlykov.R.menu.main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        logI(this, "onCreateOptionsMenu")
         when (item.itemId) {
             R.id.actionAbout -> {
                 InfoActivityFr.start(this)

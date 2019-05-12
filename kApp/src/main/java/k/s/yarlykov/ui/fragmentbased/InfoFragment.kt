@@ -12,11 +12,14 @@ import kotlinx.android.synthetic.main.info_fragment_portrait.*
 
 class InfoFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            inflater.inflate(R.layout.info_fragment_portrait, container, false)
-        } else {
-            inflater.inflate(R.layout.info_fragment_land, container, false)
+
+        // Выбрать макет для текущей ориентации экрана
+        val orientationCompatibleLayoutId = when(resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> R.layout.info_fragment_portrait
+            else -> R.layout.info_fragment_land
         }
+
+        return inflater.inflate(orientationCompatibleLayoutId, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
