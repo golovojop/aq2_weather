@@ -28,7 +28,6 @@ class ForecastFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         logI(this, "onCreate")
-//        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -36,11 +35,6 @@ class ForecastFragment : Fragment() {
         logI(this, "onCreateView")
         return inflater.inflate(R.layout.city_forecast_fragment, container, false)
     }
-
-//    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-//        logI(this, "onCreateOptionsMenu")
-//        inflater?.inflate(R.menu.fragment_menu, menu)
-//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         logI(this, "onViewCreated")
