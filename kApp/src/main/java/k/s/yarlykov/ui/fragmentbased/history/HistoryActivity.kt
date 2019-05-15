@@ -6,9 +6,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import k.s.yarlykov.R
-import k.s.yarlykov.data.domain.History
+import k.s.yarlykov.data.provider.HistoryProvider
 import kotlinx.android.synthetic.main.activity_history.*
-
 
 class HistoryActivity : AppCompatActivity() {
     companion object {
@@ -33,11 +32,13 @@ class HistoryActivity : AppCompatActivity() {
         rvHistory.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@HistoryActivity)
-            adapter = HistoryRVAdapter(listOf(
-                    History("""10/05""", R.drawable.h_cloud, "19 ~ 5"),
-                    History("""11/05""", R.drawable.h_sun, "21 ~ 8"),
-                    History("""12/05""", R.drawable.h_cloud_sun, "20 ~ 7"),
-                    History("""13/05""", R.drawable.h_roar, "17 ~ 4")))
+//            adapter = HistoryRVAdapter(listOf(
+//                    History("""10/05""", R.drawable.h_cloud, "19 ~ 5"),
+//                    History("""11/05""", R.drawable.h_sun, "21 ~ 8"),
+//                    History("""12/05""", R.drawable.h_cloud_sun, "20 ~ 7"),
+//                    History("""13/05""", R.drawable.h_roar, "17 ~ 4")))
+
+            adapter = HistoryRVAdapter(HistoryProvider.build(10))
         }
     }
 }
