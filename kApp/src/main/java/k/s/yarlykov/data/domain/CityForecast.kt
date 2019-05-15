@@ -1,5 +1,7 @@
 package k.s.yarlykov.data.domain
 
+import java.util.*
+
 class CityForecast(val city: String, imgId: Int, temperature: Int, wind: Int, humidity: Int, pressureMm: Int):
         Forecast(imgId, temperature, wind, humidity, pressureMm) {
 
@@ -26,5 +28,10 @@ class CityForecast(val city: String, imgId: Int, temperature: Int, wind: Int, hu
         if(!interestingSet.contains(MeteoData.HUMIDITY)) humidity = EMPTY_VAL;
         if(!interestingSet.contains(MeteoData.PRESSURE)) pressureMm = EMPTY_VAL;
         return this
+    }
+
+    override fun toString(): String {
+        return String.format(Locale.US, "City %s, t=%d, w=%d, h=%d, p=%d",
+                city, temperature, wind, humidity, pressureMm)
     }
 }

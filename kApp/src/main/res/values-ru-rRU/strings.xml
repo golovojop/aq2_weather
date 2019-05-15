@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_header">Погода</string>
-    <string name="forecastMoscow">Москва\nНебольшая облачность</string>
-    <string name="forecastSpb">Санкт-Петербург\nПасмурно, без осадков</string>
-    <string name="forecastSochi">Сочи\nЯсно</string>
     <string name="getForecast">Отправить запрос</string>
 
     <string name="infoWind">м/с</string>
@@ -17,4 +14,17 @@
     <string name="noData">добавьте в запрос</string>
 
     <string name="toolCity">Москва</string>
+    <string name="empty">Список городов пуст</string>
+
+    <string name="about">О программе</string>
+    <string name="version">Версия</string>
+
+    <string-array name="cities">
+        <item>Москва</item>
+        <item>Санкт Петербург</item>
+        <item>Екатеринбург</item>
+        <item>Новосибирск</item>
+        <item>Самара</item>
+    </string-array>
+
 </resources>

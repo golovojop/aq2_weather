@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_forecast.*;
 import k.s.yarlykov.R
 import k.s.yarlykov.data.domain.CityForecast
 import k.s.yarlykov.data.domain.Forecast.Companion.EMPTY_VAL
+import k.s.yarlykov.util.Utils.isRu
 
 class ForecastActivity : AppCompatActivity() {
 
@@ -39,30 +40,28 @@ class ForecastActivity : AppCompatActivity() {
 
     fun renderForecast() {
 
-        // TODO: Weather image
-        iv_sky.setImageResource(forecast.imgId)
+        // Set Weather image
+        ivSkyA.setImageResource(forecast.imgId)
 
-        //TODO: City (Uppercase first letter)
-        tv_city.setText(forecast.city.capitalize())
+        //Set City (Uppercase first letter)
+        tvCityA.text = (forecast.city.capitalize())
 
-        // TODO: Temperature
-        tv_temperature.setText(String.format("%+2d \u2103", forecast.temperature))
+        // Set Temperature
+        tvTemperatureA.text = (String.format("%+2d \u2103", forecast.temperature))
 
-        // TODO: Wind
+        // Set Wind
         if (forecast.wind != EMPTY_VAL) {
-            tv_wind.setText(String.format("%2d %s", forecast.wind, getResources().getString(R.string.infoWind)))
-        } else tv_wind.setText(NO_DATA)
+            tvWindA.text = (String.format("%2d %s", forecast.wind, getResources().getString(R.string.infoWind)))
+        } else tvWindA.text = (NO_DATA)
 
-        // TODO: Humidity
+        // Set Humidity
         if (forecast.humidity != EMPTY_VAL) {
-            tv_humidity.setText(String.format("%2d %%", forecast.humidity))
-        } else tv_humidity.setText(NO_DATA)
+            tvHumidityA.text = (String.format("%2d %%", forecast.humidity))
+        } else tvHumidityA.text = (NO_DATA)
 
-        // TODO: Pressure
+        // Set Pressure
         if (forecast.pressureMm != EMPTY_VAL) {
-            val current = resources.configuration.locale
-            val isRu = current.country === "RU"
-            tv_pressure.setText(String.format("%4d %s", forecast.getPressure(isRu), getResources().getString(R.string.infoPressure)))
-        } else tv_pressure.setText(NO_DATA)
+            tvPressureA.text = (String.format("%4d %s", forecast.getPressure(isRu()), getResources().getString(R.string.infoPressure)))
+        } else tvPressureA.text = (NO_DATA)
     }
 }

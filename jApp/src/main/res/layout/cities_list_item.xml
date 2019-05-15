@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:background="@drawable/list_item_bg"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/ivArms"
+        android:layout_width="@dimen/armsWidth"
+        android:layout_height="@dimen/armsHeight"
+        android:layout_margin="@dimen/armsMargin"
+        android:gravity="center"/>
+    <TextView
+        android:id="@+id/tvCity"
+        android:gravity="center_vertical"
+        android:layout_marginStart="@dimen/leftMargin"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+</LinearLayout>
