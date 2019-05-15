@@ -107,7 +107,6 @@ class CitiesFragment : ListFragment() {
                 ft.commit()
             }
         } else {
-            Utils.logI(this, "showForecast. Create ForecastActivityFr")
             ForecastActivityFr.start(context, forecast)
         }
     }

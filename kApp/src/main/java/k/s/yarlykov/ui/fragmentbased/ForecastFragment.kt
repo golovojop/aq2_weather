@@ -5,9 +5,9 @@ import android.support.v4.app.Fragment
 import android.view.*
 import k.s.yarlykov.R
 import k.s.yarlykov.data.domain.CityForecast
+import k.s.yarlykov.ui.fragmentbased.history.HistoryActivity
 import k.s.yarlykov.util.Utils.isRu
 import kotlinx.android.synthetic.main.city_forecast_fragment.*
-import k.s.yarlykov.util.Utils.logI
 
 class ForecastFragment : Fragment() {
 
@@ -25,20 +25,18 @@ class ForecastFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        logI(this, "onCreate")
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        logI(this, "onCreateView")
         return inflater.inflate(R.layout.city_forecast_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        logI(this, "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
+
+        btnHistory.setOnClickListener {
+            HistoryActivity.start(this@ForecastFragment.requireContext(), tvCityF.text as String)
+        }
+
         renderForecast(getForecast())
     }
 
