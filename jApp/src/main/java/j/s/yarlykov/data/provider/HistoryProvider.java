@@ -10,19 +10,22 @@ import java.util.Random;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.History;
+import j.s.yarlykov.util.Utils;
 
 
 public class HistoryProvider {
     private HistoryProvider() {}
 
-    public static List<History> build(Context context, int daysAgo) {
+    public static List<History> build(Context context, int days) {
         List<History> list = new ArrayList<>();
         Date today = new Date();
 
         TypedArray images = context.getResources().obtainTypedArray(R.array.historyLogos);
 
-        for(int i = 1; i <= daysAgo; i++) {
-            list.add(new History("", "", 0));
+        for(int i = 1; i <= days; i++) {
+            list.add(new History(Utils.daysAgo(today, i),
+                    String.format("%s\u2103 ~ %s\u2103", tDay(), tNight()),
+                    images.getResourceId(inRange(0, images.length() - 1), 0)));
         }
 
         images.recycle();

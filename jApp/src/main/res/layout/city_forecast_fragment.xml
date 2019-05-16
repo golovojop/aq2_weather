@@ -14,11 +14,22 @@
         android:layout_marginStart="@dimen/leftMargin"
         android:layout_gravity="left"
         android:layout_marginTop="12dp"
+        android:textStyle="bold"
         android:textSize="24sp"
         tools:text="@string/toolCity"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_gravity="left"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        android:text="@string/today"
+        tools:text="@string/today"/>
     <View
         android:layout_width="fill_parent"
         android:layout_height="2dp"
+        android:layout_marginTop="@dimen/leftMargin"
         android:layout_marginStart="@dimen/leftMargin"
         android:layout_marginEnd="@dimen/endMargin"
         android:background="#c0c0c0"/>

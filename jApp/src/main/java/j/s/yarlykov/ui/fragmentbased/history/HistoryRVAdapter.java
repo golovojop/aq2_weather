@@ -29,7 +29,8 @@ public class HistoryRVAdapter extends RecyclerView.Adapter<HistoryRVAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+        viewHolder.bind(dataSource.get(position));
 
     }
 
