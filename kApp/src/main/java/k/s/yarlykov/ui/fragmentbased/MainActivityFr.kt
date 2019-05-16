@@ -1,5 +1,6 @@
 package k.s.yarlykov.ui.fragmentbased
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -18,6 +19,13 @@ class MainActivityFr : AppCompatActivity() {
         return true
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.let {
+            cleanUpMenu(it, R.id.actionWeek)
+        }
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.actionAbout -> {
@@ -26,5 +34,16 @@ class MainActivityFr : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    // Метод требуется для того, чтобы убрать ненужные меню
+    // при портретной ориентации.
+    private fun cleanUpMenu(menu: Menu, vararg items: Int) {
+        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            invalidateOptionsMenu()
+            for(i in items) {
+                menu.findItem(i)?.setVisible(false)
+            }
+        }
     }
 }
