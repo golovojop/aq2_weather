@@ -23,4 +23,10 @@
     <dimen name="armsWidth">48dp</dimen>
     <dimen name="armsHeight">48dp</dimen>
     <dimen name="armsMargin">8dp</dimen>
+
+    <!-- CardView params -->
+    <dimen name = "card_margin">12dp</dimen>
+    <dimen name = "card_album_radius">8dp</dimen>
+    <dimen name = "album_cover_height">200dp</dimen>
+    <dimen name = "elevation" >3dp</dimen>
 </resources>
