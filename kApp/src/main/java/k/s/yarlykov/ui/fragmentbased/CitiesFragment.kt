@@ -13,7 +13,6 @@ import android.widget.SimpleAdapter
 import k.s.yarlykov.R
 import k.s.yarlykov.data.domain.CityForecast
 import k.s.yarlykov.data.provider.ForecastProvider
-import k.s.yarlykov.util.Utils
 import java.util.ArrayList
 
 class CitiesFragment : ListFragment() {

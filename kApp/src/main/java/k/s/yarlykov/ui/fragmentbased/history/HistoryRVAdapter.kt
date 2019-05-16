@@ -28,7 +28,6 @@ class HistoryRVAdapter(val source: List<History>): RecyclerView.Adapter<HistoryR
                         false
                 )
         )
-
     }
 
     override fun getItemCount() = source.size

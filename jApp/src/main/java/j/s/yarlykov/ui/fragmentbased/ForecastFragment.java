@@ -18,6 +18,7 @@ import java.util.Formatter;
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.ui.fragmentbased.history.HistoryActivity;
+import j.s.yarlykov.util.Utils;
 
 import static j.s.yarlykov.util.Utils.isRu;
 
@@ -101,7 +102,7 @@ public class ForecastFragment extends Fragment {
 
         //Set City (Uppercase first letter)
         String city = forecast.getCity();
-        tvCity.setText(city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase());
+        tvCity.setText(Utils.capitalize(city));
 
         // Set Temperature
         Formatter fmt = new Formatter();

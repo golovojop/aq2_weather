@@ -35,7 +35,4 @@ object HistoryProvider {
 
     // Генератор чисел в диапазоне min ~ (min + range)
     private fun inRange(min: Int, range: Int) = min + Random().nextInt(range)
-
-//    private fun tDay() = inRange(15, 10)
-//    private fun tNight() = inRange(8, 6)
 }

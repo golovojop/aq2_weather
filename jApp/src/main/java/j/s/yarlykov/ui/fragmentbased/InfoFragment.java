@@ -1,7 +1,6 @@
 package j.s.yarlykov.ui.fragmentbased;
 
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

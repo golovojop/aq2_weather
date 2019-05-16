@@ -23,6 +23,15 @@ public class Utils {
         return locale.getLanguage().toUpperCase().equals("RU");
     }
 
+    public static String capitalize(String text) {
+        StringBuilder sb = new StringBuilder();
+        for(String s : text.split("\\s")) {
+            sb.append(s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase());
+            sb.append(" ");
+        }
+        return sb.toString().trim();
+    }
+
     // Получить дату в формате "dd/MM" на days дней назад
     public static String daysAgo(Date date, int days) {
         return daysThrough(date, days, true);

@@ -22,7 +22,6 @@ public class HistoryActivity extends AppCompatActivity {
     private static final String EXTRA_HISTORY =
             HistoryActivity.class.getSimpleName() + ".extra.HISTORY";
 
-
     public static final int WEEK = 7;
 
     public static void start(Context context, String city) {
