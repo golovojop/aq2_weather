@@ -20,6 +20,8 @@ object HistoryProvider {
                     images.getResourceId(inRange(0, images.length() - 1), 0),
                     "$tDay℃ ~ $tNight℃"))
         }
+
+        images.recycle()
         return list
     }
 
