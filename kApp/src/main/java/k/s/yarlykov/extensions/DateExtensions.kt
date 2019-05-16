@@ -8,7 +8,18 @@ fun Date.daysAgo(days: Int): String {
     val format = "dd/MM"
     val calendar = Calendar.getInstance().apply {
         time = this@daysAgo
-        add(Calendar.DAY_OF_YEAR, -days)
+        add(Calendar.DAY_OF_YEAR, -Math.abs(days))
+    }
+
+    return SimpleDateFormat(format, Locale.getDefault()).format(calendar.time)
+}
+
+// Получить дату в формате "dd/MM" на days дней вперед
+fun Date.daysAhead(days: Int): String {
+    val format = "dd/MM"
+    val calendar = Calendar.getInstance().apply {
+        time = this@daysAhead
+        add(Calendar.DAY_OF_YEAR, Math.abs(days))
     }
 
     return SimpleDateFormat(format, Locale.getDefault()).format(calendar.time)

@@ -5,15 +5,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import k.s.yarlykov.R
 import k.s.yarlykov.data.provider.HistoryProvider
+import k.s.yarlykov.ui.fragmentbased.InfoActivityFr
 import kotlinx.android.synthetic.main.activity_history.*
 
 class HistoryActivity : AppCompatActivity() {
     companion object {
 
         private val EXTRA_HISTORY = HistoryActivity::class.java.simpleName + ".extra.HISTORY"
-
+        private val WEEK = 7
 
         fun start(context: Context, city: String) {
             val intent = Intent(context, HistoryActivity::class.java).apply {
@@ -32,13 +35,23 @@ class HistoryActivity : AppCompatActivity() {
         rvHistory.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@HistoryActivity)
-//            adapter = HistoryRVAdapter(listOf(
-//                    History("""10/05""", R.drawable.h_cloud, "19 ~ 5"),
-//                    History("""11/05""", R.drawable.h_sun, "21 ~ 8"),
-//                    History("""12/05""", R.drawable.h_cloud_sun, "20 ~ 7"),
-//                    History("""13/05""", R.drawable.h_roar, "17 ~ 4")))
-
-            adapter = HistoryRVAdapter(HistoryProvider.build(10))
+            adapter = HistoryRVAdapter(HistoryProvider.build(this@HistoryActivity, WEEK))
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.actionAbout -> {
+                InfoActivityFr.start(this)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 }

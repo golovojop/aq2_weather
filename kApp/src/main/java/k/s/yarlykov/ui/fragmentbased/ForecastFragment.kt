@@ -25,6 +25,11 @@ class ForecastFragment : Fragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.city_forecast_fragment, container, false)
@@ -32,12 +37,21 @@ class ForecastFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        btnHistory.setOnClickListener {
-            HistoryActivity.start(this@ForecastFragment.requireContext(), tvCityF.text as String)
-        }
-
         renderForecast(getForecast())
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.week, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.actionWeek -> {
+                HistoryActivity.start(requireContext(), tvCityF.text as String)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     fun getIndex(): Int {
