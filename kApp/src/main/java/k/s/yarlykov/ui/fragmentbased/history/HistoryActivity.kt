@@ -41,7 +41,7 @@ class HistoryActivity : AppCompatActivity() {
 
         rvHistory.apply {
             setHasFixedSize(true)
-            layoutManager = orientationCompatibleLayoutManager//LinearLayoutManager(this@HistoryActivity)
+            layoutManager = orientationCompatibleLayoutManager
             adapter = HistoryRVAdapter(HistoryProvider.build(this@HistoryActivity, WEEK))
         }
     }
