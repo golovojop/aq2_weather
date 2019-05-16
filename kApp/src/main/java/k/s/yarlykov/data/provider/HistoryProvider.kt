@@ -18,16 +18,22 @@ object HistoryProvider {
         for(i in 1..daysAgo) {
             list.add(History(today.daysAgo(i),
                     images.getResourceId(inRange(0, images.length() - 1), 0),
-                    "${tDay()}℃ ~ ${tNight()}℃"))
+                    "$tDay℃ ~ $tNight℃"))
         }
         return list
     }
 
+    // Дневная температура
+    val tDay: Int
+    get() = inRange(15, 10)
+
+    // Ночная температура
+    val tNight: Int
+    get() = inRange(8, 6)
+
     // Генератор чисел в диапазоне min ~ (min + range)
     private fun inRange(min: Int, range: Int) = min + Random().nextInt(range)
-    // Дневная температура
-    private fun tDay() = inRange(15, 10)
-    // Ночная температура
-    private fun tNight() = inRange(8, 6)
 
+//    private fun tDay() = inRange(15, 10)
+//    private fun tNight() = inRange(8, 6)
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/topMargin"
+    android:layout_marginTop="12dp"
     android:orientation="vertical"
     tools:context=".ui.ForecastActivity">
     <TextView
@@ -15,14 +15,15 @@
         android:layout_gravity="left"
         android:layout_marginTop="12dp"
         android:textSize="24sp"
+        android:textStyle="bold"
         tools:text="@string/toolCity"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_gravity="left"
-        android:layout_marginTop="12dp"
-        android:textSize="12sp"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
         android:text="@string/today"
         tools:text="@string/today"/>
     <View

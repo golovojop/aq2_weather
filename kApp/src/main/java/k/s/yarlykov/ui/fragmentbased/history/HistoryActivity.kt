@@ -2,8 +2,10 @@ package k.s.yarlykov.ui.fragmentbased.history
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
@@ -32,9 +34,14 @@ class HistoryActivity : AppCompatActivity() {
 
         tvCity.text = intent.getSerializableExtra(EXTRA_HISTORY) as String
 
+        val orientationCompatibleLayoutManager = when(resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> LinearLayoutManager(this@HistoryActivity)
+            else -> GridLayoutManager(this@HistoryActivity, 2)
+        }
+
         rvHistory.apply {
             setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(this@HistoryActivity)
+            layoutManager = orientationCompatibleLayoutManager//LinearLayoutManager(this@HistoryActivity)
             adapter = HistoryRVAdapter(HistoryProvider.build(this@HistoryActivity, WEEK))
         }
     }
@@ -53,5 +60,4 @@ class HistoryActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 }
