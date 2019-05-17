@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
@@ -21,7 +20,7 @@ class HistoryActivity : AppCompatActivity() {
 
         private val EXTRA_HISTORY = HistoryActivity::class.java.simpleName + ".extra.HISTORY"
         private val DAYS = 3
-        private val CITY = "CITY"
+        private var lastCity = ""
 
         fun start(context: Context, city: String) {
             val intent = Intent(context, HistoryActivity::class.java).apply {
@@ -37,12 +36,7 @@ class HistoryActivity : AppCompatActivity() {
 
         tvCity.text = intent.getSerializableExtra(EXTRA_HISTORY) as String
 
-        var isNotRestored = true
-
-        savedInstanceState?.let {
-            val city = it.getString(CITY)
-            isNotRestored = !city.equals(tvCity.text)
-        }
+        val isNotRestored = lastCity != tvCity.text
 
         val orientationCompatibleLayoutManager = when(resources.configuration.orientation) {
             Configuration.ORIENTATION_PORTRAIT -> LinearLayoutManager(this@HistoryActivity)
@@ -59,9 +53,13 @@ class HistoryActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState?.putString(CITY, tvCity.text as String)
+        saveLastCity()
     }
 
+    override fun onPause() {
+        super.onPause()
+        saveLastCity()
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.history, menu)
@@ -80,5 +78,10 @@ class HistoryActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    // Сохранить название текущего города
+    private fun saveLastCity() {
+        lastCity = tvCity.text as String
     }
 }

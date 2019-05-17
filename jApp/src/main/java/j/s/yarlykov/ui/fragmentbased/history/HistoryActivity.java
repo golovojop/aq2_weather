@@ -22,9 +22,10 @@ public class HistoryActivity extends AppCompatActivity {
 
     private static final String EXTRA_HISTORY =
             HistoryActivity.class.getSimpleName() + ".extra.HISTORY";
-    private static final String CITY = "CITY";
 
     public static final int DAYS = 3;
+
+    private static String lastCity = "";
 
     public static void start(Context context, String city) {
         Intent intent = new Intent(context, HistoryActivity.class);
@@ -43,11 +44,7 @@ public class HistoryActivity extends AppCompatActivity {
         tvCity = findViewById(R.id.tvCity);
         tvCity.setText((String)getIntent().getSerializableExtra(EXTRA_HISTORY));
 
-        boolean isNotRestored = true;
-        if(savedInstanceState != null) {
-            String city = savedInstanceState.getString(CITY);
-            isNotRestored = !(city.equals(tvCity.getText()));
-        }
+        boolean isNotRestored = !lastCity.equals(tvCity.getText());
 
         boolean isPortrate =
                 getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
@@ -69,9 +66,13 @@ public class HistoryActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(outState != null) {
-            outState.putString(CITY, tvCity.getText().toString());
-        }
+        saveLastCity();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveLastCity();
     }
 
     @Override
@@ -95,5 +96,9 @@ public class HistoryActivity extends AppCompatActivity {
                 default:
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void saveLastCity() {
+        lastCity = tvCity.getText().toString();
     }
 }
