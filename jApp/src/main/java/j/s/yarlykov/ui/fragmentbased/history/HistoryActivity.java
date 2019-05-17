@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,23 +22,32 @@ public class HistoryActivity extends AppCompatActivity {
 
     private static final String EXTRA_HISTORY =
             HistoryActivity.class.getSimpleName() + ".extra.HISTORY";
+    private static final String CITY = "CITY";
 
-    public static final int WEEK = 7;
+    public static final int DAYS = 3;
 
     public static void start(Context context, String city) {
-
         Intent intent = new Intent(context, HistoryActivity.class);
         intent.putExtra(EXTRA_HISTORY, city);
         context.startActivity(intent);
     }
+
+    RecyclerView rvHistory;
+    TextView tvCity;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        TextView tvCity = findViewById(R.id.tvCity);
+        tvCity = findViewById(R.id.tvCity);
         tvCity.setText((String)getIntent().getSerializableExtra(EXTRA_HISTORY));
+
+        boolean isNotRestored = true;
+        if(savedInstanceState != null) {
+            String city = savedInstanceState.getString(CITY);
+            isNotRestored = !(city.equals(tvCity.getText()));
+        }
 
         boolean isPortrate =
                 getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
@@ -46,15 +56,27 @@ public class HistoryActivity extends AppCompatActivity {
                 isPortrate ? new LinearLayoutManager(this) :
                         new GridLayoutManager(this, 2);
 
-        RecyclerView rvHistory = findViewById(R.id.rvHistory);
+        rvHistory = findViewById(R.id.rvHistory);
         rvHistory.setHasFixedSize(true);
         rvHistory.setLayoutManager(orientationCompatibleLayoutManager);
-        rvHistory.setAdapter(new HistoryRVAdapter(HistoryProvider.build(this, WEEK)));
+        rvHistory.setItemAnimator(new DefaultItemAnimator());
+        rvHistory.setAdapter(new HistoryRVAdapter(HistoryProvider.build(
+                this,
+                DAYS,
+                isNotRestored)));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(outState != null) {
+            outState.putString(CITY, tvCity.getText().toString());
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.history, menu);
         return true;
     }
 
@@ -63,6 +85,12 @@ public class HistoryActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.actionAbout:
                 InfoActivityFr.start(this);
+                break;
+            case R.id.actionAdd:
+                HistoryProvider.oneMoreDay(this);
+                try {
+                    rvHistory.getAdapter().notifyDataSetChanged();
+                } catch (NullPointerException e) {e.printStackTrace();}
                 break;
                 default:
         }

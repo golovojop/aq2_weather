@@ -12,24 +12,42 @@ import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.History;
 import j.s.yarlykov.util.Utils;
 
-
 public class HistoryProvider {
     private HistoryProvider() {}
 
-    public static List<History> build(Context context, int days) {
-        List<History> list = new ArrayList<>();
-        Date today = new Date();
+    private static List<History> listHistory = new ArrayList<>();
 
+    /**
+     * Генерит прогноз за последние daysAgo дней.
+     *
+     * @isNeedNew - определяет нужно ли генерить новый массив данных
+     * или вернуть имеющийся. Нужен для случаев восстановления активити
+     * с тем же городом.
+     */
+    public static List<History> build(Context context, int days, boolean isNeedNew) {
+
+        if(!isNeedNew) return listHistory;
+
+        listHistory.clear();
+        Date today = new Date();
         TypedArray images = context.getResources().obtainTypedArray(R.array.historyLogos);
 
         for(int i = 1; i <= days; i++) {
-            list.add(new History(Utils.daysAgo(today, i),
+            listHistory.add(new History(Utils.daysAgo(today, i),
                     String.format("%s\u2103 ~ %s\u2103", tDay(), tNight()),
                     images.getResourceId(inRange(0, images.length() - 1), 0)));
         }
 
         images.recycle();
-        return list;
+        return listHistory;
+    }
+
+    // Прогноз ещё на один день
+    public static void oneMoreDay(Context context) {
+        TypedArray images = context.getResources().obtainTypedArray(R.array.historyLogos);
+        listHistory.add(new History(Utils.daysAgo(new Date(), listHistory.size() + 1),
+                String.format("%s\u2103 ~ %s\u2103", tDay(), tNight()),
+                images.getResourceId(inRange(0, images.length() - 1), 0)));
     }
 
     // Дневная температура

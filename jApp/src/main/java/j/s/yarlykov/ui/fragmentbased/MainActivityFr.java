@@ -1,5 +1,6 @@
 package j.s.yarlykov.ui.fragmentbased;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -31,5 +32,28 @@ public class MainActivityFr extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(menu != null) {
+            cleanUpMenu(menu, R.id.actionWeek);
+        }
+        return true;
+    }
+
+    // Метод требуется для того, чтобы убрать ненужные меню
+    // при портретной ориентации.
+    private void cleanUpMenu(Menu menu, int ... items) {
+        boolean isPortrait = getResources().getConfiguration().orientation ==
+                Configuration.ORIENTATION_PORTRAIT;
+        if(isPortrait) {
+            invalidateOptionsMenu();
+            for(int item : items) {
+                try {
+                    menu.findItem(item).setVisible(false);
+                } catch (NullPointerException e) {e.printStackTrace();}
+            }
+        }
     }
 }
