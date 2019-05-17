@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
@@ -18,7 +20,8 @@ class HistoryActivity : AppCompatActivity() {
     companion object {
 
         private val EXTRA_HISTORY = HistoryActivity::class.java.simpleName + ".extra.HISTORY"
-        private val WEEK = 7
+        private val DAYS = 3
+        private val CITY = "CITY"
 
         fun start(context: Context, city: String) {
             val intent = Intent(context, HistoryActivity::class.java).apply {
@@ -34,6 +37,13 @@ class HistoryActivity : AppCompatActivity() {
 
         tvCity.text = intent.getSerializableExtra(EXTRA_HISTORY) as String
 
+        var isNotRestored = true
+
+        savedInstanceState?.let {
+            val city = it.getString(CITY)
+            isNotRestored = !city.equals(tvCity.text)
+        }
+
         val orientationCompatibleLayoutManager = when(resources.configuration.orientation) {
             Configuration.ORIENTATION_PORTRAIT -> LinearLayoutManager(this@HistoryActivity)
             else -> GridLayoutManager(this@HistoryActivity, 2)
@@ -42,12 +52,19 @@ class HistoryActivity : AppCompatActivity() {
         rvHistory.apply {
             setHasFixedSize(true)
             layoutManager = orientationCompatibleLayoutManager
-            adapter = HistoryRVAdapter(HistoryProvider.build(this@HistoryActivity, WEEK))
+            adapter = HistoryRVAdapter(HistoryProvider.build(this@HistoryActivity, DAYS, isNotRestored))
+            itemAnimator = DefaultItemAnimator()
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString(CITY, tvCity.text as String)
+    }
+
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
+        menuInflater.inflate(R.menu.history, menu)
         return true
     }
 
@@ -56,6 +73,10 @@ class HistoryActivity : AppCompatActivity() {
             R.id.actionAbout -> {
                 InfoActivityFr.start(this)
                 return true
+            }
+            R.id.actionAdd -> {
+                HistoryProvider.oneMoreDay(this@HistoryActivity)
+                rvHistory.adapter?.notifyDataSetChanged()
             }
         }
         return super.onOptionsItemSelected(item)

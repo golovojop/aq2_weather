@@ -19,10 +19,11 @@
     <string name="about">О программе</string>
     <string name="version">Версия</string>
 
-    <string name="weekForecast">\u25C0 7 дней</string>
-
+    <string name="weekForecast">\u25C0 Вчера</string>
     <string name="today">Сегодня</string>
-    <string name="last_week">За неделю</string>
+    <string name="last_week">Прошлые дни</string>
+    <string name="addHistory">Добавить</string>
+
 
     <string-array name="cities">
         <item>Москва</item>

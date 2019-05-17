@@ -25,10 +25,10 @@
     <string name="about">About</string>
     <string name="version">Version</string>
 
-    <string name="weekForecast">\u25C0 7 days</string>
+    <string name="weekForecast">\u25C0 Yesterday</string>
     <string name="today">Today</string>
-    <string name="last_week">Last week</string>
-
+    <string name="last_week">Past days</string>
+    <string name="addHistory">Add</string>
 
     <string-array name="cities">
         <item>Moscow</item>
