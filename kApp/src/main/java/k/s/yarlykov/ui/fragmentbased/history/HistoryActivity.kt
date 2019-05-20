@@ -33,6 +33,8 @@ class HistoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
+        setSupportActionBar(toolbar)
+        supportActionBar?.hide()
 
         tvCity.text = intent.getSerializableExtra(EXTRA_HISTORY) as String
 
@@ -48,6 +50,11 @@ class HistoryActivity : AppCompatActivity() {
             layoutManager = orientationCompatibleLayoutManager
             adapter = HistoryRVAdapter(HistoryProvider.build(this@HistoryActivity, DAYS, isNotRestored))
             itemAnimator = DefaultItemAnimator()
+        }
+
+        fab.setOnClickListener {
+            HistoryProvider.oneMoreDay(this@HistoryActivity)
+            rvHistory.adapter?.notifyDataSetChanged()
         }
     }
 

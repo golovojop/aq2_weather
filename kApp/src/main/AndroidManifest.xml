@@ -20,7 +20,8 @@
         <activity android:name=".ui.MainActivity" />
         <activity android:name=".ui.fragmentbased.ForecastActivityFr" />
         <activity android:name=".ui.fragmentbased.InfoActivityFr" />
-        <activity android:name=".ui.fragmentbased.history.HistoryActivity" />
+        <activity android:name=".ui.fragmentbased.history.HistoryActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
