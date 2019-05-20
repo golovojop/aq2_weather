@@ -8,7 +8,7 @@ import java.util.*
 
 object HistoryProvider {
 
-    private val listHistory = arrayListOf<History>()
+    private val listHistory = mutableListOf<History>()
 
     //
 

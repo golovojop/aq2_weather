@@ -21,7 +21,7 @@
 
     <string name="weekForecast">\u25C0 Вчера</string>
     <string name="today">Сегодня</string>
-    <string name="last_week">Прошлые дни</string>
+    <string name="last_week">Архив погоды</string>
     <string name="addHistory">Добавить</string>
 
 

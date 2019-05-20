@@ -16,4 +16,12 @@
         <item>@drawable/h_sun</item>
     </integer-array>
 
+    <integer-array name="historyBg">
+        <item>@drawable/h1_bg</item>
+        <item>@drawable/h2_bg</item>
+        <item>@drawable/h3_bg</item>
+        <item>@drawable/h4_bg</item>
+        <item>@drawable/h5_bg</item>
+    </integer-array>
+
 </resources>
