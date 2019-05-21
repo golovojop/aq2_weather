@@ -29,7 +29,6 @@ class HistoryActivity : AppCompatActivity() {
         private val EXTRA_HISTORY = HistoryActivity::class.java.simpleName + ".extra.HISTORY"
         private val DAYS = 3
         private var lastCity = ""
-        private var lastBgIdx = 0
 
         fun start(context: Context, city: String) {
             val intent = Intent(context, HistoryActivity::class.java).apply {

@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 public class Utils {
 
@@ -30,6 +31,10 @@ public class Utils {
             sb.append(" ");
         }
         return sb.toString().trim();
+    }
+
+    public static int posRandom(int until) {
+        return new Random().nextInt(Math.abs(until - 1));
     }
 
     // Получить дату в формате "dd/MM" на days дней назад
