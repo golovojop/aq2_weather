@@ -52,7 +52,6 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-
         tvCity = findViewById(R.id.tvCity);
         tvCity.setText((String)getIntent().getSerializableExtra(EXTRA_HISTORY));
 
@@ -82,6 +81,7 @@ public class HistoryActivity extends AppCompatActivity {
                 DAYS,
                 isNotRestored)));
 
+        // Обработчик нажатия на FAB
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +92,6 @@ public class HistoryActivity extends AppCompatActivity {
                 } catch (NullPointerException e) {e.printStackTrace();}
             }
         });
-
     }
 
     @Override
