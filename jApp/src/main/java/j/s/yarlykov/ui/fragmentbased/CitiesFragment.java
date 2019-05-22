@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -37,6 +38,11 @@ public class CitiesFragment extends ListFragment {
 
     private final String KEY_IMAGE_ID = "image";
     private final String KEY_CITY = "city";
+
+    public static CitiesFragment create() {
+        CitiesFragment fragment = new CitiesFragment();
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -137,4 +143,5 @@ public class CitiesFragment extends ListFragment {
             ForecastActivityFr.start(getContext(), forecast);
         }
     }
+
 }

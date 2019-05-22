@@ -1,5 +1,7 @@
 package j.s.yarlykov.ui.fragmentbased;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,7 @@ public class MainActivityFr extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbarDrawer));
+        renderLeftFragment(CitiesFragment.create());
     }
 
     @Override
@@ -59,5 +62,10 @@ public class MainActivityFr extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void renderLeftFragment(Fragment fragment){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.citiesContainer, fragment).commit();
     }
 }
