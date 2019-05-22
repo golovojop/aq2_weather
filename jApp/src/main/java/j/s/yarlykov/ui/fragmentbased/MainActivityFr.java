@@ -3,6 +3,7 @@ package j.s.yarlykov.ui.fragmentbased;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,7 +13,8 @@ public class MainActivityFr extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_fr);
+        setContentView(R.layout.activity_main_drawer);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbarDrawer));
     }
 
     @Override
@@ -28,7 +30,7 @@ public class MainActivityFr extends AppCompatActivity {
             case R.id.actionAbout:
                 InfoActivityFr.start(this);
                 return true;
-                default:
+            default:
         }
 
         return super.onOptionsItemSelected(item);
@@ -36,7 +38,7 @@ public class MainActivityFr extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(menu != null) {
+        if (menu != null) {
             cleanUpMenu(menu, R.id.actionWeek);
         }
         return true;
@@ -44,15 +46,17 @@ public class MainActivityFr extends AppCompatActivity {
 
     // Метод требуется для того, чтобы убрать ненужные меню
     // при портретной ориентации.
-    private void cleanUpMenu(Menu menu, int ... items) {
+    private void cleanUpMenu(Menu menu, int... items) {
         boolean isPortrait = getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_PORTRAIT;
-        if(isPortrait) {
+        if (isPortrait) {
             invalidateOptionsMenu();
-            for(int item : items) {
+            for (int item : items) {
                 try {
                     menu.findItem(item).setVisible(false);
-                } catch (NullPointerException e) {e.printStackTrace();}
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
