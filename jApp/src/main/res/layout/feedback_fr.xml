@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="48dp"
+    android:paddingEnd="48dp">
+
+    <TextView
+        android:layout_marginTop="176dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:text="@string/feedBackInvitation"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/etMessage"
+        android:hint="@string/feedBackMessageHint"
+        tool:hint="@string/feedBackMessageHint"
+        android:layout_marginTop="24dp"
+        android:gravity="left|top"
+        android:background="@drawable/tv_border"
+        android:layout_width="match_parent"
+        android:layout_height="128dp" />
+
+    <EditText
+        android:id="@+id/etName"
+        android:background="@drawable/tv_border"
+        android:hint="@string/feedBackNameHint"
+        tool:hint="@string/feedBackNameHint"
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:background="@drawable/tv_border"
+        android:hint="@string/feedBackEmailHint"
+        tool:hint="@string/feedBackEmailHint"
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="end"
+        android:text="@string/feedBackSend"
+        tool:text="@string/feedBackSend"
+        android:textColor="@android:color/white"
+        android:background="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

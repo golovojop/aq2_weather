@@ -24,6 +24,16 @@
     <string name="last_week">Архив погоды</string>
     <string name="addHistory">Добавить</string>
 
+    <!-- Feedback Form -->
+    <string name="feedBackInvitation">Оставьте свое сообщение и мы обязательно ответим</string>
+    <string name="feedBackMessageHint">Ваше сообщение*</string>
+    <string name="feedBackNameHint">Ваше имя*</string>
+    <string name="feedBackEmailHint">Ваш Email**</string>
+    <string name="feedBackSend">ОТПРАВИТЬ</string>
+
+    <!-- Developer Info -->
+    <string name="student">Студент GeekBrains</string>
+
     <string-array name="cities">
         <item>Москва</item>
         <item>Санкт Петербург</item>
