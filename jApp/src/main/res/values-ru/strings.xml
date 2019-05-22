@@ -25,7 +25,7 @@
     <string name="addHistory">Добавить</string>
 
     <!-- Feedback Form -->
-    <string name="feedBackInvitation">Оставьте свое сообщение и мы обязательно ответим</string>
+    <string name="feedBackInvitation">Оставьте свой отзыв</string>
     <string name="feedBackMessageHint">Ваше сообщение*</string>
     <string name="feedBackNameHint">Ваше имя*</string>
     <string name="feedBackEmailHint">Ваш Email**</string>

@@ -31,14 +31,17 @@
     <string name="addHistory">Add</string>
 
     <!-- Feedback Form -->
-    <string name="feedBackInvitation">Type your message and we will contact you shortly</string>
+    <string name="feedBackInvitation">Type your feedback here</string>
     <string name="feedBackMessageHint">Your message*</string>
     <string name="feedBackNameHint">Your name*</string>
     <string name="feedBackEmailHint">Your email*</string>
-    <string name="feedBackSend">SEND</string>
+    <string name="feedBackSend">POST</string>
 
     <!-- Developer Info -->
     <string name="student">GeekBrains Student</string>
+
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
     <string-array name="cities">
         <item>Moscow</item>
