@@ -20,11 +20,15 @@ class MainActivityFr : AppCompatActivity() {
         setContentView(R.layout.activity_main_drawer)
         setSupportActionBar(toolbarDrawer)
 
-        val tvText = navView.getHeaderView(0).findViewById<TextView>(R.id.appWeather)
-
+        // Градиент текста в заголовке Drawer
         val shader = LinearGradient(0f, 0f, 512f, 64f,
                 Color.WHITE, Color.BLUE, Shader.TileMode.REPEAT)
-        tvText?.paint?.shader = shader
+        navView.getHeaderView(0).findViewById<TextView>(R.id.appWeather)?.apply {
+            paint?.shader = shader
+        }
+
+//        val tvText = navView.getHeaderView(0).findViewById<TextView>(R.id.appWeather)
+//        tvText?.paint?.shader = shader
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

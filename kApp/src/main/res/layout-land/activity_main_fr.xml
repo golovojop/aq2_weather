@@ -5,10 +5,12 @@
     <fragment
         android:layout_width="0px"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_weight="1"
         android:name="k.s.yarlykov.ui.fragmentbased.CitiesFragment"
         android:id="@+id/cities"/>
     <FrameLayout
+        android:layout_marginTop="?attr/actionBarSize"
         android:id="@+id/forecastContainer"
         android:layout_width="0px"
         android:layout_height="match_parent"
