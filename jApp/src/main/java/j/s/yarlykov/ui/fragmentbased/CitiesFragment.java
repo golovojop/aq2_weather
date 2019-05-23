@@ -13,12 +13,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -138,12 +136,11 @@ public class CitiesFragment extends ListFragment {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.forecastContainer, forecastFragment);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack(String.format("%s", forecastFragment.hashCode()));
+                ft.addToBackStack(null);
                 ft.commit();
             }
         } else {
             ForecastActivityFr.start(getContext(), forecast);
         }
     }
-
 }
