@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,7 @@ public class CitiesFragment extends ListFragment {
 
         if(isLandscape){
             listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            listView.setItemChecked(selectedPosition, true);
             showForecast();
         }
     }

@@ -3,6 +3,7 @@ package j.s.yarlykov.ui.fragmentbased;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -23,15 +25,34 @@ import j.s.yarlykov.R;
 public class MainActivityFr extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    boolean isLandscape;
+    LinearLayout layoutWeather;
+    FrameLayout layoutAux = null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
 
+        isLandscape = getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE;
+
+        // Контейнеры для вывода различных фрагментов
+        // layoutWeather - для фрагментов с погодой
+        // layoutAux - для фрагментов из SideMenu
+        if (isLandscape) {
+            layoutWeather = findViewById(R.id.layoutWeather);
+            layoutAux = findViewById(R.id.layoutAux);
+        }
+
         Toolbar toolbar = findViewById(R.id.toolbarDrawer);
         setSupportActionBar(toolbar);
         initSideMenu(toolbar);
-        renderLeftFragment(CitiesFragment.create());
+
+        if (savedInstanceState == null) {
+            renderWindow(CitiesFragment.create());
+        }
     }
 
     @Override
@@ -66,15 +87,13 @@ public class MainActivityFr extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if(isLandscape && layoutWeather.getVisibility() != View.VISIBLE) {
+            layoutAux.setVisibility(View.GONE);
+            layoutWeather.setVisibility(View.VISIBLE);
         } else {
-
-            List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
-            for(Fragment f : fragmentList) {
-                if(f instanceof FeedbackFragment || f instanceof DevInfoFragment) {
-                    FrameLayout rightContainer = findViewById(R.id.forecastContainer);
-                    if(rightContainer != null) rightContainer.setVisibility(View.VISIBLE);
-                }
-            }
+            // Очистить back stack
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             super.onBackPressed();
         }
     }
@@ -86,13 +105,13 @@ public class MainActivityFr extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.nav_send:
-                renderLeftFragment(FeedbackFragment.create());
+            case R.id.nav_feedback:
+                renderWindow(FeedbackFragment.create());
                 break;
-            case R.id.nav_slideshow:
-                renderLeftFragment(DevInfoFragment.create());
+            case R.id.nav_developer:
+                renderWindow(DevInfoFragment.create());
                 break;
-                default:
+            default:
 
         }
 
@@ -129,27 +148,25 @@ public class MainActivityFr extends AppCompatActivity
     }
 
     // Отрисовать фрагменты
-    private void renderLeftFragment(Fragment leftFragment){
+    private void renderWindow(Fragment leftFragment) {
 
-        boolean isLandscape = getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_LANDSCAPE;
-
-        FrameLayout rightContainer = findViewById(R.id.forecastContainer);
         Fragment rightFragment = getSupportFragmentManager().findFragmentById(R.id.forecastContainer);
-
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-        if(isLandscape && rightFragment != null) {
+        if (isLandscape && rightFragment != null) {
 
             // Если прилетел фрагмент со списком городов,
-            // то сделать видимым правы фрагмент с прогнозом
-            if(leftFragment instanceof CitiesFragment) {
+            // то сделать видимым макет для погоды и поместить
+            // в него фрагмент
+            if (leftFragment instanceof CitiesFragment) {
+                layoutAux.setVisibility(View.GONE);
+                layoutWeather.setVisibility(View.VISIBLE);
                 ft.replace(R.id.citiesContainer, leftFragment);
-                rightContainer.setVisibility(View.VISIBLE);
-                // Иначе скрыть правый фрагмент и отрисовать на весь экран новый фрагмент
+                // Иначе сделать видимым макет для доп фрагментов
             } else {
-                rightContainer.setVisibility(View.GONE);
-                ft.replace(R.id.citiesContainer, leftFragment);
+                layoutWeather.setVisibility(View.GONE);
+                layoutAux.setVisibility(View.VISIBLE);
+                ft.replace(R.id.layoutAux, leftFragment);
             }
         } else {
             ft.replace(R.id.citiesContainer, leftFragment);
