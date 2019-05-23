@@ -3,25 +3,39 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <FrameLayout
-        android:id="@+id/citiesContainer"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:layout_width="0px"
-        android:layout_weight="1"
-        android:layout_height="match_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <!--<fragment-->
-        <!--android:layout_width="0px"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_marginTop="?attr/actionBarSize"-->
-        <!--android:layout_weight="1"-->
-        <!--android:name="j.s.yarlykov.ui.fragmentbased.CitiesFragment"-->
-        <!--android:id="@+id/cities"/>-->
-    <FrameLayout
-        android:layout_marginTop="?attr/actionBarSize"
-        android:id="@+id/forecastContainer"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/layoutWeather"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/citiesContainer"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:layout_width="0px"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+            <FrameLayout
+                android:layout_marginTop="?attr/actionBarSize"
+                android:id="@+id/forecastContainer"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/layoutAux"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </FrameLayout>
+
+    </FrameLayout>
+
 </LinearLayout>

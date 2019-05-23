@@ -11,11 +11,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <!--<fragment-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_marginTop="?attr/actionBarSize"-->
-        <!--android:name="j.s.yarlykov.ui.fragmentbased.CitiesFragment"-->
-        <!--android:id="@+id/cities"/>-->
 </LinearLayout>
 
