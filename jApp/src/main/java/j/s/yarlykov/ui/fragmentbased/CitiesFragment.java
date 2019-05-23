@@ -27,6 +27,7 @@ import java.util.Map;
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.data.provider.ForecastProvider;
+import j.s.yarlykov.util.Utils;
 
 public class CitiesFragment extends ListFragment {
 
@@ -45,12 +46,17 @@ public class CitiesFragment extends ListFragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
+        Utils.logI(this, "onCreateView");
         return inflater.inflate(R.layout.cities_list_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Utils.logI(this, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         listView = getListView();
         initList();
@@ -58,6 +64,7 @@ public class CitiesFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        Utils.logI(this, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
 
         isLandscape = getResources().getConfiguration().orientation
@@ -76,6 +83,7 @@ public class CitiesFragment extends ListFragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+        Utils.logI(this, "onSaveInstanceState");
         outState.putInt(selectedPositionKey, selectedPosition);
         super.onSaveInstanceState(outState);
     }
@@ -117,6 +125,7 @@ public class CitiesFragment extends ListFragment {
     }
 
     private void showForecast(){
+        Utils.logI(this, "showForecast");
         ForecastProvider provider = ForecastProvider.getInstance();
 
         String citySelected = getResources().getStringArray(R.array.cities)[selectedPosition];
@@ -125,16 +134,17 @@ public class CitiesFragment extends ListFragment {
                 provider.getForecastByIndex(selectedPosition));
 
         if(isLandscape) {
+            getActivity().findViewById(R.id.rightFrame).setVisibility(View.VISIBLE);
             listView.setItemChecked(selectedPosition, true);
 
             ForecastFragment forecastFragment = (ForecastFragment)getFragmentManager()
-                    .findFragmentById(R.id.forecastContainer);
+                    .findFragmentById(R.id.rightFrame);
 
             if(forecastFragment == null || forecastFragment.getIndex() != selectedPosition) {
                 forecastFragment = ForecastFragment.create(selectedPosition, forecast);
 
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.forecastContainer, forecastFragment);
+                ft.replace(R.id.rightFrame, forecastFragment);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
                 ft.commit();

@@ -1,26 +1,20 @@
 package j.s.yarlykov.ui.fragmentbased;
 
+import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.content.res.Configuration;
-import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-
-import java.lang.reflect.Constructor;
-import java.util.List;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.util.Utils;
@@ -28,17 +22,19 @@ import j.s.yarlykov.util.Utils;
 public class MainActivityFr extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    FrameLayout leftFrame, rightFrame;
+
     boolean isLandscape;
-    LinearLayout layoutWeather;
-    FrameLayout layoutAux = null;
-    String lastFragment = null;
     private static final String F_KEY = "F_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.logI(this, "onCreate. savedInstanceState is null: " + (savedInstanceState == null));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
+
+        leftFrame = findViewById(R.id.leftFrame);
 
         isLandscape = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
@@ -47,10 +43,8 @@ public class MainActivityFr extends AppCompatActivity
         // layoutWeather - для фрагментов с погодой
         // layoutAux - для фрагментов из SideMenu
         if (isLandscape) {
-            layoutWeather = findViewById(R.id.layoutWeather);
-            layoutAux = findViewById(R.id.layoutAux);
-            layoutAux.setVisibility(View.GONE);
-            layoutWeather.setVisibility(View.VISIBLE);
+            rightFrame = findViewById(R.id.rightFrame);
+//            layoutWeather = findViewById(R.id.layoutWeather);
         }
 
         Toolbar toolbar = findViewById(R.id.toolbarDrawer);
@@ -59,21 +53,22 @@ public class MainActivityFr extends AppCompatActivity
 
         if (savedInstanceState == null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.citiesContainer, CitiesFragment.create(), CitiesFragment.class.getCanonicalName()).commit();
-            lastFragment = CitiesFragment.class.getCanonicalName();
+            ft.add(R.id.leftFrame, CitiesFragment.create(),
+                    CitiesFragment.class.getCanonicalName()).commit();
         } else {
             String fName = savedInstanceState.getString(F_KEY);
-            Utils.logI(this, "onCreate: " + fName);
-            if(fName != null && !fName.equals(CitiesFragment.class.getSimpleName())) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            Utils.logI(this, "onCreate: saved fragment is " + fName);
 
-                try {
-                    Class<?> c = Class.forName(fName);
-                    Constructor<?> cons = c.getConstructors()[0];
-                    lastFragment = fName;
-                    renderWindow((Fragment)cons.newInstance());
-                } catch (Exception e) {e.printStackTrace();}
+            // Если сохраняли имя класса фрагмента, и оно не "CitiesFragment",
+            // то скрыть правую панель. Далее система сама восстановит последний
+            // фрагмент в левой панели и он займет все окно.
+            //
+            // Если fName == "CitiesFragment", то система восстановит его в левой панели
+            // а в процессе запуска он сделает видимой правую панель.
+            if (fName != null
+                    && !fName.equals(CitiesFragment.class.getCanonicalName())
+                    && isLandscape) {
+                    rightFrame.setVisibility(View.GONE);
             }
         }
     }
@@ -108,16 +103,11 @@ public class MainActivityFr extends AppCompatActivity
     @Override
     public void onBackPressed() {
         Utils.logI(this, "onBackPressed");
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if(isLandscape && layoutWeather.getVisibility() != View.VISIBLE) {
-            layoutAux.setVisibility(View.GONE);
-            layoutWeather.setVisibility(View.VISIBLE);
         } else {
-            // Очистить back stack
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             super.onBackPressed();
         }
     }
@@ -130,10 +120,10 @@ public class MainActivityFr extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_feedback:
-                renderWindow(FeedbackFragment.create());
+                renderFragment(FeedbackFragment.create());
                 break;
             case R.id.nav_developer:
-                renderWindow(DevInfoFragment.create());
+                renderFragment(DevInfoFragment.create());
                 break;
             default:
 
@@ -173,42 +163,78 @@ public class MainActivityFr extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(F_KEY, lastFragment);
+
+        // Будем сохранять фрагмент из левого контейнера. Потом по нему
+        // определим как отрисовать окно
+        Fragment fr = getSupportFragmentManager().findFragmentById(R.id.leftFrame);
+
+        if (fr != null) {
+            Utils.logI(this, "onSaveInstanceState: "
+                    + fr.getClass().getCanonicalName());
+            outState.putString(F_KEY, fr.getClass().getCanonicalName());
+        } else {
+            Utils.logI(this, "onSaveInstanceState");
+        }
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onDestroy() {
         Utils.logI(this, "onDestroy");
-
         super.onDestroy();
     }
 
     // Отрисовать фрагменты
-    private void renderWindow(Fragment leftFragment) {
+    private void renderFragment(Fragment leftFragment) {
         Utils.logI(this, "renderWindow " + leftFragment.getClass().getCanonicalName());
-        lastFragment = leftFragment.getClass().getCanonicalName();
-        Fragment rightFragment = getSupportFragmentManager().findFragmentById(R.id.forecastContainer);
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         if (isLandscape) {
-            // Если прилетел фрагмент со списком городов,
-            // то сделать видимым макет для погоды и поместить
-            // в него фрагмент
+            // Если прилетел фрагмент со списком городов, то сделать
+            // видимым правый фрейм и для вывода фрагмента с прогнозом по городу
             if (leftFragment instanceof CitiesFragment) {
-                layoutAux.setVisibility(View.GONE);
-                layoutWeather.setVisibility(View.VISIBLE);
-                ft.replace(R.id.citiesContainer, leftFragment, leftFragment.getClass().getCanonicalName());
-                // Иначе сделать видимым макет для доп фрагментов
+                ft.replace(R.id.leftFrame, leftFragment, leftFragment.getClass().getCanonicalName());
+
+                // Иначе сделать невидимым правый фрейм. Так освобождается место на экране
+                // для фрагментов получаемых от SideMenu
             } else {
-                layoutWeather.setVisibility(View.GONE);
-                layoutAux.setVisibility(View.VISIBLE);
-                ft.replace(R.id.layoutAux, leftFragment, leftFragment.getClass().getCanonicalName());
+                rightFrame.setVisibility(View.GONE);
+                ft.replace(R.id.leftFrame, leftFragment, leftFragment.getClass().getCanonicalName());
             }
         } else {
-            ft.replace(R.id.citiesContainer, leftFragment, leftFragment.getClass().getCanonicalName());
+            ft.replace(R.id.leftFrame, leftFragment, leftFragment.getClass().getCanonicalName());
         }
 
         ft.addToBackStack(null).commit();
     }
+
+//    // Отрисовать фрагменты
+//    private void renderWindow(Fragment leftFragment) {
+//        Utils.logI(this, "renderWindow " + leftFragment.getClass().getCanonicalName());
+//        lastFragment = leftFragment.getClass().getCanonicalName();
+//        Fragment rightFragment = getSupportFragmentManager().findFragmentById(R.id.forecastContainer);
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//
+//        if (isLandscape) {
+//            // Если прилетел фрагмент со списком городов,
+//            // то сделать видимым макет для погоды и поместить
+//            // в него фрагмент
+//            if (leftFragment instanceof CitiesFragment) {
+//                layoutAux.setVisibility(View.GONE);
+//                layoutWeather.setVisibility(View.VISIBLE);
+//                ft.replace(R.id.citiesContainer, leftFragment, leftFragment.getClass().getCanonicalName());
+//                // Иначе сделать видимым макет для доп фрагментов
+//            } else {
+//                layoutWeather.setVisibility(View.GONE);
+//                layoutAux.setVisibility(View.VISIBLE);
+//                ft.replace(R.id.layoutAux, leftFragment, leftFragment.getClass().getCanonicalName());
+//            }
+//        } else {
+//            ft.replace(R.id.citiesContainer, leftFragment, leftFragment.getClass().getCanonicalName());
+//        }
+//
+//        ft.addToBackStack(null).commit();
+//    }
+
 }
