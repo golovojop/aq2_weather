@@ -31,12 +31,9 @@ public class MainActivityFr extends AppCompatActivity
     boolean isLandscape;
     LinearLayout layoutWeather;
     FrameLayout layoutAux = null;
-    String lastFragment = null;
-    private static final String F_KEY = "F_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Utils.logI(this, "onCreate. savedInstanceState is null: " + (savedInstanceState == null));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
 
@@ -57,25 +54,8 @@ public class MainActivityFr extends AppCompatActivity
         setSupportActionBar(toolbar);
         initSideMenu(toolbar);
 
-        if (savedInstanceState == null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.citiesContainer, CitiesFragment.create(), CitiesFragment.class.getCanonicalName()).commit();
-            lastFragment = CitiesFragment.class.getCanonicalName();
-        } else {
-            String fName = savedInstanceState.getString(F_KEY);
-            Utils.logI(this, "onCreate: " + fName);
-            if(fName != null && !fName.equals(CitiesFragment.class.getSimpleName())) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-                try {
-                    Class<?> c = Class.forName(fName);
-                    Constructor<?> cons = c.getConstructors()[0];
-                    lastFragment = fName;
-                    renderWindow((Fragment)cons.newInstance());
-                } catch (Exception e) {e.printStackTrace();}
-            }
-        }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.citiesContainer, CitiesFragment.create(), CitiesFragment.class.getCanonicalName()).commit();
     }
 
     @Override
@@ -115,9 +95,6 @@ public class MainActivityFr extends AppCompatActivity
             layoutAux.setVisibility(View.GONE);
             layoutWeather.setVisibility(View.VISIBLE);
         } else {
-            // Очистить back stack
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             super.onBackPressed();
         }
     }
@@ -171,24 +148,8 @@ public class MainActivityFr extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(F_KEY, lastFragment);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onDestroy() {
-        Utils.logI(this, "onDestroy");
-
-        super.onDestroy();
-    }
-
     // Отрисовать фрагменты
     private void renderWindow(Fragment leftFragment) {
-        Utils.logI(this, "renderWindow " + leftFragment.getClass().getCanonicalName());
-        lastFragment = leftFragment.getClass().getCanonicalName();
-        Fragment rightFragment = getSupportFragmentManager().findFragmentById(R.id.forecastContainer);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         if (isLandscape) {
