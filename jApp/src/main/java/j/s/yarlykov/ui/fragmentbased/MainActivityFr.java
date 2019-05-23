@@ -22,10 +22,9 @@ import j.s.yarlykov.util.Utils;
 public class MainActivityFr extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    FrameLayout leftFrame, rightFrame;
-
-    boolean isLandscape;
     private static final String F_KEY = "F_KEY";
+    FrameLayout leftFrame, rightFrame;
+    boolean isLandscape;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +38,8 @@ public class MainActivityFr extends AppCompatActivity
         isLandscape = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
 
-        // Контейнеры для вывода различных фрагментов
-        // layoutWeather - для фрагментов с погодой
-        // layoutAux - для фрагментов из SideMenu
         if (isLandscape) {
             rightFrame = findViewById(R.id.rightFrame);
-//            layoutWeather = findViewById(R.id.layoutWeather);
         }
 
         Toolbar toolbar = findViewById(R.id.toolbarDrawer);
@@ -208,33 +203,5 @@ public class MainActivityFr extends AppCompatActivity
 
         ft.addToBackStack(null).commit();
     }
-
-//    // Отрисовать фрагменты
-//    private void renderWindow(Fragment leftFragment) {
-//        Utils.logI(this, "renderWindow " + leftFragment.getClass().getCanonicalName());
-//        lastFragment = leftFragment.getClass().getCanonicalName();
-//        Fragment rightFragment = getSupportFragmentManager().findFragmentById(R.id.forecastContainer);
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//
-//        if (isLandscape) {
-//            // Если прилетел фрагмент со списком городов,
-//            // то сделать видимым макет для погоды и поместить
-//            // в него фрагмент
-//            if (leftFragment instanceof CitiesFragment) {
-//                layoutAux.setVisibility(View.GONE);
-//                layoutWeather.setVisibility(View.VISIBLE);
-//                ft.replace(R.id.citiesContainer, leftFragment, leftFragment.getClass().getCanonicalName());
-//                // Иначе сделать видимым макет для доп фрагментов
-//            } else {
-//                layoutWeather.setVisibility(View.GONE);
-//                layoutAux.setVisibility(View.VISIBLE);
-//                ft.replace(R.id.layoutAux, leftFragment, leftFragment.getClass().getCanonicalName());
-//            }
-//        } else {
-//            ft.replace(R.id.citiesContainer, leftFragment, leftFragment.getClass().getCanonicalName());
-//        }
-//
-//        ft.addToBackStack(null).commit();
-//    }
 
 }
