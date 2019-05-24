@@ -16,12 +16,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import k.s.yarlykov.R
+import k.s.yarlykov.data.provider.SensorProvider
 import kotlinx.android.synthetic.main.activity_main_app_bar.*
 import kotlinx.android.synthetic.main.activity_main_drawer.*
 import kotlinx.android.synthetic.main.activity_main_fr.*
 
 class MainActivityFr : AppCompatActivity(),
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener, SensorsFragment.SensorsAdapter {
 
     val F_KEY = "F_KEY"
     var isLandscape: Boolean = false
@@ -95,6 +96,7 @@ class MainActivityFr : AppCompatActivity(),
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
 
         when (menuItem.itemId) {
+            R.id.nav_sensor -> renderFragment(SensorsFragment.create())
             R.id.nav_feedback -> renderFragment(FeedbackFragment.create())
             R.id.nav_developer -> renderFragment(DevInfoFragment.create())
         }
@@ -112,6 +114,8 @@ class MainActivityFr : AppCompatActivity(),
         }
         super.onSaveInstanceState(outState)
     }
+
+    override fun getSensorProvider(): SensorProvider = SensorProvider
 
     private fun initSideMenu(toolbar: Toolbar) {
 

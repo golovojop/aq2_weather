@@ -37,6 +37,7 @@
     <!-- Drawer menu-->
     <string name="feedBackMenu">Оставить отзыв</string>
     <string name="devMenu">О разработчике</string>
+    <string name="sensorMenu">Встроенные датчики</string>
 
     <string-array name="cities">
         <item>Москва</item>

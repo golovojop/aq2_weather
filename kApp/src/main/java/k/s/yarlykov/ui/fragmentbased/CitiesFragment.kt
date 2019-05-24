@@ -24,7 +24,9 @@ class CitiesFragment : ListFragment() {
     private var isLandscape: Boolean = false
     private var selectedPosition: Int = 0
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.cities_list_fragment, container, false)
     }
 
