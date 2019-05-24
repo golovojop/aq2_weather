@@ -46,6 +46,7 @@
     <!-- Drawer menu-->
     <string name="feedBackMenu">Feedback</string>
     <string name="devMenu">About developer</string>
+    <string name="sensorMenu">Embedded sensors</string>
 
     <string-array name="cities">
         <item>Moscow</item>

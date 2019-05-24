@@ -17,10 +17,11 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import j.s.yarlykov.R;
+import j.s.yarlykov.data.provider.SensorProvider;
 import j.s.yarlykov.util.Utils;
 
 public class MainActivityFr extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SensorsFragment.SensorsAdapter {
 
     private static final String F_KEY = "F_KEY";
     FrameLayout leftFrame, rightFrame;
@@ -96,7 +97,6 @@ public class MainActivityFr extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        Utils.logI(this, "onBackPressed");
 
         DrawerLayout drawer = findViewById(R.id.drawerLayout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -119,8 +119,10 @@ public class MainActivityFr extends AppCompatActivity
             case R.id.nav_developer:
                 renderFragment(DevInfoFragment.create());
                 break;
+            case R.id.nav_sensor:
+                renderFragment(SensorsFragment.create());
+                break;
             default:
-
         }
 
         DrawerLayout drawer = findViewById(R.id.drawerLayout);
@@ -138,6 +140,11 @@ public class MainActivityFr extends AppCompatActivity
             outState.putString(F_KEY, fr.getClass().getCanonicalName());
         }
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public SensorProvider getSensorProvider() {
+        return SensorProvider.SensorProviderFabric(this);
     }
 
     private void initSideMenu(Toolbar toolbar) {

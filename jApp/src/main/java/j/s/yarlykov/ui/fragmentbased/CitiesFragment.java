@@ -50,13 +50,11 @@ public class CitiesFragment extends ListFragment {
             @NonNull LayoutInflater inflater,
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        Utils.logI(this, "onCreateView");
         return inflater.inflate(R.layout.cities_list_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Utils.logI(this, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         listView = getListView();
         initList();
