@@ -52,7 +52,6 @@ public class MainActivityFr extends AppCompatActivity
                     CitiesFragment.class.getCanonicalName()).commit();
         } else {
             String fName = savedInstanceState.getString(F_KEY);
-            Utils.logI(this, "onCreate: saved fragment is " + fName);
 
             // Если сохраняли имя класса фрагмента, и оно не "CitiesFragment",
             // то скрыть правую панель. Далее система сама восстановит последний
@@ -99,7 +98,7 @@ public class MainActivityFr extends AppCompatActivity
     public void onBackPressed() {
         Utils.logI(this, "onBackPressed");
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -124,13 +123,25 @@ public class MainActivityFr extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        // Будем сохранять фрагмент из левого контейнера. Потом по нему
+        // определим как отрисовать окно
+        Fragment fr = getSupportFragmentManager().findFragmentById(R.id.leftFrame);
+        if (fr != null) {
+            outState.putString(F_KEY, fr.getClass().getCanonicalName());
+        }
+        super.onSaveInstanceState(outState);
+    }
+
     private void initSideMenu(Toolbar toolbar) {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navView);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -156,32 +167,9 @@ public class MainActivityFr extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-
-        // Будем сохранять фрагмент из левого контейнера. Потом по нему
-        // определим как отрисовать окно
-        Fragment fr = getSupportFragmentManager().findFragmentById(R.id.leftFrame);
-
-        if (fr != null) {
-            Utils.logI(this, "onSaveInstanceState: "
-                    + fr.getClass().getCanonicalName());
-            outState.putString(F_KEY, fr.getClass().getCanonicalName());
-        } else {
-            Utils.logI(this, "onSaveInstanceState");
-        }
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onDestroy() {
-        Utils.logI(this, "onDestroy");
-        super.onDestroy();
-    }
 
     // Отрисовать фрагменты
     private void renderFragment(Fragment leftFragment) {
-        Utils.logI(this, "renderWindow " + leftFragment.getClass().getCanonicalName());
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 

@@ -34,7 +34,6 @@
     <!-- Developer Info -->
     <string name="student">Студент GeekBrains</string>
 
-
     <!-- Drawer menu-->
     <string name="feedBackMenu">Оставить отзыв</string>
     <string name="devMenu">О разработчике</string>
