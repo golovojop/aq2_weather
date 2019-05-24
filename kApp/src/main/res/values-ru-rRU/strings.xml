@@ -24,6 +24,19 @@
     <string name="last_week">Архив погоды</string>
     <string name="addHistory">Добавить</string>
 
+    <!-- Feedback Form -->
+    <string name="feedBackInvitation">Оставьте свой отзыв</string>
+    <string name="feedBackMessageHint">Ваше сообщение*</string>
+    <string name="feedBackNameHint">Ваше имя*</string>
+    <string name="feedBackEmailHint">Ваш Email*</string>
+    <string name="feedBackSend">ОТПРАВИТЬ</string>
+
+    <!-- Developer Info -->
+    <string name="student">Студент GeekBrains</string>
+
+    <!-- Drawer menu-->
+    <string name="feedBackMenu">Оставить отзыв</string>
+    <string name="devMenu">О разработчике</string>
 
     <string-array name="cities">
         <item>Москва</item>
