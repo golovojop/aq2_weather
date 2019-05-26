@@ -7,6 +7,7 @@ package j.s.yarlykov.ui.fragmentbased;
 
 import android.content.Context;
 import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -23,33 +25,25 @@ import java.util.List;
 import java.util.Map;
 
 import j.s.yarlykov.R;
-import j.s.yarlykov.data.provider.SensorProvider;
 
 public class SensorsFragment extends Fragment {
-
-    public interface SensorsAdapter {
-        SensorProvider getSensorProvider();
-    }
 
     public static SensorsFragment create() {
         return new SensorsFragment();
     }
 
-    private SensorProvider sensorProvider = null;
+    SensorManager sensorManager = null;
     private ListView listView;
+    private List<Sensor> sensors;
 
     private final String KEY_IMAGE_ID = "image";
     private final String KEY_SENSOR = "sensor";
+    private int selectedPosition = 0;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
-            SensorsAdapter adapter = (SensorsAdapter) context;
-            sensorProvider = adapter.getSensorProvider();
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        }
+        sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
     }
 
     @Nullable
@@ -70,7 +64,7 @@ public class SensorsFragment extends Fragment {
 
     private void initList() {
         List<Map<String, Object>> data = new ArrayList<>();
-        List<Sensor> sensors = sensorProvider.getSensorsList();
+        sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
 
         for (int i = 0; i < sensors.size(); i++) {
             Map<String, Object> map = new HashMap<>();
@@ -89,5 +83,26 @@ public class SensorsFragment extends Fragment {
                 from,
                 to);
         listView.setAdapter(sAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedPosition = position;
+                showSensorInfo(sensors.get(position));
+            }
+        });
+    }
+
+    private void showSensorInfo(Sensor s) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Name: " + s.getName() + "\n");
+        sb.append("Type: " + s.getType() + "\n");
+        sb.append("Vendor: " + s.getVendor() + "\n");
+        sb.append("Version: " + s.getVersion() + "\n");
+
+        SensorInfoDialog dialog = SensorInfoDialog.create(sb.toString());
+        dialog.show(getChildFragmentManager(), null);
+
     }
 }

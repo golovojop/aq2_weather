@@ -7,9 +7,10 @@
     <string name="infoPressure">мм рт.ст.</string>
 
     <string name="yourCity">Ваш город</string>
-    <string name="headerWind">Ветер</string>
-    <string name="headerHumidity">Влажность</string>
-    <string name="headerPressure">Давление</string>
+    <string name="headerWind">Ветер:</string>
+    <string name="headerTemperature">Температура:</string>
+    <string name="headerHumidity">Влажность:</string>
+    <string name="headerPressure">Давление:</string>
 
     <string name="noData">добавьте в запрос</string>
 
@@ -38,6 +39,14 @@
     <string name="feedBackMenu">Оставить отзыв</string>
     <string name="devMenu">О разработчике</string>
     <string name="sensorMenu">Встроенные датчики</string>
+    <string name="temperatureMenu">Температура и влажность</string>
+
+    <!-- Sensors -->
+    <string name="sensorNotSupported">Нет сенсора</string>
+    <string name="sensorInfo">О сенсоре</string>
+
+    <!-- Dialog buttons-->
+    <string name="buttonClose">Закрыть</string>
 
     <string-array name="cities">
         <item>Москва</item>
