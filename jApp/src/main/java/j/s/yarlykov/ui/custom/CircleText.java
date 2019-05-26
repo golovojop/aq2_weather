@@ -9,11 +9,13 @@ import android.graphics.drawable.shapes.Shape;
 import android.util.AttributeSet;
 import android.view.View;
 
+import j.s.yarlykov.R;
+
 public class CircleText extends View {
 
-    private String text;
+    private String circleText;
+    private Path circlePath;
     private Paint paint;
-    private Path path;
 
     public CircleText(Context context) {
         super(context);
@@ -31,59 +33,43 @@ public class CircleText extends View {
     }
 
     private void init() {
-        this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        this.paint = new Paint();
         this.paint.setStrokeWidth(1);
-        this.paint.setTextSize(32);
-        this.path = new Path();
-        this.text = "GEEKBRAINS STUDENT";
+        this.paint.setTextSize(22);
+        this.paint.setAntiAlias(true);
+        this.paint.setColor(Color.DKGRAY);
+        this.circlePath = new Path();
+        this.circleText = getResources().getString(R.string.text_avatar).toUpperCase();
     }
-
 
     /**
      * https://startandroid.ru/ru/uroki/vse-uroki-spiskom/316-urok-143-risovanie-path.html
      * http://developer.alexanderklimov.ru/android/catshop/android.graphics.path.php
      * https://developer.android.com/reference/android/graphics/Canvas.html#drawTextOnPath(java.lang.String,%20android.graphics.Path,%20float,%20float,%20android.graphics.Paint)
-     * @param canvas
      */
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawARGB(0, 255, 255, 255);
-        float mRatioRadius = 0.5f;
+        int centerX = getWidth()/2;
+        int centerY = getHeight()/2;
+        int radius = Math.min(centerX, centerY);
 
-        // Размеры View
-        int width = getWidth();
-        int height = getHeight();
+        float textLength = paint.measureText(circleText);
 
-        if ((width == 0) || (height == 0)) {
-            return;
-        }
+        // Path.Direction.CCW - отсчет угла против часовой стрелки
+        circlePath.addCircle(centerX, centerY, radius, Path.Direction.CCW);
 
-        // Координаты центра
-        float x = (float) width / 2.0f;
-        float y = (float) height / 2.0f;
+        // Позиционирование текста внизу круга по центру
+        canvas.drawTextOnPath(circleText,
+                circlePath,
+                (float) (1.5f*Math.PI*radius) - textLength/2,
+                -5,
+                paint);
 
-        float radius;
-        if (width > height) {
-            radius = height * mRatioRadius;
-        } else {
-            radius = width * mRatioRadius;
-        }
-
-        path.reset();
-
-        // Определить форму и позицию контура
-        path.addCircle(x, y, radius * 1.1f, Path.Direction.CCW);
-
-        // Смещение центра
-        path.offset(0, 0);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.BLUE);
-        canvas.drawTextOnPath(text, path, 3.14f * radius, 0, paint);
-
+        // Отрисовка окружности
         paint.setStyle(Paint.Style.STROKE);
-        canvas.drawPath(path, paint);
+        canvas.drawPath(circlePath, paint);
     }
 }
