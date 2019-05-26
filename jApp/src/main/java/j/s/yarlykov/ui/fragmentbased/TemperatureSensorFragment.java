@@ -87,7 +87,6 @@ public class TemperatureSensorFragment extends Fragment implements SensorEventLi
                 break;
             case Sensor.TYPE_RELATIVE_HUMIDITY:
                 tvH.setText(String.valueOf(event.values[0]));
-
                 break;
             default:
 
