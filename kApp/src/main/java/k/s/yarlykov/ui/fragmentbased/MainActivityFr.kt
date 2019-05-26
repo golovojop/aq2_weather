@@ -99,6 +99,7 @@ class MainActivityFr : AppCompatActivity(),
             R.id.nav_sensor -> renderFragment(SensorsFragment.create())
             R.id.nav_feedback -> renderFragment(FeedbackFragment.create())
             R.id.nav_developer -> renderFragment(DevInfoFragment.create())
+            R.id.nav_temperature -> renderFragment(TemperatureSensorFragment.create())
         }
 
         drawerLayout.closeDrawer(GravityCompat.START)

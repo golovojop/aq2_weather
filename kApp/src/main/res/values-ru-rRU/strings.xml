@@ -49,7 +49,7 @@
     <string name="buttonClose">Закрыть</string>
 
     <!-- Custom View -->
-    <string name="text_avatar">Студент</string>
+    <string name="textAvatar">Студент</string>
 
     <string-array name="cities">
         <item>Москва</item>
