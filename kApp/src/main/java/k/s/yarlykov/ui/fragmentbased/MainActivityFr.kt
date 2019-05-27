@@ -14,11 +14,11 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
 import k.s.yarlykov.R
 import kotlinx.android.synthetic.main.activity_main_app_bar.*
 import kotlinx.android.synthetic.main.activity_main_drawer.*
-import kotlinx.android.synthetic.main.activity_main_fr.*
 
 class MainActivityFr : AppCompatActivity(),
         NavigationView.OnNavigationItemSelectedListener {
@@ -26,13 +26,21 @@ class MainActivityFr : AppCompatActivity(),
     val F_KEY = "F_KEY"
     var isLandscape: Boolean = false
 
+    private lateinit var leftFrame: FrameLayout
+    private lateinit var rightFrame: FrameLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_drawer)
+
+        leftFrame = findViewById(R.id.leftFrame)
+        isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        if(isLandscape) {
+            this.rightFrame = findViewById(R.id.rightFrame)
+        }
+
         setSupportActionBar(toolbarDrawer)
         initSideMenu(toolbarDrawer)
-
-        isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
         // Градиент текста в заголовке Drawer
         val shader = LinearGradient(0f, 0f, 512f, 64f,
@@ -56,7 +64,7 @@ class MainActivityFr : AppCompatActivity(),
             // а в процессе запуска он сделает видимой правую панель.
             fName?.let {
                 if (it != CitiesFragment::class.java.canonicalName && isLandscape) {
-                    rightFrame?.visibility = View.GONE
+                    rightFrame.visibility = View.GONE
                 }
             }
         }
@@ -149,7 +157,7 @@ class MainActivityFr : AppCompatActivity(),
                 // Иначе сделать невидимым правый фрейм. Так освобождается место на экране
                 // для фрагментов получаемых от SideMenu
             } else {
-                rightFrame?.visibility = View.GONE
+                rightFrame.visibility = View.GONE
                 ft.replace(R.id.leftFrame, leftFragment, leftFragment.javaClass.canonicalName)
             }
         } else {
@@ -158,5 +166,4 @@ class MainActivityFr : AppCompatActivity(),
 
         ft.addToBackStack(null).commit()
     }
-
 }
