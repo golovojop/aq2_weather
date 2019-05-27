@@ -1,11 +1,11 @@
 package j.s.yarlykov.ui.custom;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.drawable.shapes.Shape;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -16,28 +16,39 @@ public class CircleText extends View {
     private String circleText;
     private Path circlePath;
     private Paint paint;
+    private int color = Color.DKGRAY;
+    private int textZise = 24;
 
     public CircleText(Context context) {
         super(context);
-        init();
+        initView();
     }
 
     public CircleText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        initAttr(context, attrs);
+        initView();
     }
 
     public CircleText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        initAttr(context, attrs);
+        initView();
     }
 
-    private void init() {
+    private void initAttr(Context context , AttributeSet attrs) {
+        TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.CircleText);
+        setColor(attributes.getColor(R.styleable.CircleText_cv_Color, Color.DKGRAY));
+        setTextSize(attributes.getInt(R.styleable.CircleText_cv_TextSize, 22));
+        attributes.recycle();
+    }
+
+    private void initView() {
         this.paint = new Paint();
         this.paint.setStrokeWidth(1);
-        this.paint.setTextSize(22);
         this.paint.setAntiAlias(true);
-        this.paint.setColor(Color.DKGRAY);
+        this.paint.setColor(color);
+        this.paint.setTextSize(textZise);
         this.circlePath = new Path();
         this.circleText = getResources().getString(R.string.text_avatar).toUpperCase();
     }
@@ -71,5 +82,13 @@ public class CircleText extends View {
         // Отрисовка окружности
         paint.setStyle(Paint.Style.STROKE);
         canvas.drawPath(circlePath, paint);
+    }
+
+    private void setColor(int color) {
+        this.color = color;
+    }
+
+    private void setTextSize(int textSize) {
+        this.textZise = textZise;
     }
 }

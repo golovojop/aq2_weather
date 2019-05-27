@@ -38,7 +38,6 @@ public class SensorsFragment extends Fragment {
 
     private final String KEY_IMAGE_ID = "image";
     private final String KEY_SENSOR = "sensor";
-    private int selectedPosition = 0;
 
     @Override
     public void onAttach(Context context) {
@@ -87,7 +86,6 @@ public class SensorsFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedPosition = position;
                 showSensorInfo(sensors.get(position));
             }
         });
@@ -103,6 +101,5 @@ public class SensorsFragment extends Fragment {
 
         SensorInfoDialog dialog = SensorInfoDialog.create(sb.toString());
         dialog.show(getChildFragmentManager(), null);
-
     }
 }
