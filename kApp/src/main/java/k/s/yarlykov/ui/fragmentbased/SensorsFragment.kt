@@ -7,17 +7,21 @@ package k.s.yarlykov.ui.fragmentbased
 
 import java.util.*
 import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.SimpleAdapter
 import k.s.yarlykov.R
-import k.s.yarlykov.data.provider.SensorProvider
 import kotlinx.android.synthetic.main.sensors_list.*
 
 class SensorsFragment : Fragment() {
+
+    lateinit var sensorManager: SensorManager
 
     companion object {
         fun create(): SensorsFragment {
@@ -28,20 +32,9 @@ class SensorsFragment : Fragment() {
     private val KEY_IMAGE_ID = "image"
     private val KEY_SENSOR = "sensor"
 
-    lateinit var sensorProvider: SensorProvider
-
-    interface SensorsAdapter {
-        fun getSensorProvider(): SensorProvider
-    }
-
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        try {
-            val adapter = context as SensorsAdapter?
-            sensorProvider = adapter!!.getSensorProvider()
-        } catch (e: ClassCastException) {
-            e.printStackTrace()
-        }
+        sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
 
     override fun onCreateView(
@@ -58,7 +51,7 @@ class SensorsFragment : Fragment() {
 
     private fun initList() {
         val data = ArrayList<Map<String, Any>>()
-        val sensors = sensorProvider!!.getSensorsList(activity as Context)
+        val sensors = sensorManager.getSensorList(Sensor.TYPE_ALL)
 
         for (sensor in sensors) {
             val map = mapOf(
@@ -77,6 +70,23 @@ class SensorsFragment : Fragment() {
                 from,
                 to)
 
-        sensorsList!!.adapter = sAdapter
+        sensorsList!!.apply {
+            adapter = sAdapter
+            onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                showSensorInfo(sensors[position])
+            }
+        }
+    }
+
+    private fun showSensorInfo(s: Sensor) {
+        val sb = StringBuilder()
+
+        sb.append("Name: " + s.name + "\n")
+        sb.append("Type: " + s.type + "\n")
+        sb.append("Vendor: " + s.vendor + "\n")
+        sb.append("Version: " + s.version + "\n")
+
+        val dialog = SensorInfoDialog.create(sb.toString())
+        dialog.show(childFragmentManager, null)
     }
 }
