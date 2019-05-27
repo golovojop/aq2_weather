@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import j.s.yarlykov.R;
-import j.s.yarlykov.util.Utils;
 
 public class MainActivityFr extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -28,8 +27,6 @@ public class MainActivityFr extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Utils.logI(this, "onCreate. savedInstanceState is null: " + (savedInstanceState == null));
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
 
@@ -171,7 +168,6 @@ public class MainActivityFr extends AppCompatActivity
         }
     }
 
-
     // Отрисовать фрагменты
     private void renderFragment(Fragment leftFragment) {
 
@@ -195,5 +191,4 @@ public class MainActivityFr extends AppCompatActivity
 
         ft.addToBackStack(null).commit();
     }
-
 }

@@ -7,8 +7,8 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
+
 import j.s.yarlykov.R;
 
 public class SensorInfoDialog extends DialogFragment implements View.OnClickListener {

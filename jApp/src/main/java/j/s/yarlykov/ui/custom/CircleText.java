@@ -17,7 +17,7 @@ public class CircleText extends View {
     private Path circlePath;
     private Paint paint;
     private int color = Color.DKGRAY;
-    private int textZise = 24;
+    private int textSize = 24;
 
     public CircleText(Context context) {
         super(context);
@@ -48,16 +48,10 @@ public class CircleText extends View {
         this.paint.setStrokeWidth(1);
         this.paint.setAntiAlias(true);
         this.paint.setColor(color);
-        this.paint.setTextSize(textZise);
+        this.paint.setTextSize(textSize);
         this.circlePath = new Path();
         this.circleText = getResources().getString(R.string.text_avatar).toUpperCase();
     }
-
-    /**
-     * https://startandroid.ru/ru/uroki/vse-uroki-spiskom/316-urok-143-risovanie-path.html
-     * http://developer.alexanderklimov.ru/android/catshop/android.graphics.path.php
-     * https://developer.android.com/reference/android/graphics/Canvas.html#drawTextOnPath(java.lang.String,%20android.graphics.Path,%20float,%20float,%20android.graphics.Paint)
-     */
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -89,6 +83,6 @@ public class CircleText extends View {
     }
 
     private void setTextSize(int textSize) {
-        this.textZise = textZise;
+        this.textSize = textSize;
     }
 }
