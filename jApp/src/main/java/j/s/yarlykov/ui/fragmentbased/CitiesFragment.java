@@ -38,9 +38,17 @@ public class CitiesFragment extends ListFragment {
     private final String KEY_IMAGE_ID = "image";
     private final String KEY_CITY = "city";
 
+    public static CitiesFragment create() {
+        CitiesFragment fragment = new CitiesFragment();
+        return fragment;
+    }
+
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.cities_list_fragment, container, false);
     }
 
@@ -64,6 +72,7 @@ public class CitiesFragment extends ListFragment {
 
         if(isLandscape){
             listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            listView.setItemChecked(selectedPosition, true);
             showForecast();
         }
     }
@@ -119,18 +128,18 @@ public class CitiesFragment extends ListFragment {
                 provider.getForecastByIndex(selectedPosition));
 
         if(isLandscape) {
+            getActivity().findViewById(R.id.rightFrame).setVisibility(View.VISIBLE);
             listView.setItemChecked(selectedPosition, true);
 
             ForecastFragment forecastFragment = (ForecastFragment)getFragmentManager()
-                    .findFragmentById(R.id.forecastContainer);
+                    .findFragmentById(R.id.rightFrame);
 
             if(forecastFragment == null || forecastFragment.getIndex() != selectedPosition) {
                 forecastFragment = ForecastFragment.create(selectedPosition, forecast);
 
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.forecastContainer, forecastFragment);
+                ft.replace(R.id.rightFrame, forecastFragment);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack(String.format("%s", forecastFragment.hashCode()));
                 ft.commit();
             }
         } else {

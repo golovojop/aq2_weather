@@ -10,9 +10,10 @@
     <string name="infoHumidity" translatable="false">%</string>
 
     <string name="yourCity">Your city</string>
-    <string name="headerWind">Wind</string>
-    <string name="headerHumidity">Humidity</string>
-    <string name="headerPressure">Pressure</string>
+    <string name="headerWind">Wind:</string>
+    <string name="headerTemperature">Temperature:</string>
+    <string name="headerHumidity">Humidity:</string>
+    <string name="headerPressure">Pressure:</string>
 
     <string name="noData">add to request</string>
     <string name="incorrectRequest" translatable="false">Empty or incorrect request</string>
@@ -24,6 +25,40 @@
 
     <string name="about">About</string>
     <string name="version">Version</string>
+
+    <string name="weekForecast">\u25C0 Yesterday</string>
+    <string name="today">Today</string>
+    <string name="last_week">Past days</string>
+    <string name="addHistory">Add</string>
+
+    <!-- Feedback Form -->
+    <string name="feedBackInvitation">Type your feedback here</string>
+    <string name="feedBackMessageHint">Your message*</string>
+    <string name="feedBackNameHint">Your name*</string>
+    <string name="feedBackEmailHint">Your email*</string>
+    <string name="feedBackSend">POST</string>
+
+    <!-- Developer Info -->
+    <string name="student">GeekBrains Student</string>
+
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
+    <!-- Drawer menu-->
+    <string name="feedBackMenu">Feedback</string>
+    <string name="devMenu">About developer</string>
+    <string name="sensorMenu">Embedded sensors</string>
+    <string name="temperatureMenu">Temperature and Humidity</string>
+
+    <!-- Sensors -->
+    <string name="sensorNotSupported">No sensor</string>
+    <string name="sensorInfo">Sensor information</string>
+
+    <!-- Dialog buttons-->
+    <string name="buttonClose">Close</string>
+
+    <!-- Custom View -->
+    <string name="text_avatar">Student</string>
 
     <string-array name="cities">
         <item>Moscow</item>

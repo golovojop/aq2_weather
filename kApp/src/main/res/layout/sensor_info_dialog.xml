@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginStart="@dimen/leftMargin"
+        android:layout_marginEnd="@dimen/endMargin"
+        android:background="#c0c0c0"/>
+
+    <TextView
+        android:id="@+id/tvSensorInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:textSize="16sp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:text="@string/headerHumidity"/>
+
+    <Button
+        android:id="@+id/btnCloseDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:background="@drawable/request_button"
+        android:textColor="@android:color/white"
+        android:padding="4dp"
+        android:text="@string/buttonClose">
+    </Button>
+
+</LinearLayout>

@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,6 +17,8 @@ import java.util.Formatter;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
+import j.s.yarlykov.ui.fragmentbased.history.HistoryActivity;
+import j.s.yarlykov.util.Utils;
 
 import static j.s.yarlykov.util.Utils.isRu;
 
@@ -37,6 +42,12 @@ public class ForecastFragment extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,6 +59,22 @@ public class ForecastFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
         renderForecast(getForecast());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.week, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.actionWeek:
+                HistoryActivity.start(requireContext(), tvCity.getText().toString());
+                break;
+                default:
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public int getIndex() {
@@ -75,7 +102,7 @@ public class ForecastFragment extends Fragment {
 
         //Set City (Uppercase first letter)
         String city = forecast.getCity();
-        tvCity.setText(city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase());
+        tvCity.setText(Utils.capitalize(city));
 
         // Set Temperature
         Formatter fmt = new Formatter();

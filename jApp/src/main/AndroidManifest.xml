@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.fragmentbased.MainActivityFr">
+        <activity android:name=".ui.fragmentbased.MainActivityFr"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -20,6 +21,8 @@
         <activity android:name=".ui.MainActivity" />
         <activity android:name=".ui.fragmentbased.ForecastActivityFr" />
         <activity android:name=".ui.fragmentbased.InfoActivityFr" />
+        <activity android:name=".ui.fragmentbased.history.HistoryActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

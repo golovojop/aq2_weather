@@ -7,9 +7,10 @@
     <string name="infoPressure">мм рт.ст.</string>
 
     <string name="yourCity">Ваш город</string>
-    <string name="headerWind">Ветер</string>
-    <string name="headerHumidity">Влажность</string>
-    <string name="headerPressure">Давление</string>
+    <string name="headerWind">Ветер:</string>
+    <string name="headerTemperature">Температура:</string>
+    <string name="headerHumidity">Влажность:</string>
+    <string name="headerPressure">Давление:</string>
 
     <string name="noData">добавьте в запрос</string>
 
@@ -18,6 +19,37 @@
 
     <string name="about">О программе</string>
     <string name="version">Версия</string>
+
+    <string name="weekForecast">\u25C0 Вчера</string>
+    <string name="today">Сегодня</string>
+    <string name="last_week">Архив погоды</string>
+    <string name="addHistory">Добавить</string>
+
+    <!-- Feedback Form -->
+    <string name="feedBackInvitation">Оставьте свой отзыв</string>
+    <string name="feedBackMessageHint">Ваше сообщение*</string>
+    <string name="feedBackNameHint">Ваше имя*</string>
+    <string name="feedBackEmailHint">Ваш Email*</string>
+    <string name="feedBackSend">ОТПРАВИТЬ</string>
+
+    <!-- Developer Info -->
+    <string name="student">Студент GeekBrains</string>
+
+    <!-- Drawer menu-->
+    <string name="feedBackMenu">Оставить отзыв</string>
+    <string name="devMenu">О разработчике</string>
+    <string name="sensorMenu">Встроенные датчики</string>
+    <string name="temperatureMenu">Температура и влажность</string>
+
+    <!-- Sensors -->
+    <string name="sensorNotSupported">Нет сенсора</string>
+    <string name="sensorInfo">О сенсоре</string>
+
+    <!-- Dialog buttons-->
+    <string name="buttonClose">Закрыть</string>
+
+    <!-- Custom View -->
+    <string name="textAvatar">Студент</string>
 
     <string-array name="cities">
         <item>Москва</item>

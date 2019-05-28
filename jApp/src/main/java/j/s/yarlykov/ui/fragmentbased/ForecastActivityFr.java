@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
-import j.s.yarlykov.ui.ForecastActivity;
 
 
 public class ForecastActivityFr extends AppCompatActivity {
@@ -43,7 +42,7 @@ public class ForecastActivityFr extends AppCompatActivity {
 
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.forecastContainer, forecastFragment).commit();
+                    .replace(R.id.rightFrame, forecastFragment).commit();
         }
     }
 

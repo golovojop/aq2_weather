@@ -8,13 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.FrameLayout
 import android.widget.ListView
 import android.widget.SimpleAdapter
 import k.s.yarlykov.R
 import k.s.yarlykov.data.domain.CityForecast
 import k.s.yarlykov.data.provider.ForecastProvider
-import k.s.yarlykov.util.Utils
-import java.util.ArrayList
+import java.util.*
 
 class CitiesFragment : ListFragment() {
 
@@ -25,7 +25,9 @@ class CitiesFragment : ListFragment() {
     private var isLandscape: Boolean = false
     private var selectedPosition: Int = 0
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.cities_list_fragment, container, false)
     }
 
@@ -45,6 +47,7 @@ class CitiesFragment : ListFragment() {
 
         if (isLandscape) {
             listView.choiceMode = ListView.CHOICE_MODE_SINGLE
+            listView.setItemChecked(selectedPosition, true)
             showForecast()
         }
     }
@@ -92,22 +95,22 @@ class CitiesFragment : ListFragment() {
                 provider.getForecastByIndex(selectedPosition))
 
         if (isLandscape) {
+
+            activity!!.findViewById<FrameLayout>(R.id.rightFrame).visibility = View.VISIBLE
             listView.setItemChecked(selectedPosition, true)
 
             var forecastFragment = fragmentManager!!
-                    .findFragmentById(R.id.forecastContainer) as ForecastFragment?
+                    .findFragmentById(R.id.rightFrame) as ForecastFragment?
 
             if (forecastFragment == null || forecastFragment.getIndex() != selectedPosition) {
                 forecastFragment = ForecastFragment.create(selectedPosition, forecast)
 
                 val ft = fragmentManager!!.beginTransaction()
-                ft.replace(R.id.forecastContainer, forecastFragment)
+                ft.replace(R.id.rightFrame, forecastFragment)
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                ft.addToBackStack(String.format("%s", forecastFragment.hashCode()))
                 ft.commit()
             }
         } else {
-            Utils.logI(this, "showForecast. Create ForecastActivityFr")
             ForecastActivityFr.start(context, forecast)
         }
     }
