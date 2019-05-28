@@ -23,6 +23,8 @@
         <activity android:name=".ui.fragmentbased.InfoActivityFr" />
         <activity android:name=".ui.fragmentbased.history.HistoryActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <service android:name=".services.ForecastService" />
     </application>
 
 </manifest>

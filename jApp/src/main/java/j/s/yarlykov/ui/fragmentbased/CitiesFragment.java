@@ -9,6 +9,7 @@ package j.s.yarlykov.ui.fragmentbased;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -26,7 +27,9 @@ import java.util.Map;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
+import j.s.yarlykov.data.domain.Forecast;
 import j.s.yarlykov.data.provider.ForecastProvider;
+import j.s.yarlykov.services.ForecastService;
 
 public class CitiesFragment extends ListFragment {
 
@@ -37,10 +40,28 @@ public class CitiesFragment extends ListFragment {
 
     private final String KEY_IMAGE_ID = "image";
     private final String KEY_CITY = "city";
+    private final static String KEY_BINDER = "binder";
+    private ForecastSource forecastSource = null;
 
-    public static CitiesFragment create() {
+    public static CitiesFragment create(IBinder binder) {
         CitiesFragment fragment = new CitiesFragment();
+        Bundle args = new Bundle();
+        args.putBinder(KEY_BINDER, binder);
+        fragment.setArguments(args);
+
         return fragment;
+    }
+
+    public interface ForecastSource {
+        Forecast getForecastById(int id);
+        Forecast getForecastByCity(String city);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        forecastSource = ((ForecastService.ServiceBinder)getArguments().getBinder(KEY_BINDER))
+                .getService();
     }
 
     @Nullable
@@ -120,12 +141,10 @@ public class CitiesFragment extends ListFragment {
     }
 
     private void showForecast(){
-        ForecastProvider provider = ForecastProvider.getInstance();
-
         String citySelected = getResources().getStringArray(R.array.cities)[selectedPosition];
 
         CityForecast forecast = new CityForecast(citySelected,
-                provider.getForecastByIndex(selectedPosition));
+                forecastSource.getForecastById(selectedPosition));
 
         if(isLandscape) {
             getActivity().findViewById(R.id.rightFrame).setVisibility(View.VISIBLE);
