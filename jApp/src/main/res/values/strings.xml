@@ -60,6 +60,9 @@
     <!-- Custom View -->
     <string name="text_avatar">Student</string>
 
+    <!-- ProgressBar header-->
+    <string name="loading">Loading...</string>
+
     <string-array name="cities">
         <item>Moscow</item>
         <item>Saint Peterburg</item>
