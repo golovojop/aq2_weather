@@ -81,10 +81,10 @@ class SensorsFragment : Fragment() {
     private fun showSensorInfo(s: Sensor) {
         val sb = StringBuilder()
 
-        sb.append("Name: " + s.name + "\n")
-        sb.append("Type: " + s.type + "\n")
-        sb.append("Vendor: " + s.vendor + "\n")
-        sb.append("Version: " + s.version + "\n")
+        sb.append("Name: ${s.name}\n")
+        sb.append("Type: ${Integer.toString(s.type)}\n")
+        sb.append("Vendor: ${s.vendor}\n")
+        sb.append("Version: ${Integer.toString(s.version)}\n")
 
         val dialog = SensorInfoDialog.create(sb.toString())
         dialog.show(childFragmentManager, null)

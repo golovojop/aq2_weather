@@ -23,8 +23,7 @@ public class TemperatureSensorFragment extends Fragment implements SensorEventLi
     private TextView tvT, tvH;
 
     public static TemperatureSensorFragment create() {
-        TemperatureSensorFragment fragment = new TemperatureSensorFragment();
-        return fragment;
+        return new TemperatureSensorFragment();
     }
 
     @Override
@@ -83,10 +82,12 @@ public class TemperatureSensorFragment extends Fragment implements SensorEventLi
     public void onSensorChanged(SensorEvent event) {
         switch (event.sensor.getType()) {
             case Sensor.TYPE_AMBIENT_TEMPERATURE:
-                tvT.setText(String.valueOf(event.values[0]) + " \u2103");
+                String tS = String.format("%s \u2103", String.valueOf(event.values[0]));
+                tvT.setText(tS);
                 break;
             case Sensor.TYPE_RELATIVE_HUMIDITY:
-                tvH.setText(String.valueOf(event.values[0]));
+                String hS = String.format("%s %%", String.valueOf(event.values[0]));
+                tvH.setText(hS);
                 break;
             default:
 

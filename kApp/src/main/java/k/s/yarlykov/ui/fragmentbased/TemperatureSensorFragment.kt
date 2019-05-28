@@ -67,8 +67,14 @@ class TemperatureSensorFragment : Fragment(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent) {
         when (event.sensor.type) {
-            Sensor.TYPE_AMBIENT_TEMPERATURE -> tvT.text = event.values[0].toString() + " \u2103"
-            Sensor.TYPE_RELATIVE_HUMIDITY -> tvH.text = event.values[0].toString()
+            Sensor.TYPE_AMBIENT_TEMPERATURE -> {
+                val sT = "${event.values[0]} ℃"
+                tvT.text = sT
+            }
+            Sensor.TYPE_RELATIVE_HUMIDITY -> {
+                val sH = "${event.values[0]} %"
+                tvH.text = sH
+            }
         }
     }
 

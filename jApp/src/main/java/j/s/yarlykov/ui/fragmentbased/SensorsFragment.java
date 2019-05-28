@@ -94,10 +94,10 @@ public class SensorsFragment extends Fragment {
     private void showSensorInfo(Sensor s) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Name: " + s.getName() + "\n");
-        sb.append("Type: " + s.getType() + "\n");
-        sb.append("Vendor: " + s.getVendor() + "\n");
-        sb.append("Version: " + s.getVersion() + "\n");
+        sb.append(String.format("Name: %s\n", s.getName()));
+        sb.append(String.format("Type: %s\n", Integer.toString(s.getType())));
+        sb.append(String.format("Vendor: %s\n", s.getVendor()));
+        sb.append(String.format("Version: %s\n", Integer.toString(s.getVersion())));
 
         SensorInfoDialog dialog = SensorInfoDialog.create(sb.toString());
         dialog.show(getChildFragmentManager(), null);
