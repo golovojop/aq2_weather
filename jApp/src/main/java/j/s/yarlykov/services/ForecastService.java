@@ -8,7 +8,6 @@ import android.os.IBinder;
 import j.s.yarlykov.data.domain.Forecast;
 import j.s.yarlykov.data.provider.ForecastProvider;
 import j.s.yarlykov.ui.fragmentbased.CitiesFragment;
-import j.s.yarlykov.util.Utils;
 
 public class ForecastService extends Service implements CitiesFragment.ForecastSource {
 
@@ -27,13 +26,11 @@ public class ForecastService extends Service implements CitiesFragment.ForecastS
 
     @Override
     public void onCreate() {
-        Utils.logI(this, "onCreate");
         super.onCreate();
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        Utils.logI(this, "onBind");
         return mBinder;
     }
 

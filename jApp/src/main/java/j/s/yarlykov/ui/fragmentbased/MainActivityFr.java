@@ -27,7 +27,7 @@ public class MainActivityFr extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String F_KEY = "F_KEY";
-    private FrameLayout leftFrame, rightFrame;
+    private FrameLayout rightFrame;
     private boolean isLandscape, isBound;
     private ServiceConnection serviceConnection;
     private Intent serviceIntent;
@@ -36,8 +36,6 @@ public class MainActivityFr extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
-
-//        leftFrame = findViewById(R.id.leftFrame);
 
         isLandscape = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
@@ -50,8 +48,9 @@ public class MainActivityFr extends AppCompatActivity
         setSupportActionBar(toolbar);
         initSideMenu(toolbar);
 
+        // Если стартуем первый раз, то привязываемся к службе
         if (savedInstanceState == null) {
-            serviceIntent = new Intent(this, ForecastService.class);
+            serviceIntent = new Intent(getApplicationContext(), ForecastService.class);
             serviceConnection = new ServiceConnection() {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
@@ -72,6 +71,7 @@ public class MainActivityFr extends AppCompatActivity
             };
 
             bindService(serviceIntent, serviceConnection, BIND_AUTO_CREATE);
+
         } else {
             String fName = savedInstanceState.getString(F_KEY);
 

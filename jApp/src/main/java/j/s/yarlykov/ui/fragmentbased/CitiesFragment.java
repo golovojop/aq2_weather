@@ -28,7 +28,6 @@ import java.util.Map;
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.data.domain.Forecast;
-import j.s.yarlykov.data.provider.ForecastProvider;
 import j.s.yarlykov.services.ForecastService;
 
 public class CitiesFragment extends ListFragment {
