@@ -28,6 +28,8 @@ import java.util.concurrent.TimeUnit;
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.provider.HistoryProvider;
 import j.s.yarlykov.ui.fragmentbased.InfoActivityFr;
+import j.s.yarlykov.util.Utils;
+
 import static j.s.yarlykov.util.Utils.*;
 
 public class HistoryActivity extends AppCompatActivity {
@@ -50,6 +52,7 @@ public class HistoryActivity extends AppCompatActivity {
     ProgressBar progressBar;
     LoadTask loadTask;
     LinearLayout pbContainer;
+    static CustomState customState;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,53 +60,63 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        loadTask = (LoadTask)getLastNonConfigurationInstance();
+        // Город
+        String city = (String) getIntent().getSerializableExtra(EXTRA_HISTORY);
+//        customState = (CustomState)getLastCustomNonConfigurationInstance();
 
-        initViews();
+        boolean isNotRestored = customState == null || !customState.lastCity.equals(city);
 
-        if(loadTask == null) {
-            loadTask = new LoadTask();
-            loadTask.bind(this);
-            loadTask.execute();
+        initViews(city, isNotRestored);
+
+//        loadTask = (LoadTask) getLastCustomNonConfigurationInstance();
+
+        if (isNotRestored) {
+            customState = new CustomState(city, new LoadTask());
+            customState.loadTask.bind(this);
+            customState.loadTask.execute(progressBar.getMax());
+        } else {
+            pbContainer.setVisibility(View.GONE);
+            rvHistory.setVisibility(View.VISIBLE);
         }
     }
 
-    @Override
-    public Object onRetainCustomNonConfigurationInstance() {
-        loadTask.unbind();
-        return loadTask;
-    }
+//    @Override
+//    public Object onRetainCustomNonConfigurationInstance() {
+//        Utils.logI(this, "onRetainCustomNonConfigurationInstance");
+//        customState.loadTask.unbind();
+//        return customState;
+//}
 
-    private void initViews() {
+    private void initViews(String city, boolean isNotRestored) {
         tvCity = findViewById(R.id.tvCity);
-        tvCity.setText((String)getIntent().getSerializableExtra(EXTRA_HISTORY));
-
+        rvHistory = findViewById(R.id.rvHistory);
         pbContainer = findViewById(R.id.pbContainer);
         progressBar = findViewById(R.id.myProgressBar);
+
+        tvCity.setText(city);
 
         // Установить фоновое изображение для CollapsingToolbarLayout
         TypedArray imagesBg = getResources().obtainTypedArray(R.array.historyBg);
         CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsingToolbar);
         collapsingToolbar.setBackground(ContextCompat.getDrawable(
-                this,
+                getApplicationContext(),
                 imagesBg.getResourceId(posRandom(imagesBg.length()), 0)));
         imagesBg.recycle();
-        boolean isNotRestored = !lastCity.equals(tvCity.getText());
+//        boolean isNotRestored = !customState.lastCity.equals(tvCity.getText().toString());
 
         // Установить LayoutManager в зависимости от ориентации экрана
         boolean isPortrate =
                 getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
         RecyclerView.LayoutManager orientationCompatibleLayoutManager =
-                isPortrate ? new LinearLayoutManager(this) :
-                        new GridLayoutManager(this, 2);
+                isPortrate ? new LinearLayoutManager(getApplicationContext()) :
+                        new GridLayoutManager(getApplicationContext(), 2);
 
         // Инициализировать элемент RecyclerView
-        rvHistory = findViewById(R.id.rvHistory);
         rvHistory.setHasFixedSize(true);
         rvHistory.setLayoutManager(orientationCompatibleLayoutManager);
         rvHistory.setItemAnimator(new DefaultItemAnimator());
         rvHistory.setAdapter(new HistoryRVAdapter(HistoryProvider.build(
-                this,
+                getApplicationContext(),
                 DAYS,
                 isNotRestored)));
 
@@ -115,21 +128,25 @@ public class HistoryActivity extends AppCompatActivity {
                 HistoryProvider.oneMoreDay(HistoryActivity.this);
                 try {
                     rvHistory.getAdapter().notifyDataSetChanged();
-                } catch (NullPointerException e) {e.printStackTrace();}
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        Utils.logI(this, "onSaveInstanceState");
         super.onSaveInstanceState(outState);
-        saveLastCity();
+//        saveLastCity();
     }
 
     @Override
     protected void onPause() {
+        Utils.logI(this, "onPause");
         super.onPause();
-        saveLastCity();
+//        saveLastCity();
     }
 
     @Override
@@ -144,19 +161,32 @@ public class HistoryActivity extends AppCompatActivity {
             case R.id.actionAbout:
                 InfoActivityFr.start(this);
                 break;
-                default:
+            default:
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void saveLastCity() {
-        lastCity = tvCity.getText().toString();
+        customState.lastCity = tvCity.getText().toString();
+    }
+
+    /**
+     * Класс для сохранения состояния
+     */
+    static class CustomState {
+        String lastCity;
+        LoadTask loadTask;
+
+        public CustomState(String lastCity, LoadTask loadTask) {
+            this.lastCity = lastCity;
+            this.loadTask = loadTask;
+        }
     }
 
     /**
      * Task загрузки истории. Эмулирует долгую работу
      */
-    static class LoadTask extends AsyncTask<Void, Integer, Integer> {
+    static class LoadTask extends AsyncTask<Integer, Integer, Integer> {
         HistoryActivity historyActivity;
 
         void bind(HistoryActivity activity) {
@@ -168,11 +198,11 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Integer doInBackground(Void... voids) {
-            int max = historyActivity.progressBar.getMax();
+        protected Integer doInBackground(Integer... args) {
+            int max = args[0];
 
             try {
-                for(int i = 10; i < max;) {
+                for (int i = 10; i < max; ) {
                     TimeUnit.MILLISECONDS.sleep(100);
                     publishProgress(i);
                     i += 5;
@@ -187,21 +217,28 @@ public class HistoryActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            historyActivity.rvHistory.setVisibility(View.GONE);
-            historyActivity.pbContainer.setVisibility(View.VISIBLE);
+            if (historyActivity != null) {
+                historyActivity.rvHistory.setVisibility(View.GONE);
+                historyActivity.pbContainer.setVisibility(View.VISIBLE);
+            }
         }
 
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            historyActivity.pbContainer.setVisibility(View.GONE);
-            historyActivity.rvHistory.setVisibility(View.VISIBLE);
+            if (historyActivity != null) {
+                historyActivity.pbContainer.setVisibility(View.GONE);
+                historyActivity.rvHistory.setVisibility(View.VISIBLE);
+                historyActivity = null;
+            }
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            historyActivity.progressBar.setProgress(values[0]);
+            if (historyActivity != null) {
+                historyActivity.progressBar.setProgress(values[0]);
+            }
         }
     }
 }
