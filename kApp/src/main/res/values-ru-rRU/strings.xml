@@ -51,6 +51,9 @@
     <!-- Custom View -->
     <string name="textAvatar">Студент</string>
 
+    <!-- ProgressBar header-->
+    <string name="loading">Загружаю...</string>
+
     <string-array name="cities">
         <item>Москва</item>
         <item>Санкт Петербург</item>
