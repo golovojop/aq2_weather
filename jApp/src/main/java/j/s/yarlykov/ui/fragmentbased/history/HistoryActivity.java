@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.provider.HistoryProvider;
 import j.s.yarlykov.ui.fragmentbased.InfoActivityFr;
-import j.s.yarlykov.util.Utils;
 
 import static j.s.yarlykov.util.Utils.*;
 
@@ -39,7 +38,8 @@ public class HistoryActivity extends AppCompatActivity {
 
     public static final int DAYS = 3;
 
-    private static String lastCity = "";
+    // Статическая переменная для сохранения переменных состояния
+    static CustomState customState;
 
     public static void start(Context context, String city) {
         Intent intent = new Intent(context, HistoryActivity.class);
@@ -50,9 +50,7 @@ public class HistoryActivity extends AppCompatActivity {
     RecyclerView rvHistory;
     TextView tvCity;
     ProgressBar progressBar;
-    LoadTask loadTask;
     LinearLayout pbContainer;
-    static CustomState customState;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,13 +60,12 @@ public class HistoryActivity extends AppCompatActivity {
 
         // Город
         String city = (String) getIntent().getSerializableExtra(EXTRA_HISTORY);
-//        customState = (CustomState)getLastCustomNonConfigurationInstance();
 
+        // isNotRestored == true если активити создается первый раз
+        // или выбран новый город
         boolean isNotRestored = customState == null || !customState.lastCity.equals(city);
 
         initViews(city, isNotRestored);
-
-//        loadTask = (LoadTask) getLastCustomNonConfigurationInstance();
 
         if (isNotRestored) {
             customState = new CustomState(city, new LoadTask());
@@ -80,12 +77,11 @@ public class HistoryActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    public Object onRetainCustomNonConfigurationInstance() {
-//        Utils.logI(this, "onRetainCustomNonConfigurationInstance");
-//        customState.loadTask.unbind();
-//        return customState;
-//}
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        customState.loadTask.unbind();
+    }
 
     private void initViews(String city, boolean isNotRestored) {
         tvCity = findViewById(R.id.tvCity);
@@ -102,7 +98,6 @@ public class HistoryActivity extends AppCompatActivity {
                 getApplicationContext(),
                 imagesBg.getResourceId(posRandom(imagesBg.length()), 0)));
         imagesBg.recycle();
-//        boolean isNotRestored = !customState.lastCity.equals(tvCity.getText().toString());
 
         // Установить LayoutManager в зависимости от ориентации экрана
         boolean isPortrate =
@@ -136,20 +131,6 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        Utils.logI(this, "onSaveInstanceState");
-        super.onSaveInstanceState(outState);
-//        saveLastCity();
-    }
-
-    @Override
-    protected void onPause() {
-        Utils.logI(this, "onPause");
-        super.onPause();
-//        saveLastCity();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -164,10 +145,6 @@ public class HistoryActivity extends AppCompatActivity {
             default:
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void saveLastCity() {
-        customState.lastCity = tvCity.getText().toString();
     }
 
     /**
