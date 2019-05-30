@@ -163,7 +163,7 @@ public class HistoryActivity extends AppCompatActivity {
     /**
      * Task загрузки истории. Эмулирует долгую работу
      */
-    static class LoadTask extends AsyncTask<Integer, Integer, Integer> {
+    static class LoadTask extends AsyncTask<Integer, Integer, Void> {
         HistoryActivity historyActivity;
 
         void bind(HistoryActivity activity) {
@@ -175,7 +175,7 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Integer doInBackground(Integer... args) {
+        protected Void doInBackground(Integer... args) {
             int max = args[0];
 
             try {
@@ -201,8 +201,8 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Integer integer) {
-            super.onPostExecute(integer);
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
             if (historyActivity != null) {
                 historyActivity.pbContainer.setVisibility(View.GONE);
                 historyActivity.rvHistory.setVisibility(View.VISIBLE);
