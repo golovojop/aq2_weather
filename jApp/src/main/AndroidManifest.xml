@@ -24,7 +24,7 @@
         <activity android:name=".ui.fragmentbased.history.HistoryActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <service android:name=".services.ForecastService" />
+        <service android:name=".services.CityForecastService" />
     </application>
 
 </manifest>
