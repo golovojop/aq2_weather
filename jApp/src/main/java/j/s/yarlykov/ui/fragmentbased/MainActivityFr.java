@@ -21,7 +21,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import j.s.yarlykov.R;
-import j.s.yarlykov.services.ForecastService;
+import j.s.yarlykov.services.CityForecastService;
 
 public class MainActivityFr extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,7 +30,6 @@ public class MainActivityFr extends AppCompatActivity
     private FrameLayout rightFrame;
     private boolean isLandscape, isBound;
     private ServiceConnection serviceConnection;
-    private Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +49,7 @@ public class MainActivityFr extends AppCompatActivity
 
         // Если стартуем первый раз, то привязываемся к службе
         if (savedInstanceState == null) {
-            serviceIntent = new Intent(getApplicationContext(), ForecastService.class);
+            Intent serviceIntent = new Intent(getApplicationContext(), CityForecastService.class);
             serviceConnection = new ServiceConnection() {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
@@ -127,7 +126,6 @@ public class MainActivityFr extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-
         DrawerLayout drawer = findViewById(R.id.drawerLayout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);

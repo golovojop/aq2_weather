@@ -1,9 +1,13 @@
 package j.s.yarlykov.ui.fragmentbased;
 
+import android.content.Context;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,29 +15,37 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Formatter;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
+import j.s.yarlykov.data.domain.Forecast;
+import j.s.yarlykov.services.CityForecastService;
 import j.s.yarlykov.ui.fragmentbased.history.HistoryActivity;
 import j.s.yarlykov.util.Utils;
 
 import static j.s.yarlykov.util.Utils.isRu;
 
-public class ForecastFragment extends Fragment {
+public class ForecastFragment extends Fragment implements CityForecastService.ForecastReceiver {
 
     public static final String forecastBundleKey = "forecastKey";
+    public static final String cityBundleKey = "cityKey";
+    public static final String binderBundleKey = "binderKey";
     public static final String indexBundleKey = "indexKey";
 
     private TextView tvCity, tvTemperature, tvWind, tvHumidity, tvPressure;
+    private LinearLayout pbfContainer, forecastContainer;
+    private CityForecastService forecastService;
     private ImageView ivSky;
+    private Context context;
 
     public static ForecastFragment create(int index, CityForecast forecast) {
         ForecastFragment fragment = new ForecastFragment();
 
-        // Передача параметра
+        // Передача параметров
         Bundle args = new Bundle();
         args.putSerializable(forecastBundleKey, forecast);
         args.putInt(indexBundleKey, index);
@@ -42,23 +54,73 @@ public class ForecastFragment extends Fragment {
         return fragment;
     }
 
+    public static ForecastFragment create(IBinder binder, String city, int index) {
+        ForecastFragment fragment = new ForecastFragment();
+
+        // Передача параметра
+        Bundle args = new Bundle();
+        args.putBinder(binderBundleKey, binder);
+        args.putString(cityBundleKey, city);
+        args.putInt(indexBundleKey, index);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onForecastReady(final Forecast forecast) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                renderForecast(new CityForecast(getCity(), forecast));
+            }
+        });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        Utils.logI(this, "onAttach");
+        super.onAttach(context);
+        this.context = context;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Utils.logI(this, "onCreate");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        bindToService();
+    }
+
+    @Override
+    public void onDestroy() {
+        Utils.logI(this, "onDestroy");
+        super.onDestroy();
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        Utils.logI(this, "onCreateView");
         return inflater.inflate(R.layout.city_forecast_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Utils.logI(this, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        renderForecast(getForecast());
+    }
+
+    @Override
+    public void onResume() {
+        Utils.logI(this, "onResume");
+        super.onResume();
+
+        pbfContainer.setVisibility(View.VISIBLE);
+        forecastContainer.setVisibility(View.GONE);
+        forecastService.requestForecast(this, getIndex());
     }
 
     @Override
@@ -72,26 +134,46 @@ public class ForecastFragment extends Fragment {
             case R.id.actionWeek:
                 loadHistory();
                 break;
-                default:
+            default:
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public int getIndex() {
-        return getArguments().getInt(indexBundleKey, 0);
-    }
-
-    private CityForecast getForecast() {
-        return (CityForecast) getArguments().getSerializable(forecastBundleKey);
-    }
-
     private void initViews(View parent) {
+
+        pbfContainer = parent.findViewById(R.id.pbfContainer);
+        forecastContainer = parent.findViewById(R.id.llForecast);
         ivSky = parent.findViewById(R.id.iv_sky);
         tvCity = parent.findViewById(R.id.tv_city);
         tvTemperature = parent.findViewById(R.id.tv_temperature);
         tvWind = parent.findViewById(R.id.tv_wind);
         tvHumidity = parent.findViewById(R.id.tv_humidity);
         tvPressure = parent.findViewById(R.id.tv_pressure);
+
+        pbfContainer.setVisibility(View.VISIBLE);
+        forecastContainer.setVisibility(View.GONE);
+
+        tvCity.setText(getCity());
+    }
+
+    private void bindToService() {
+        forecastService
+                = ((CityForecastService.ServiceBinder)
+                getArguments()
+                .getBinder(binderBundleKey))
+                .getService();
+    }
+
+    public String getCity() {
+        return getArguments().getString(cityBundleKey);
+    }
+
+    public int getIndex() {
+        return getArguments().getInt(indexBundleKey, 0);
+    }
+
+    public IBinder getBinder() {
+        return getArguments().getBinder(cityBundleKey);
     }
 
     // Отрисовать прогноз на экране
@@ -127,6 +209,9 @@ public class ForecastFragment extends Fragment {
         fmt.format("%4d %s", (int) forecast.getPressure(isRu()), getResources().getString(R.string.infoPressure));
         tvPressure.setText(fmt.toString());
         fmt.close();
+
+        pbfContainer.setVisibility(View.GONE);
+        forecastContainer.setVisibility(View.VISIBLE);
     }
 
     // Эмуляция длительной работы в AsyncTask
