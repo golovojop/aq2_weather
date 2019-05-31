@@ -1,10 +1,15 @@
 package k.s.yarlykov.ui.fragmentbased
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.os.Bundle
+import android.os.IBinder
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
@@ -17,6 +22,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import k.s.yarlykov.R
+import k.s.yarlykov.services.ForecastService
 import kotlinx.android.synthetic.main.activity_main_app_bar.*
 import kotlinx.android.synthetic.main.activity_main_drawer.*
 
@@ -26,16 +32,16 @@ class MainActivityFr : AppCompatActivity(),
     val F_KEY = "F_KEY"
     var isLandscape: Boolean = false
 
-    private lateinit var leftFrame: FrameLayout
     private lateinit var rightFrame: FrameLayout
+    private lateinit var serviceConnection: ServiceConnection
+    private var isBound = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_drawer)
 
-        leftFrame = findViewById(R.id.leftFrame)
         isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-        if(isLandscape) {
+        if (isLandscape) {
             this.rightFrame = findViewById(R.id.rightFrame)
         }
 
@@ -49,10 +55,30 @@ class MainActivityFr : AppCompatActivity(),
             paint?.shader = shader
         }
 
+        // Если стартуем первый раз, то привязываемся к службе
         if (savedInstanceState == null) {
-            val ft = supportFragmentManager.beginTransaction()
-            ft.add(R.id.leftFrame, CitiesFragment(),
-                    CitiesFragment::class.java.canonicalName).commit()
+            val intent = Intent(applicationContext, ForecastService::class.java)
+
+            serviceConnection = object : ServiceConnection {
+
+                override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+
+                    service?.also { binder ->
+                        supportFragmentManager.beginTransaction()
+                                .add(R.id.leftFrame,
+                                        CitiesFragment.create(binder),
+                                        CitiesFragment::class.java.canonicalName)
+                                .commit()
+                        isBound = true
+                    }
+                }
+
+                override fun onServiceDisconnected(name: ComponentName?) {
+                    isBound = false
+                }
+            }
+
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         } else {
             val fName = savedInstanceState.getString(F_KEY)
 
@@ -67,6 +93,14 @@ class MainActivityFr : AppCompatActivity(),
                     rightFrame.visibility = View.GONE
                 }
             }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(isBound) {
+            unbindService(serviceConnection)
+            isBound = !isBound
         }
     }
 

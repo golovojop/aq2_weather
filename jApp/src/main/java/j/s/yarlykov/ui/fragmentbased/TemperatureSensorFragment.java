@@ -90,7 +90,6 @@ public class TemperatureSensorFragment extends Fragment implements SensorEventLi
                 tvH.setText(hS);
                 break;
             default:
-
         }
     }
 

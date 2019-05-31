@@ -1,7 +1,9 @@
 package k.s.yarlykov.ui.fragmentbased
 
 import android.content.res.Configuration
+import android.os.Binder
 import android.os.Bundle
+import android.os.IBinder
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.app.ListFragment
 import android.view.LayoutInflater
@@ -13,10 +15,28 @@ import android.widget.ListView
 import android.widget.SimpleAdapter
 import k.s.yarlykov.R
 import k.s.yarlykov.data.domain.CityForecast
-import k.s.yarlykov.data.provider.ForecastProvider
+import k.s.yarlykov.data.domain.Forecast
+import k.s.yarlykov.services.ForecastService
 import java.util.*
 
 class CitiesFragment : ListFragment() {
+
+    companion object {
+        val KEY_BINDER = "binder"
+
+        fun create(binder: IBinder): CitiesFragment {
+            return CitiesFragment().apply {
+                arguments = Bundle().apply {
+                    putBinder(KEY_BINDER, binder)
+                }
+            }
+        }
+    }
+
+    interface ForecastSource {
+        fun getForecastById(id: Int): Forecast
+        fun getForecastByCity(city: String): Forecast?
+    }
 
     private  val selectedPositionKey = "SelectedCity"
     private  val KEY_IMAGE_ID = "image"
@@ -24,6 +44,13 @@ class CitiesFragment : ListFragment() {
 
     private var isLandscape: Boolean = false
     private var selectedPosition: Int = 0
+    private var forecastSource: ForecastSource? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val binder =  arguments?.getBinder(KEY_BINDER) as ForecastService.ServiceBinder
+        forecastSource = binder.getService()
+    }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -87,12 +114,8 @@ class CitiesFragment : ListFragment() {
     }
 
     private fun showForecast() {
-        val provider = ForecastProvider
-
         val citySelected = resources.getStringArray(R.array.cities)[selectedPosition]
-
-        val forecast = CityForecast(citySelected,
-                provider.getForecastByIndex(selectedPosition))
+        val forecast = CityForecast(citySelected, forecastSource!!.getForecastById(selectedPosition))
 
         if (isLandscape) {
 

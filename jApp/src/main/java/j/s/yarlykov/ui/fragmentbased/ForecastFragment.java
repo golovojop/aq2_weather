@@ -70,7 +70,7 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.actionWeek:
-                HistoryActivity.start(requireContext(), tvCity.getText().toString());
+                loadHistory();
                 break;
                 default:
         }
@@ -128,4 +128,10 @@ public class ForecastFragment extends Fragment {
         tvPressure.setText(fmt.toString());
         fmt.close();
     }
+
+    // Эмуляция длительной работы в AsyncTask
+    private void loadHistory() {
+        HistoryActivity.start(requireContext(), tvCity.getText().toString());
+    }
+
 }

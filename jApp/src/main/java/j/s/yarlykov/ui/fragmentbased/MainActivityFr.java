@@ -1,7 +1,11 @@
 package j.s.yarlykov.ui.fragmentbased;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -17,20 +21,21 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import j.s.yarlykov.R;
+import j.s.yarlykov.services.ForecastService;
 
 public class MainActivityFr extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String F_KEY = "F_KEY";
-    FrameLayout leftFrame, rightFrame;
-    boolean isLandscape;
+    private FrameLayout rightFrame;
+    private boolean isLandscape, isBound;
+    private ServiceConnection serviceConnection;
+    private Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
-
-        leftFrame = findViewById(R.id.leftFrame);
 
         isLandscape = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
@@ -43,10 +48,30 @@ public class MainActivityFr extends AppCompatActivity
         setSupportActionBar(toolbar);
         initSideMenu(toolbar);
 
+        // Если стартуем первый раз, то привязываемся к службе
         if (savedInstanceState == null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.leftFrame, CitiesFragment.create(),
-                    CitiesFragment.class.getCanonicalName()).commit();
+            serviceIntent = new Intent(getApplicationContext(), ForecastService.class);
+            serviceConnection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    isBound = service != null;
+
+                    if (isBound) {
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.add(R.id.leftFrame,
+                                CitiesFragment.create(service),
+                                CitiesFragment.class.getCanonicalName()).commit();
+                    }
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    isBound = false;
+                }
+            };
+
+            bindService(serviceIntent, serviceConnection, BIND_AUTO_CREATE);
+
         } else {
             String fName = savedInstanceState.getString(F_KEY);
 
@@ -54,13 +79,22 @@ public class MainActivityFr extends AppCompatActivity
             // то скрыть правую панель. Далее система сама восстановит последний
             // фрагмент в левой панели и он займет все окно.
             //
-            // Если fName == "CitiesFragment", то система восстановит его в левой панели
+            // Если fName == "CitiesFragment", то система восстановит его в левой панеле,
             // а в процессе запуска он сделает видимой правую панель.
             if (fName != null
                     && !fName.equals(CitiesFragment.class.getCanonicalName())
                     && isLandscape) {
-                    rightFrame.setVisibility(View.GONE);
+                rightFrame.setVisibility(View.GONE);
             }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isBound) {
+            unbindService(serviceConnection);
+            isBound = !isBound;
         }
     }
 
