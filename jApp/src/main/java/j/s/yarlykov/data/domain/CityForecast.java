@@ -28,7 +28,7 @@ public class CityForecast extends Forecast {
     @Override
     public float getPressure(boolean isMm) {
         if(pressureMm != EMPTY_VAL) {
-            return isMm ? pressureMm : mmToMb(pressureMm);
+            return isMm ? mbToMm(pressureMm) : pressureMm;
         }
         return EMPTY_VAL;
     }

@@ -27,14 +27,17 @@ public class CityForecastService extends Service {
 
                 // Ждать подключения к интернет
                 while(f == null) {
-                    f = provider.getRealForecast(getApplicationContext(), city);
-                    if(f != null) break;
+//                    f = provider.getRealForecast(getApplicationContext(), city);
+//                    if(f != null) break;
 
                     try {
                         TimeUnit.SECONDS.sleep(2);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+
+                    f = provider.getRealForecast(getApplicationContext(), city);
+
                 }
 
                 receiver.onForecastReady(f);
