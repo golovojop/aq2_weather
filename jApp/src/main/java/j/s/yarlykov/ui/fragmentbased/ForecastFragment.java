@@ -1,13 +1,11 @@
 package j.s.yarlykov.ui.fragmentbased;
 
 import android.content.Context;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -68,12 +66,16 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
 
     @Override
     public void onForecastReady(final Forecast forecast) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                renderForecast(new CityForecast(getCity(), forecast));
-            }
-        });
+        try {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    renderForecast((CityForecast)forecast);
+                }
+            });
+        } catch (NullPointerException e) {
+            Utils.logI(this, "onForecastReady: activity was destroyed");
+        }
     }
 
     @Override
@@ -88,7 +90,7 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
         Utils.logI(this, "onCreate");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        bindToService();
+        getServiceBinder();
     }
 
     @Override
@@ -120,7 +122,7 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
 
         pbfContainer.setVisibility(View.VISIBLE);
         forecastContainer.setVisibility(View.GONE);
-        forecastService.requestForecast(this, getIndex());
+        forecastService.requestForecast(this, getCity());
     }
 
     @Override
@@ -156,11 +158,11 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
         tvCity.setText(getCity());
     }
 
-    private void bindToService() {
+    private void getServiceBinder() {
         forecastService
                 = ((CityForecastService.ServiceBinder)
                 getArguments()
-                .getBinder(binderBundleKey))
+                        .getBinder(binderBundleKey))
                 .getService();
     }
 
@@ -170,10 +172,6 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
 
     public int getIndex() {
         return getArguments().getInt(indexBundleKey, 0);
-    }
-
-    public IBinder getBinder() {
-        return getArguments().getBinder(cityBundleKey);
     }
 
     // Отрисовать прогноз на экране
@@ -194,7 +192,7 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
 
         // Set Wind
         fmt = new Formatter();
-        fmt.format("%2d %s", forecast.getWind(), getResources().getString(R.string.infoWind));
+        fmt.format("%.1f %s", forecast.getWind(), getResources().getString(R.string.infoWind));
         tvWind.setText(fmt.toString());
         fmt.close();
 
@@ -218,5 +216,4 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
     private void loadHistory() {
         HistoryActivity.start(requireContext(), tvCity.getText().toString());
     }
-
 }

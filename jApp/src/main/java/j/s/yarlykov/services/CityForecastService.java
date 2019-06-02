@@ -18,17 +18,26 @@ public class CityForecastService extends Service {
         void onForecastReady(Forecast forecast);
     }
 
-    public void requestForecast(final ForecastReceiver receiver, final int id) {
+    public void requestForecast(final ForecastReceiver receiver, final String city) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    TimeUnit.SECONDS.sleep(3);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 ForecastProvider provider = ForecastProvider.getInstance();
-                receiver.onForecastReady(provider.getForecastByIndex(id));
+                Forecast f = null;
+
+                // Ждать подключения к интернет
+                while(f == null) {
+                    f = provider.getRealForecast(getApplicationContext(), city);
+                    if(f != null) break;
+
+                    try {
+                        TimeUnit.SECONDS.sleep(2);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                receiver.onForecastReady(f);
             }
         }).start();
     }

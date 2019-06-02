@@ -20,16 +20,17 @@ public class WeatherDataLoader {
             "2173331fd3e3226666b27e71abc27974";
 
     private static final String OPEN_WEATHER_API_URL =
-            "https://api.openweathermap.org/data/2.5/weather?q=%s&units=metric";
+            "https://api.openweathermap.org/data/2.5/weather?q=%s,ru&units=metric";
     private static final String KEY = "x-api-key";
     private static final String RESPONSE = "cod";
     private static final int ALL_GOOD = 200;
 
-    static JSONObject getJSONData(String city) {
+    public static JSONObject getJSONData(String city) {
         try {
             URL url = new URL(String.format(OPEN_WEATHER_API_URL, city));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.addRequestProperty(KEY, OPEN_WEATHER_API_KEY);
+            connection.connect();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder rawData = new StringBuilder(1024);
@@ -38,7 +39,6 @@ public class WeatherDataLoader {
             while ((tempVariable = reader.readLine()) != null) {
                 rawData.append(tempVariable).append("\n");
             }
-
             reader.close();
 
             JSONObject jsonObject = new JSONObject(rawData.toString());

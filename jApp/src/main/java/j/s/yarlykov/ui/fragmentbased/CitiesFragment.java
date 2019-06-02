@@ -2,6 +2,8 @@
  * Materials:
  * http://developer.alexanderklimov.ru/android/listfragment.php
  *
+ *  { "id": 498817, "name": "Saint Petersburg", "country": "RU", "coord": { "lon": 30.264168, "lat": 59.894444 }
+ *
  */
 
 package j.s.yarlykov.ui.fragmentbased;
@@ -47,11 +49,6 @@ public class CitiesFragment extends ListFragment {
 
         return fragment;
     }
-
-//    public interface ForecastSource {
-//        Forecast getForecastById(int id);
-//        Forecast getForecastByCity(String city);
-//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -136,7 +133,7 @@ public class CitiesFragment extends ListFragment {
     }
 
     private void showForecast(){
-        String citySelected = getResources().getStringArray(R.array.cities)[selectedPosition];
+        String citySelected = getResources().getStringArray(R.array.cities_openweather)[selectedPosition];
 
         if(isLandscape) {
             getActivity().findViewById(R.id.rightFrame).setVisibility(View.VISIBLE);

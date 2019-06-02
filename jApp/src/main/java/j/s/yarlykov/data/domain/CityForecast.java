@@ -11,7 +11,7 @@ public class CityForecast extends Forecast {
 
     private String city;
 
-    public CityForecast(String city, int imgId, int temperature, int wind, int humidity, float pressureMm) {
+    public CityForecast(String city, int imgId, int temperature, int wind, int humidity, int pressureMm) {
         super(imgId, temperature, wind, humidity, pressureMm);
         this.city = city;
     }
@@ -50,7 +50,7 @@ public class CityForecast extends Forecast {
     }
 
     public String toString(){
-        return String.format(Locale.US,"City %s, t=%d, w=%d, h=%d, p=%.02f",
+        return String.format(Locale.US,"City %s, t=%d, w=%d, h=%d, p=%d",
                 city, temperature, wind, humidity, pressureMm);
     }
 }

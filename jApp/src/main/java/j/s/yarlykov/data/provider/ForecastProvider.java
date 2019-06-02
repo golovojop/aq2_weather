@@ -1,5 +1,11 @@
 package j.s.yarlykov.data.provider;
 
+import android.content.Context;
+import android.content.res.Resources;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -8,6 +14,9 @@ import java.util.Set;
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.data.domain.Forecast;
+import j.s.yarlykov.data.network.WeatherDataLoader;
+import j.s.yarlykov.util.Utils;
+
 import static j.s.yarlykov.data.domain.CityForecast.*;
 
 public class ForecastProvider {
@@ -20,6 +29,67 @@ public class ForecastProvider {
         }
         return instance;
     }
+
+    public CityForecast getRealForecast(Context context, String city) {
+        final JSONObject jsonObject = WeatherDataLoader.getJSONData(city);
+
+        if(jsonObject != null) {
+            try {
+                JSONObject details = jsonObject.getJSONArray("weather").getJSONObject(0);
+                JSONObject main = jsonObject.getJSONObject("main");
+                JSONObject wind = jsonObject.getJSONObject("wind");
+
+                return new CityForecast(
+                        extractPlaceName(jsonObject),
+                        extractIconResourceId(context, details),
+                        (int)extractCurrentTemp(main),
+                        (int)extractWindSpeed(wind),
+                        extractHumidity(main),
+                        extractPressure(main)
+                );
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    private String extractPlaceName(JSONObject jsonObject) throws JSONException {
+        return jsonObject.getString("name");
+    }
+
+    private double extractCurrentTemp(JSONObject main) throws JSONException {
+        return main.getDouble("temp");
+    }
+
+    private int extractHumidity(JSONObject main)throws JSONException {
+        return main.getInt("humidity");
+    }
+
+    private int extractPressure(JSONObject main)throws JSONException {
+        return main.getInt("pressure");
+    }
+
+    private double extractWindSpeed(JSONObject wind)throws JSONException {
+        return wind.getDouble("speed");
+    }
+
+    private String extractWindDirect(JSONObject wind)throws JSONException {
+        int deg = wind.getInt("deg");
+        return "Stub";
+    }
+
+    private int extractIconResourceId(Context context, JSONObject details) throws JSONException {
+        String icon = "ow" + details.getString("icon");
+        Resources resources = context.getResources();
+        return resources.getIdentifier(icon, "drawable",
+                context.getPackageName());
+
+    }
+
+    /**
+     * Старые функции для работы со статическими данными
+     */
 
     private List<Forecast> forecasts;
 
@@ -66,4 +136,6 @@ public class ForecastProvider {
         Random randomForecast = new Random();
         return randomForecast.nextInt(forecasts.size());
     }
+
+
 }

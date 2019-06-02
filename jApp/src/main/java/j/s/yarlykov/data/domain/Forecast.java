@@ -8,11 +8,11 @@ public class Forecast implements Serializable {
 
     protected int imgId;
     protected int temperature;
-    protected int wind;
+    protected float wind;
     protected int humidity;
-    protected float pressureMm;
+    protected int pressureMm;
 
-    public Forecast(int imgId, int temperature, int wind, int humidity, float pressureMm) {
+    public Forecast(int imgId, int temperature, float wind, int humidity, int pressureMm) {
         this.imgId = imgId;
         this.temperature = temperature;
         this.wind = Math.abs(wind);
@@ -32,7 +32,7 @@ public class Forecast implements Serializable {
     public int getTemperature() {
         return temperature;
     }
-    public int getWind() {
+    public float getWind() {
         return wind;
     }
     public int getHumidity() {
