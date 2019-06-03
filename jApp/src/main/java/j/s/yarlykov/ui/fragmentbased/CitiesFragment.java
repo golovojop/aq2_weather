@@ -2,6 +2,8 @@
  * Materials:
  * http://developer.alexanderklimov.ru/android/listfragment.php
  *
+ *  { "id": 498817, "name": "Saint Petersburg", "country": "RU", "coord": { "lon": 30.264168, "lat": 59.894444 }
+ *
  */
 
 package j.s.yarlykov.ui.fragmentbased;
@@ -26,9 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import j.s.yarlykov.R;
-import j.s.yarlykov.data.domain.CityForecast;
-import j.s.yarlykov.data.domain.Forecast;
-import j.s.yarlykov.services.ForecastService;
 
 public class CitiesFragment extends ListFragment {
 
@@ -40,7 +39,7 @@ public class CitiesFragment extends ListFragment {
     private final String KEY_IMAGE_ID = "image";
     private final String KEY_CITY = "city";
     private final static String KEY_BINDER = "binder";
-    private ForecastSource forecastSource = null;
+    private IBinder forecastSource = null;
 
     public static CitiesFragment create(IBinder binder) {
         CitiesFragment fragment = new CitiesFragment();
@@ -51,16 +50,10 @@ public class CitiesFragment extends ListFragment {
         return fragment;
     }
 
-    public interface ForecastSource {
-        Forecast getForecastById(int id);
-        Forecast getForecastByCity(String city);
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        forecastSource = ((ForecastService.ServiceBinder)getArguments().getBinder(KEY_BINDER))
-                .getService();
+        forecastSource = getArguments().getBinder(KEY_BINDER);
     }
 
     @Nullable
@@ -140,10 +133,7 @@ public class CitiesFragment extends ListFragment {
     }
 
     private void showForecast(){
-        String citySelected = getResources().getStringArray(R.array.cities)[selectedPosition];
-
-        CityForecast forecast = new CityForecast(citySelected,
-                forecastSource.getForecastById(selectedPosition));
+        String citySelected = getResources().getStringArray(R.array.cities_openweather)[selectedPosition];
 
         if(isLandscape) {
             getActivity().findViewById(R.id.rightFrame).setVisibility(View.VISIBLE);
@@ -153,7 +143,8 @@ public class CitiesFragment extends ListFragment {
                     .findFragmentById(R.id.rightFrame);
 
             if(forecastFragment == null || forecastFragment.getIndex() != selectedPosition) {
-                forecastFragment = ForecastFragment.create(selectedPosition, forecast);
+
+                forecastFragment = ForecastFragment.create(forecastSource, citySelected, selectedPosition);
 
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.rightFrame, forecastFragment);
@@ -161,7 +152,7 @@ public class CitiesFragment extends ListFragment {
                 ft.commit();
             }
         } else {
-            ForecastActivityFr.start(getContext(), forecast);
+            ForecastActivityFr.start(getContext(), forecastSource, citySelected, selectedPosition);
         }
     }
 }
