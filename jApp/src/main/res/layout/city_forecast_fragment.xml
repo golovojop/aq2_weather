@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/topMargin"
     android:orientation="vertical"
-    tools:context=".ui.ForecastActivity">
+    tools:context=".ui.fragmentbased.ForecastActivityFr">
 
     <TextView
         android:id="@+id/tv_city"
@@ -17,17 +17,29 @@
         android:textSize="24sp"
         android:textStyle="bold"
         tools:text="@string/toolCity" />
-
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/today"
-        android:textSize="16sp"
-        tools:text="@string/today" />
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/today"
+            android:textSize="16sp"
+            tools:text="@string/today" />
 
+        <View
+            android:id="@+id/onlineStatus"
+            android:background="@drawable/tr_circle"
+            android:layout_marginStart="@dimen/leftMargin"
+            android:layout_gravity="center_vertical"
+            android:layout_width="12dp"
+            android:layout_height="12dp"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/pbfContainer"

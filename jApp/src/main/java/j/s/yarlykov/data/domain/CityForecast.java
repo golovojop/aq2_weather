@@ -1,6 +1,5 @@
 package j.s.yarlykov.data.domain;
 
-import java.util.Locale;
 import java.util.Set;
 
 public class CityForecast extends Forecast {
@@ -11,13 +10,28 @@ public class CityForecast extends Forecast {
 
     private String city;
 
-    public CityForecast(String city, int imgId, int temperature, int wind, int humidity, int pressureMm) {
+    public CityForecast(String city, int imgId, int temperature, float wind, int humidity, int pressureMm) {
         super(imgId, temperature, wind, humidity, pressureMm);
         this.city = city;
     }
 
+    public CityForecast(String city,
+                        int imgId,
+                        int temperature,
+                        float wind,
+                        int humidity,
+                        int pressureMm,
+                        long timeStamp) {
+        super(imgId, temperature, wind, humidity, pressureMm, timeStamp);
+        this.city = city;
+    }
+
     public CityForecast(String city, Forecast forecast) {
-        super(forecast.imgId, forecast.temperature, forecast.wind, forecast.humidity, forecast.pressureMm);
+        super(forecast.imgId,
+                forecast.temperature,
+                forecast.wind,
+                forecast.humidity,
+                forecast.pressureMm);
         this.city = city;
     }
 
@@ -26,7 +40,7 @@ public class CityForecast extends Forecast {
     }
 
     @Override
-    public float getPressure(boolean isMm) {
+    public int getPressure(boolean isMm) {
         if(pressureMm != EMPTY_VAL) {
             return isMm ? mbToMm(pressureMm) : pressureMm;
         }
@@ -47,10 +61,5 @@ public class CityForecast extends Forecast {
             pressureMm = EMPTY_VAL;
         }
         return this;
-    }
-
-    public String toString(){
-        return String.format(Locale.US,"City %s, t=%d, w=%d, h=%d, p=%d",
-                city, temperature, wind, humidity, pressureMm);
     }
 }

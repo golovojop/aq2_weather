@@ -40,6 +40,7 @@ public class WeatherDataLoader {
                 rawData.append(tempVariable).append("\n");
             }
             reader.close();
+            connection.disconnect();
 
             JSONObject jsonObject = new JSONObject(rawData.toString());
             if(jsonObject.getInt(RESPONSE) != ALL_GOOD) {
