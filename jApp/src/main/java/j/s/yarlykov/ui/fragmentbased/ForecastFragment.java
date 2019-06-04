@@ -187,7 +187,7 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
         // Прогноз не получен - алерт
         if(forecast == null) {
             vStatus.setBackgroundResource(R.drawable.red_circle);
-            AlertInternet();
+            AlertNoData();
             return;
         }
 
@@ -238,13 +238,16 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
         HistoryActivity.start(requireContext(), tvCity.getText().toString());
     }
 
-    private void AlertInternet(){
+    private void AlertNoData(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.connectivity_alert));
 
-        TextView tv = new TextView(getActivity());
-        tv.setText(getString(R.string.check_connection));
-        builder.setView(tv);
+        View view = getLayoutInflater().inflate(R.layout.no_data_dialog, null);
+        builder.setView(view);
+
+//        TextView tv = new TextView(getActivity());
+//        tv.setText(getString(R.string.check_connection));
+//        builder.setView(tv);
 
         builder.setPositiveButton(getString(R.string.buttonClose), new DialogInterface.OnClickListener() {
             @Override

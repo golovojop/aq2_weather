@@ -4,7 +4,7 @@ import java.util.Set;
 
 public class CityForecast extends Forecast {
 
-    public static enum MeteoData {
+    public enum MeteoData {
         WIND, HUMIDITY, PRESSURE
     }
 
