@@ -23,6 +23,7 @@ public class CityForecastService extends Service {
     private final String humidity = "humidity";
     private final String timeStamp = "time";
     private final String iconId = "icon";
+    private final int attempts = 3;
 
     private final IBinder mBinder = new ServiceBinder();
 
@@ -39,7 +40,7 @@ public class CityForecastService extends Service {
                 boolean success = false;
 
                 // Три попытки подучить данные онлайн
-                for(int i = 0; i < 1; i++) {
+                for(int i = 0; i < attempts; i++) {
                     cf = provider.getRealForecast(getApplicationContext(), city);
 
                     if (cf != null) {

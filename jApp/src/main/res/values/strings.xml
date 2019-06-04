@@ -64,8 +64,8 @@
     <string name="loading">Loading...</string>
 
     <!-- Internet connection -->
-    <string name="connectivity_alert">Connectivity error</string>
-    <string name="check_connection">Check internet connection</string>
+    <string name="connectivity_alert">No response</string>
+    <string name="check_connection">Place not found or server unavailable</string>
 
     <string-array name="cities">
         <item>Moscow</item>
@@ -74,6 +74,7 @@
         <item>Novosibirsk</item>
         <item>Samara</item>
     </string-array>
+
     <string-array name="cities_openweather" translatable="false">
         <item>Moscow</item>
         <item>Saint Petersburg</item>
