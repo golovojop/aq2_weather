@@ -2,7 +2,7 @@ package j.s.yarlykov.data.network.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class WeatherRestModel {
+public class WeatherModel {
     @SerializedName("id") public int id;
     @SerializedName("main") public String main;
     @SerializedName("description") public String description;

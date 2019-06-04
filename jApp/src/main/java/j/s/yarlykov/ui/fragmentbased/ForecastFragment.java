@@ -24,13 +24,19 @@ import java.util.Formatter;
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.data.domain.Forecast;
+import j.s.yarlykov.data.network.api.OpenWeatherProvider;
+import j.s.yarlykov.data.network.model.WeatherResponseModel;
 import j.s.yarlykov.services.CityForecastService;
+import j.s.yarlykov.services.RestForecastService;
 import j.s.yarlykov.ui.fragmentbased.history.HistoryActivity;
 import j.s.yarlykov.util.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static j.s.yarlykov.util.Utils.isRu;
 
-public class ForecastFragment extends Fragment implements CityForecastService.ForecastReceiver {
+public class ForecastFragment extends Fragment implements RestForecastService.RestForecastReceiver {
 
     public static final String forecastBundleKey = "forecastKey";
     public static final String cityBundleKey = "cityKey";
@@ -39,11 +45,14 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
 
     private TextView tvCity, tvTemperature, tvWind, tvHumidity, tvPressure;
     private LinearLayout pbfContainer, forecastContainer;
-    private CityForecastService forecastService;
+//    private CityForecastService forecastService;
+    private RestForecastService forecastService;
     private ImageView ivSky;
     private Context context;
     private View vStatus;
     private final long TTL = 1 * 1000;
+
+    private WeatherResponseModel model = new WeatherResponseModel();
 
     public static ForecastFragment create(int index, CityForecast forecast) {
         ForecastFragment fragment = new ForecastFragment();
@@ -69,18 +78,23 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
         return fragment;
     }
 
-    // Вызывается из CityForecastService
     @Override
-    public void onForecastReady(final Forecast forecast) {
-        try {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    renderForecast((CityForecast)forecast);
-                }
-            });
-        } catch (NullPointerException e) {
-            Utils.logI(this, "onForecastReady: activity was destroyed");
+    public void onForecastOnline(Forecast forecast) {
+        renderForecast((CityForecast)forecast, true);
+    }
+
+    @Override
+    public void onIconReady() {
+
+    }
+
+    @Override
+    public void onForecastOffline(Forecast forecast) {
+        if(forecast != null) {
+            renderForecast((CityForecast)forecast, false);
+        } else {
+            vStatus.setBackgroundResource(R.drawable.red_circle);
+            AlertNoData();
         }
     }
 
@@ -167,7 +181,7 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
 
     private void getServiceBinder() {
         forecastService
-                = ((CityForecastService.ServiceBinder)
+                = ((RestForecastService.ServiceBinder)
                 getArguments()
                         .getBinder(binderBundleKey))
                 .getService();
@@ -182,24 +196,17 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
     }
 
     // Отрисовать прогноз на экране
-    private void renderForecast(CityForecast forecast) {
+    private void renderForecast(CityForecast forecast, boolean isOnline) {
 
-        // Прогноз не получен - алерт
-        if(forecast == null) {
-            vStatus.setBackgroundResource(R.drawable.red_circle);
-            AlertNoData();
-            return;
-        }
 
         // Если получен прогноз онлайн, то зеленый индикатор,
         // иначе красный.
         long currentTime = new Date().getTime();
-        int drawableId = (currentTime - forecast.getTimestamp() > TTL) ?
-                R.drawable.red_circle : R.drawable.green_circle;
+        int drawableId = isOnline ? R.drawable.green_circle : R.drawable.red_circle;
         vStatus.setBackgroundResource(drawableId);
 
         // Set Weather image
-        ivSky.setImageResource(forecast.getImgId());
+//        ivSky.setImageResource(forecast.getImgId());
 
         //Set City (Uppercase first letter)
         String city = forecast.getCity();
@@ -244,10 +251,6 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
 
         View view = getLayoutInflater().inflate(R.layout.no_data_dialog, null);
         builder.setView(view);
-
-//        TextView tv = new TextView(getActivity());
-//        tv.setText(getString(R.string.check_connection));
-//        builder.setView(tv);
 
         builder.setPositiveButton(getString(R.string.buttonClose), new DialogInterface.OnClickListener() {
             @Override

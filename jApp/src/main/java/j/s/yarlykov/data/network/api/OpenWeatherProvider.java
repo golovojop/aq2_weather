@@ -3,12 +3,25 @@ package j.s.yarlykov.data.network.api;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class OpenWeatherAdapter {
+public class OpenWeatherProvider {
 
-    private static OpenWeatherAdapter instance = null;
+    private static OpenWeatherProvider instance = null;
     private OpenWeather api;
 
-    private OpenWeatherAdapter() {
+    private OpenWeatherProvider() {
+        api = createAdapter();
+    }
+
+    public static OpenWeatherProvider getInstance() {
+        if(instance == null) {
+            instance = new OpenWeatherProvider();
+        }
+
+        return instance;
+    }
+
+    public OpenWeather getApi() {
+        return api;
     }
 
     private static OpenWeather createAdapter(){

@@ -22,6 +22,7 @@ import android.widget.FrameLayout;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.services.CityForecastService;
+import j.s.yarlykov.services.RestForecastService;
 
 public class MainActivityFr extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,7 +50,7 @@ public class MainActivityFr extends AppCompatActivity
 
         // Если стартуем первый раз, то привязываемся к службе
         if (savedInstanceState == null) {
-            Intent serviceIntent = new Intent(getApplicationContext(), CityForecastService.class);
+            Intent serviceIntent = new Intent(getApplicationContext(), RestForecastService.class);
             serviceConnection = new ServiceConnection() {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
