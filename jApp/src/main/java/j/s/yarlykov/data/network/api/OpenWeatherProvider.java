@@ -1,5 +1,8 @@
 package j.s.yarlykov.data.network.api;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -16,7 +19,6 @@ public class OpenWeatherProvider {
         if(instance == null) {
             instance = new OpenWeatherProvider();
         }
-
         return instance;
     }
 
@@ -25,8 +27,17 @@ public class OpenWeatherProvider {
     }
 
     private static OpenWeather createAdapter(){
+
+        // Установить таймауты
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .build();
+
         Retrofit adapter = new Retrofit.Builder()
                 .baseUrl("http://api.openweathermap.org/")
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

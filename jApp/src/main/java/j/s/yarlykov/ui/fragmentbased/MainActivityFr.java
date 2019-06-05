@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import j.s.yarlykov.R;
-import j.s.yarlykov.services.CityForecastService;
 import j.s.yarlykov.services.RestForecastService;
 
 public class MainActivityFr extends AppCompatActivity

@@ -2,6 +2,7 @@ package j.s.yarlykov.ui.fragmentbased;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -18,21 +19,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Date;
 import java.util.Formatter;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.data.domain.Forecast;
-import j.s.yarlykov.data.network.api.OpenWeatherProvider;
 import j.s.yarlykov.data.network.model.WeatherResponseModel;
-import j.s.yarlykov.services.CityForecastService;
 import j.s.yarlykov.services.RestForecastService;
 import j.s.yarlykov.ui.fragmentbased.history.HistoryActivity;
 import j.s.yarlykov.util.Utils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static j.s.yarlykov.util.Utils.isRu;
 
@@ -45,7 +40,6 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
 
     private TextView tvCity, tvTemperature, tvWind, tvHumidity, tvPressure;
     private LinearLayout pbfContainer, forecastContainer;
-//    private CityForecastService forecastService;
     private RestForecastService forecastService;
     private ImageView ivSky;
     private Context context;
@@ -79,35 +73,13 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     }
 
     @Override
-    public void onForecastOnline(Forecast forecast) {
-        renderForecast((CityForecast)forecast, true);
-    }
-
-    @Override
-    public void onIconReady() {
-
-    }
-
-    @Override
-    public void onForecastOffline(Forecast forecast) {
-        if(forecast != null) {
-            renderForecast((CityForecast)forecast, false);
-        } else {
-            vStatus.setBackgroundResource(R.drawable.red_circle);
-            AlertNoData();
-        }
-    }
-
-    @Override
     public void onAttach(Context context) {
-        Utils.logI(this, "onAttach");
         super.onAttach(context);
         this.context = context;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Utils.logI(this, "onCreate");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         getServiceBinder();
@@ -115,7 +87,6 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
 
     @Override
     public void onDestroy() {
-        Utils.logI(this, "onDestroy");
         super.onDestroy();
     }
 
@@ -124,25 +95,21 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        Utils.logI(this, "onCreateView");
         return inflater.inflate(R.layout.city_forecast_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Utils.logI(this, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
+        forecastService.requestForecast(this, getCity());
     }
 
     @Override
     public void onResume() {
-        Utils.logI(this, "onResume");
         super.onResume();
-
         pbfContainer.setVisibility(View.VISIBLE);
         forecastContainer.setVisibility(View.GONE);
-        forecastService.requestForecast(this, getCity());
     }
 
     @Override
@@ -159,6 +126,23 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
             default:
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onForecastOnline(Forecast forecast, Bitmap icon) {
+        renderForecast((CityForecast) forecast, true, icon);
+    }
+
+    @Override
+    public void onForecastOffline(Forecast forecast) {
+        if (forecast != null) {
+            renderForecast((CityForecast) forecast, false, null);
+        } else {
+            vStatus.setBackgroundResource(android.R.color.transparent);
+            pbfContainer.setVisibility(View.GONE);
+            forecastContainer.setVisibility(View.GONE);
+            AlertNoData();
+        }
     }
 
     private void initViews(View parent) {
@@ -196,17 +180,18 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     }
 
     // Отрисовать прогноз на экране
-    private void renderForecast(CityForecast forecast, boolean isOnline) {
+    private void renderForecast(CityForecast forecast, boolean isOnline, Bitmap icon) {
 
-
-        // Если получен прогноз онлайн, то зеленый индикатор,
-        // иначе красный.
-        long currentTime = new Date().getTime();
+        // Для онлайн прогноза - зеленый индикатор, иначе красный.
         int drawableId = isOnline ? R.drawable.green_circle : R.drawable.red_circle;
         vStatus.setBackgroundResource(drawableId);
 
         // Set Weather image
-//        ivSky.setImageResource(forecast.getImgId());
+        if (icon != null) {
+            ivSky.setImageBitmap(icon);
+        } else {
+            ivSky.setImageResource(forecast.getImgId());
+        }
 
         //Set City (Uppercase first letter)
         String city = forecast.getCity();
@@ -245,7 +230,7 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
         HistoryActivity.start(requireContext(), tvCity.getText().toString());
     }
 
-    private void AlertNoData(){
+    private void AlertNoData() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.connectivity_alert));
 
