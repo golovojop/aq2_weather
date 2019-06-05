@@ -23,6 +23,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import k.s.yarlykov.R
 import k.s.yarlykov.services.ForecastService
+import k.s.yarlykov.services.RestForecastService
 import kotlinx.android.synthetic.main.activity_main_app_bar.*
 import kotlinx.android.synthetic.main.activity_main_drawer.*
 
@@ -57,7 +58,7 @@ class MainActivityFr : AppCompatActivity(),
 
         // Если стартуем первый раз, то привязываемся к службе
         if (savedInstanceState == null) {
-            val intent = Intent(applicationContext, ForecastService::class.java)
+            val intent = Intent(applicationContext, RestForecastService::class.java)
 
             serviceConnection = object : ServiceConnection {
 
