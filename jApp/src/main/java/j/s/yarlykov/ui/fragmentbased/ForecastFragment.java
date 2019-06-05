@@ -24,7 +24,6 @@ import java.util.Formatter;
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.data.domain.Forecast;
-import j.s.yarlykov.data.network.model.WeatherResponseModel;
 import j.s.yarlykov.services.RestForecastService;
 import j.s.yarlykov.ui.fragmentbased.history.HistoryActivity;
 import j.s.yarlykov.util.Utils;
@@ -34,7 +33,7 @@ import static j.s.yarlykov.util.Utils.isRu;
 public class ForecastFragment extends Fragment implements RestForecastService.RestForecastReceiver {
 
     public static final String forecastBundleKey = "forecastKey";
-    public static final String cityBundleKey = "cityKey";
+    public static final String placeBundleKey = "cityKey";
     public static final String binderBundleKey = "binderKey";
     public static final String indexBundleKey = "indexKey";
 
@@ -45,8 +44,6 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     private Context context;
     private View vStatus;
     private final long TTL = 1 * 1000;
-
-    private WeatherResponseModel model = new WeatherResponseModel();
 
     public static ForecastFragment create(int index, CityForecast forecast) {
         ForecastFragment fragment = new ForecastFragment();
@@ -66,7 +63,7 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
         // Передача параметра
         Bundle args = new Bundle();
         args.putBinder(binderBundleKey, binder);
-        args.putString(cityBundleKey, city);
+        args.putString(placeBundleKey, city);
         args.putInt(indexBundleKey, index);
         fragment.setArguments(args);
         return fragment;
@@ -102,7 +99,7 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        forecastService.requestForecast(this, getCity());
+        forecastService.requestForecast(this, getCity(), getCountry());
     }
 
     @Override
@@ -171,8 +168,18 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
                 .getService();
     }
 
+    public String getPlace() {
+        return getArguments().getString(placeBundleKey);
+    }
+
     public String getCity() {
-        return getArguments().getString(cityBundleKey);
+        String[] arr = getPlace().split(",", 2);
+        return arr[0];
+    }
+
+    public String getCountry() {
+        String[] arr = getPlace().split(",", 2);
+        return arr[1];
     }
 
     public int getIndex() {

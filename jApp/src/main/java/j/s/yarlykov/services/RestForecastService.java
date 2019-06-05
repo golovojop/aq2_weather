@@ -59,10 +59,10 @@ public class RestForecastService extends Service {
 
     // Запросить теукщий прогноз погоды для города city
     public void requestForecast(final RestForecastService.RestForecastReceiver receiver,
-                                final String city) {
+                                final String city, final String country) {
 
         OpenWeatherProvider.getInstance().getApi().loadWeather(
-                city + ",ru",
+                city + "," + country,
                 "2173331fd3e3226666b27e71abc27974",
                 "metric")
                 .enqueue(new Callback<WeatherResponseModel>() {

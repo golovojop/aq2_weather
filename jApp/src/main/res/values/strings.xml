@@ -73,14 +73,16 @@
         <item>Ekaterinburg</item>
         <item>Novosibirsk</item>
         <item>Samara</item>
+        <item>Tbilisi</item>
     </string-array>
 
     <string-array name="cities_openweather" translatable="false">
-        <item>Moscow</item>
-        <item>Saint Petersburg</item>
-        <item>Ekaterinburg</item>
-        <item>Novosibirsk</item>
-        <item>Samara</item>
+        <item>Moscow,ru</item>
+        <item>Saint Petersburg,ru</item>
+        <item>Ekaterinburg,ru</item>
+        <item>Novosibirsk,ru</item>
+        <item>Samara,ru</item>
+        <item>Tbilisi,ge</item>
     </string-array>
 
 </resources>
