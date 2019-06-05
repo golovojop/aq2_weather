@@ -50,11 +50,11 @@ public class ForecastActivityFr extends AppCompatActivity {
         if (savedInstanceState == null) {
 
             Bundle extras = getIntent().getExtras();
-            IBinder serice = extras.getBinder(binderBundleKey);
+            IBinder service = extras.getBinder(binderBundleKey);
             String city = extras.getString(cityBundleKey);
             int index = extras.getInt(indexBundleKey);
 
-            ForecastFragment forecastFragment = ForecastFragment.create(serice, city, index);
+            ForecastFragment forecastFragment = ForecastFragment.create(service, city, index);
 
             getSupportFragmentManager()
                     .beginTransaction()

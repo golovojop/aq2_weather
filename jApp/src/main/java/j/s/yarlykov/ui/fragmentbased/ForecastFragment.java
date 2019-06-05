@@ -45,18 +45,6 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     private View vStatus;
     private final long TTL = 1 * 1000;
 
-    public static ForecastFragment create(int index, CityForecast forecast) {
-        ForecastFragment fragment = new ForecastFragment();
-
-        // Передача параметров
-        Bundle args = new Bundle();
-        args.putSerializable(forecastBundleKey, forecast);
-        args.putInt(indexBundleKey, index);
-
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public static ForecastFragment create(IBinder binder, String city, int index) {
         ForecastFragment fragment = new ForecastFragment();
 
@@ -82,11 +70,6 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
         getServiceBinder();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -105,8 +88,8 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     @Override
     public void onResume() {
         super.onResume();
-        pbfContainer.setVisibility(View.VISIBLE);
-        forecastContainer.setVisibility(View.GONE);
+//        pbfContainer.setVisibility(View.VISIBLE);
+//        forecastContainer.setVisibility(View.GONE);
     }
 
     @Override
@@ -232,7 +215,6 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
         forecastContainer.setVisibility(View.VISIBLE);
     }
 
-    // Эмуляция длительной работы в AsyncTask
     private void loadHistory() {
         HistoryActivity.start(requireContext(), tvCity.getText().toString());
     }
