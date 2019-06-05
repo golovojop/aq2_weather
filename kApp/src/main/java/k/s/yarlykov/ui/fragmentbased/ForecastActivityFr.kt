@@ -52,13 +52,16 @@ class ForecastActivityFr : AppCompatActivity() {
         }
 
         if(savedInstanceState == null) {
-            forecast = intent.getSerializableExtra(EXTRA_FORECAST) as CityForecast
+            val extras = intent.extras
+            val service = extras.getBinder(binderBundleKey)
+            val city = extras.getString(cityBundleKey)
+            val index = extras.getInt(indexBundleKey)
 
-            val forecastFragment = ForecastFragment.create(0, forecast)
+            val forecastFragment = ForecastFragment.create(service, city, index)
 
             supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.forecastContainer, forecastFragment).commit()
+                    .replace(R.id.rightFrame, forecastFragment).commit()
         }
     }
 
