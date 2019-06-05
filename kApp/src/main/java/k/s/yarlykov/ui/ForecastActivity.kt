@@ -55,12 +55,12 @@ class ForecastActivity : AppCompatActivity() {
         } else tvWindA.text = (NO_DATA)
 
         // Set Humidity
-        if (forecast.humidity != EMPTY_VAL) {
+        if (forecast.humidity != EMPTY_VAL.toInt()) {
             tvHumidityA.text = (String.format("%2d %%", forecast.humidity))
         } else tvHumidityA.text = (NO_DATA)
 
         // Set Pressure
-        if (forecast.pressureMm != EMPTY_VAL) {
+        if (forecast.pressureMm != EMPTY_VAL.toInt()) {
             tvPressureA.text = (String.format("%4d %s", forecast.getPressure(isRu()), getResources().getString(R.string.infoPressure)))
         } else tvPressureA.text = (NO_DATA)
     }

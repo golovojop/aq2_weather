@@ -2,8 +2,23 @@ package k.s.yarlykov.data.domain
 
 import java.util.*
 
-class CityForecast(val city: String, imgId: Int, temperature: Int, wind: Int, humidity: Int, pressureMm: Int):
+class CityForecast(imgId: Int,
+                   temperature: Int,
+                   wind: Float,
+                   humidity: Int,
+                   pressureMm: Int,
+                   val city: String,
+                   val timeStamp: Long = Date().time):
         Forecast(imgId, temperature, wind, humidity, pressureMm) {
+
+    constructor(f: Forecast,
+                city: String):
+            this(f.imgId, f.temperature, f.wind, f.humidity, f.pressureMm, city)
+
+    constructor(f: Forecast,
+                city: String,
+                timeStamp: Long):
+            this(f.imgId, f.temperature, f.wind, f.humidity, f.pressureMm, city, timeStamp)
 
     companion object {
         enum class MeteoData {
@@ -11,27 +26,10 @@ class CityForecast(val city: String, imgId: Int, temperature: Int, wind: Int, hu
         }
     }
 
-    constructor(city: String, f: Forecast) : this(city, f.imgId, f.temperature, f.wind, f.humidity, f.pressureMm)
-
     override fun getPressure(isMm: Boolean): Int {
-        if(pressureMm != EMPTY_VAL) {
-            return if(isMm) pressureMm else mmToMb(pressureMm)
+        if (pressureMm != EMPTY_VAL.toInt()) {
+            return if (isMm) pressureMm else mmToMb(pressureMm)
         }
-        return EMPTY_VAL
-    }
-
-    /**
-     * TODO: Удалить не требуемые данные
-     */
-    fun clearUnused(interestingSet: Set<MeteoData>): CityForecast {
-        if(!interestingSet.contains(MeteoData.WIND)) wind = EMPTY_VAL;
-        if(!interestingSet.contains(MeteoData.HUMIDITY)) humidity = EMPTY_VAL;
-        if(!interestingSet.contains(MeteoData.PRESSURE)) pressureMm = EMPTY_VAL;
-        return this
-    }
-
-    override fun toString(): String {
-        return String.format(Locale.US, "City %s, t=%d, w=%d, h=%d, p=%d",
-                city, temperature, wind, humidity, pressureMm)
+        return EMPTY_VAL.toInt()
     }
 }

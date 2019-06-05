@@ -115,7 +115,7 @@ class CitiesFragment : ListFragment() {
 
     private fun showForecast() {
         val citySelected = resources.getStringArray(R.array.cities)[selectedPosition]
-        val forecast = CityForecast(citySelected, forecastSource!!.getForecastById(selectedPosition))
+        val forecast = CityForecast(forecastSource!!.getForecastById(selectedPosition), citySelected)
 
         if (isLandscape) {
 
