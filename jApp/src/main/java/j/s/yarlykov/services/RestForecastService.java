@@ -100,7 +100,7 @@ public class RestForecastService extends Service {
                              final String icon, final CityForecast cf) {
 
         Call<ResponseBody> call = OpenWeatherProvider.getInstance().getApi()
-                .fetchIcon(String.format("http://openweathermap.org/img/w/%s.png", icon));
+                .fetchIcon(String.format("https://openweathermap.org/img/w/%s.png", icon));
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
