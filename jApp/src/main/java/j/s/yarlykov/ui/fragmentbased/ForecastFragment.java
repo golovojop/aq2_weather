@@ -32,7 +32,6 @@ import static j.s.yarlykov.util.Utils.isRu;
 
 public class ForecastFragment extends Fragment implements RestForecastService.RestForecastReceiver {
 
-    public static final String forecastBundleKey = "forecastKey";
     public static final String placeBundleKey = "cityKey";
     public static final String binderBundleKey = "binderKey";
     public static final String indexBundleKey = "indexKey";
@@ -83,13 +82,6 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
         forecastService.requestForecast(this, getCity(), getCountry());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-//        pbfContainer.setVisibility(View.VISIBLE);
-//        forecastContainer.setVisibility(View.GONE);
     }
 
     @Override
