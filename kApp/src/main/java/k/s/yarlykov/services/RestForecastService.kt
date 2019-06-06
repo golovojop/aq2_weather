@@ -84,7 +84,7 @@ class RestForecastService : Service() {
                             icon: String, cf: CityForecast) {
 
         val call = OpenWeatherProvider.api
-                .fetchIcon("http://openweathermap.org/img/w/${icon}.png")
+                .fetchIcon("https://openweathermap.org/img/w/${icon}.png")
 
         call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

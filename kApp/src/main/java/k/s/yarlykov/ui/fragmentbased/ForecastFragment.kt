@@ -44,7 +44,6 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
 
     private var forecastService: RestForecastService? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -56,12 +55,9 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
         return inflater.inflate(R.layout.city_forecast_fragment, container, false)
     }
 
-    var viewFragment: View? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        viewFragment = view
         forecastService?.requestForecast(this, getCity(), getCountry())
     }
 
@@ -161,13 +157,12 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
     }
 
     private fun AlertNoData() {
-        val builder = AlertDialog.Builder(context!!)
-        builder.setTitle(getString(R.string.connectivity_alert))
-
-        val view = layoutInflater.inflate(R.layout.no_data_dialog, viewFragment as ViewGroup)
-        builder.setView(view)
-
-        builder.setPositiveButton(getString(R.string.buttonClose)) { dialog, which -> dialog.dismiss() }
-        builder.show()
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.no_data_dialog, null)
+        AlertDialog.Builder(context!!).apply {
+            setTitle(getString(R.string.connectivity_alert))
+            setPositiveButton(getString(R.string.buttonClose)) { dialog, _ -> dialog.dismiss() }
+            setView(dialogView)
+            show()
+        }
     }
 }

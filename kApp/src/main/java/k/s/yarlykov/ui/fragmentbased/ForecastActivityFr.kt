@@ -10,11 +10,8 @@ import android.view.Menu
 import android.view.MenuItem
 import k.s.yarlykov.R
 import k.s.yarlykov.data.domain.CityForecast
-import k.s.yarlykov.services.RestForecastService
 
 class ForecastActivityFr : AppCompatActivity() {
-
-    lateinit var forecast: CityForecast
 
     companion object {
         private val EXTRA_FORECAST = ForecastActivityFr::class.java.simpleName + ".extra.FORECAST"
@@ -51,16 +48,15 @@ class ForecastActivityFr : AppCompatActivity() {
         }
 
         if(savedInstanceState == null) {
-            val extras = intent.extras
-            val service = extras.getBinder(binderBundleKey)
-            val city = extras.getString(cityBundleKey)
-            val index = extras.getInt(indexBundleKey)
-
-            val forecastFragment = ForecastFragment.create(service, city, index)
-
-            supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.rightFrame, forecastFragment).commit()
+            intent.extras?.apply {
+                val service = getBinder(binderBundleKey)
+                val city = getString(cityBundleKey)
+                val index = getInt(indexBundleKey)
+                val forecastFragment = ForecastFragment.create(service, city, index)
+                supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.rightFrame, forecastFragment).commit()
+            }
         }
     }
 

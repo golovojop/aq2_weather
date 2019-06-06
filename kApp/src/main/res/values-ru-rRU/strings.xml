@@ -49,22 +49,23 @@
     <string name="buttonClose">Закрыть</string>
 
     <!-- Custom View -->
-    <string name="textAvatar">Студент</string>
+    <string name="text_avatar">Студент</string>
 
     <!-- ProgressBar header-->
     <string name="loading">Загружаю...</string>
 
     <!-- Internet connection -->
-    <string name="connectivity_alert">Ошибка соединения</string>
-    <string name="check_connection">Проверьте интернет соединение</string>
+    <string name="connectivity_alert">Нет ответа</string>
+    <string name="check_connection">Город не найден или сервер недоступен</string>
 
     <string-array name="cities">
         <item>Москва</item>
         <item>Санкт Петербург</item>
-        <item>Екатеринбург</item>
         <item>Новосибирск</item>
         <item>Самара</item>
+        <item>Пенза</item>
         <item>Тбилиси</item>
+        <item>Екатеринбург</item>
     </string-array>
 
 </resources>
