@@ -5,12 +5,12 @@ import java.io.Serializable
 open class Forecast (
         val imgId: Int,
         internal var temperature: Int,
-        internal var wind: Int,
+        internal var wind: Float,
         internal var humidity: Int,
         internal var pressureMm: Int) : Serializable {
 
     companion object {
-        val EMPTY_VAL: Int = -1
+        val EMPTY_VAL: Float = -1f
     }
 
     fun mmToMb(mm: Int) = (mm * 1.333f).toInt()

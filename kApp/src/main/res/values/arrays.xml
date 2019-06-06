@@ -3,9 +3,11 @@
     <integer-array name="armsImages">
         <item>@drawable/msc</item><!-- герб Москвы -->
         <item>@drawable/spb</item><!-- герб Санкт-Петербурга -->
-        <item>@drawable/ebrg</item><!-- герб Екатеринбурга -->
         <item>@drawable/nsk</item><!-- герб Новосибирска -->
         <item>@drawable/sam</item><!-- герб Самары -->
+        <item>@drawable/pnz</item><!-- герб Пензы -->
+        <item>@drawable/tbl</item><!-- герб Тбилиси -->
+        <item>@drawable/ebrg</item><!-- герб Екатеринбурга -->
     </integer-array>
 
     <integer-array name="historyLogos">

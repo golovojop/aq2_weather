@@ -2,6 +2,7 @@ package j.s.yarlykov.ui.fragmentbased;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -18,44 +19,30 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Date;
 import java.util.Formatter;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.data.domain.Forecast;
-import j.s.yarlykov.services.CityForecastService;
+import j.s.yarlykov.services.RestForecastService;
 import j.s.yarlykov.ui.fragmentbased.history.HistoryActivity;
 import j.s.yarlykov.util.Utils;
 
 import static j.s.yarlykov.util.Utils.isRu;
 
-public class ForecastFragment extends Fragment implements CityForecastService.ForecastReceiver {
+public class ForecastFragment extends Fragment implements RestForecastService.RestForecastReceiver {
 
-    public static final String forecastBundleKey = "forecastKey";
-    public static final String cityBundleKey = "cityKey";
+    public static final String placeBundleKey = "cityKey";
     public static final String binderBundleKey = "binderKey";
     public static final String indexBundleKey = "indexKey";
 
     private TextView tvCity, tvTemperature, tvWind, tvHumidity, tvPressure;
     private LinearLayout pbfContainer, forecastContainer;
-    private CityForecastService forecastService;
+    private RestForecastService forecastService;
     private ImageView ivSky;
     private Context context;
     private View vStatus;
     private final long TTL = 1 * 1000;
-
-    public static ForecastFragment create(int index, CityForecast forecast) {
-        ForecastFragment fragment = new ForecastFragment();
-
-        // Передача параметров
-        Bundle args = new Bundle();
-        args.putSerializable(forecastBundleKey, forecast);
-        args.putInt(indexBundleKey, index);
-
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     public static ForecastFragment create(IBinder binder, String city, int index) {
         ForecastFragment fragment = new ForecastFragment();
@@ -63,46 +50,23 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
         // Передача параметра
         Bundle args = new Bundle();
         args.putBinder(binderBundleKey, binder);
-        args.putString(cityBundleKey, city);
+        args.putString(placeBundleKey, city);
         args.putInt(indexBundleKey, index);
         fragment.setArguments(args);
         return fragment;
     }
 
-    // Вызывается из CityForecastService
-    @Override
-    public void onForecastReady(final Forecast forecast) {
-        try {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    renderForecast((CityForecast)forecast);
-                }
-            });
-        } catch (NullPointerException e) {
-            Utils.logI(this, "onForecastReady: activity was destroyed");
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
-        Utils.logI(this, "onAttach");
         super.onAttach(context);
         this.context = context;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Utils.logI(this, "onCreate");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         getServiceBinder();
-    }
-
-    @Override
-    public void onDestroy() {
-        Utils.logI(this, "onDestroy");
-        super.onDestroy();
     }
 
     @Nullable
@@ -110,25 +74,14 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        Utils.logI(this, "onCreateView");
         return inflater.inflate(R.layout.city_forecast_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Utils.logI(this, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-    }
-
-    @Override
-    public void onResume() {
-        Utils.logI(this, "onResume");
-        super.onResume();
-
-        pbfContainer.setVisibility(View.VISIBLE);
-        forecastContainer.setVisibility(View.GONE);
-        forecastService.requestForecast(this, getCity());
+        forecastService.requestForecast(this, getCity(), getCountry());
     }
 
     @Override
@@ -145,6 +98,23 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
             default:
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onForecastOnline(Forecast forecast, Bitmap icon) {
+        renderForecast((CityForecast) forecast, true, icon);
+    }
+
+    @Override
+    public void onForecastOffline(Forecast forecast) {
+        if (forecast != null) {
+            renderForecast((CityForecast) forecast, false, null);
+        } else {
+            vStatus.setBackgroundResource(android.R.color.transparent);
+            pbfContainer.setVisibility(View.GONE);
+            forecastContainer.setVisibility(View.GONE);
+            AlertNoData();
+        }
     }
 
     private void initViews(View parent) {
@@ -167,14 +137,24 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
 
     private void getServiceBinder() {
         forecastService
-                = ((CityForecastService.ServiceBinder)
+                = ((RestForecastService.ServiceBinder)
                 getArguments()
                         .getBinder(binderBundleKey))
                 .getService();
     }
 
+    public String getPlace() {
+        return getArguments().getString(placeBundleKey);
+    }
+
     public String getCity() {
-        return getArguments().getString(cityBundleKey);
+        String[] arr = getPlace().split(",", 2);
+        return arr[0];
+    }
+
+    public String getCountry() {
+        String[] arr = getPlace().split(",", 2);
+        return arr[1];
     }
 
     public int getIndex() {
@@ -182,24 +162,18 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
     }
 
     // Отрисовать прогноз на экране
-    private void renderForecast(CityForecast forecast) {
+    private void renderForecast(CityForecast forecast, boolean isOnline, Bitmap icon) {
 
-        // Прогноз не получен - алерт
-        if(forecast == null) {
-            vStatus.setBackgroundResource(R.drawable.red_circle);
-            AlertNoData();
-            return;
-        }
-
-        // Если получен прогноз онлайн, то зеленый индикатор,
-        // иначе красный.
-        long currentTime = new Date().getTime();
-        int drawableId = (currentTime - forecast.getTimestamp() > TTL) ?
-                R.drawable.red_circle : R.drawable.green_circle;
+        // Для онлайн прогноза - зеленый индикатор, иначе красный.
+        int drawableId = isOnline ? R.drawable.green_circle : R.drawable.red_circle;
         vStatus.setBackgroundResource(drawableId);
 
         // Set Weather image
-        ivSky.setImageResource(forecast.getImgId());
+        if (icon != null) {
+            ivSky.setImageBitmap(icon);
+        } else {
+            ivSky.setImageResource(forecast.getImgId());
+        }
 
         //Set City (Uppercase first letter)
         String city = forecast.getCity();
@@ -233,21 +207,16 @@ public class ForecastFragment extends Fragment implements CityForecastService.Fo
         forecastContainer.setVisibility(View.VISIBLE);
     }
 
-    // Эмуляция длительной работы в AsyncTask
     private void loadHistory() {
         HistoryActivity.start(requireContext(), tvCity.getText().toString());
     }
 
-    private void AlertNoData(){
+    private void AlertNoData() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.connectivity_alert));
 
         View view = getLayoutInflater().inflate(R.layout.no_data_dialog, null);
         builder.setView(view);
-
-//        TextView tv = new TextView(getActivity());
-//        tv.setText(getString(R.string.check_connection));
-//        builder.setView(tv);
 
         builder.setPositiveButton(getString(R.string.buttonClose), new DialogInterface.OnClickListener() {
             @Override

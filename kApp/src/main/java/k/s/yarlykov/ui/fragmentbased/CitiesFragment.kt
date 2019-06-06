@@ -44,12 +44,11 @@ class CitiesFragment : ListFragment() {
 
     private var isLandscape: Boolean = false
     private var selectedPosition: Int = 0
-    private var forecastSource: ForecastSource? = null
+    private var forecastSource: IBinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binder =  arguments?.getBinder(KEY_BINDER) as ForecastService.ServiceBinder
-        forecastSource = binder.getService()
+        forecastSource =  arguments?.getBinder(KEY_BINDER)
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -114,8 +113,7 @@ class CitiesFragment : ListFragment() {
     }
 
     private fun showForecast() {
-        val citySelected = resources.getStringArray(R.array.cities)[selectedPosition]
-        val forecast = CityForecast(citySelected, forecastSource!!.getForecastById(selectedPosition))
+        val citySelected = resources.getStringArray(R.array.cities_openweather)[selectedPosition]
 
         if (isLandscape) {
 
@@ -126,7 +124,7 @@ class CitiesFragment : ListFragment() {
                     .findFragmentById(R.id.rightFrame) as ForecastFragment?
 
             if (forecastFragment == null || forecastFragment.getIndex() != selectedPosition) {
-                forecastFragment = ForecastFragment.create(selectedPosition, forecast)
+                forecastFragment = ForecastFragment.create(forecastSource, citySelected, selectedPosition)
 
                 val ft = fragmentManager!!.beginTransaction()
                 ft.replace(R.id.rightFrame, forecastFragment)
@@ -134,7 +132,7 @@ class CitiesFragment : ListFragment() {
                 ft.commit()
             }
         } else {
-            ForecastActivityFr.start(context, forecast)
+            ForecastActivityFr.start(context, forecastSource, citySelected, selectedPosition)
         }
     }
 }

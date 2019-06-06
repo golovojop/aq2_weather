@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -12,16 +13,27 @@ import k.s.yarlykov.data.domain.CityForecast
 
 class ForecastActivityFr : AppCompatActivity() {
 
-    lateinit var forecast: CityForecast
-
     companion object {
         private val EXTRA_FORECAST = ForecastActivityFr::class.java.simpleName + ".extra.FORECAST"
+        val cityBundleKey = "cityKey"
+        val binderBundleKey = "binderKey"
+        val indexBundleKey = "indexKey"
 
         fun start(context: Context?, forecast: CityForecast) {
             val intent = Intent(context, ForecastActivityFr::class.java).apply {
                 putExtra(EXTRA_FORECAST, forecast)
             }
             context?.startActivity(intent)
+        }
+
+        fun start(context: Context?, binder: IBinder?, city: String, index: Int) {
+            context?.startActivity(Intent(context, ForecastActivityFr::class.java).also {intent ->
+                intent.putExtras(Bundle().also {bundle ->
+                    bundle.putBinder(binderBundleKey, binder)
+                    bundle.putString(cityBundleKey, city)
+                    bundle.putInt(indexBundleKey, index)
+                })
+            })
         }
     }
 
@@ -36,13 +48,15 @@ class ForecastActivityFr : AppCompatActivity() {
         }
 
         if(savedInstanceState == null) {
-            forecast = intent.getSerializableExtra(EXTRA_FORECAST) as CityForecast
-
-            val forecastFragment = ForecastFragment.create(0, forecast)
-
-            supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.forecastContainer, forecastFragment).commit()
+            intent.extras?.apply {
+                val service = getBinder(binderBundleKey)
+                val city = getString(cityBundleKey)
+                val index = getInt(indexBundleKey)
+                val forecastFragment = ForecastFragment.create(service, city, index)
+                supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.rightFrame, forecastFragment).commit()
+            }
         }
     }
 

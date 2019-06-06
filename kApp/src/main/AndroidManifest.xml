@@ -25,6 +25,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".services.ForecastService" />
+        <service android:name=".services.RestForecastService" />
     </application>
 
 </manifest>

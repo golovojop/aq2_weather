@@ -8,9 +8,12 @@ public class CityForecast extends Forecast {
         WIND, HUMIDITY, PRESSURE
     }
 
-    private String city;
-
-    public CityForecast(String city, int imgId, int temperature, float wind, int humidity, int pressureMm) {
+    public CityForecast(String city,
+                        int imgId,
+                        int temperature,
+                        float wind,
+                        int humidity,
+                        int pressureMm) {
         super(imgId, temperature, wind, humidity, pressureMm);
         this.city = city;
     }
@@ -34,6 +37,8 @@ public class CityForecast extends Forecast {
                 forecast.pressureMm);
         this.city = city;
     }
+
+    private String city;
 
     public String getCity() {
         return city;

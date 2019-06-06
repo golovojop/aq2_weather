@@ -61,9 +61,11 @@
     <string-array name="cities">
         <item>Москва</item>
         <item>Санкт Петербург</item>
-        <item>Екатеринбург</item>
         <item>Новосибирск</item>
         <item>Самара</item>
+        <item>Пенза</item>
+        <item>Тбилиси</item>
+        <item>Екатеринбург</item>
     </string-array>
 
 </resources>

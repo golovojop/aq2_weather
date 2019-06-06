@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
                 if(chbHumidity.isChecked) requiredMeteoData.add(CityForecast.Companion.MeteoData.HUMIDITY)
                 if(chbPressure.isChecked) requiredMeteoData.add(CityForecast.Companion.MeteoData.PRESSURE)
 
-                ForecastActivity.start(button.context, ForecastProvider.getForecastCustom(city, requiredMeteoData))
+//                ForecastActivity.start(button.context, ForecastProvider.getForecastCustom(city, requiredMeteoData))
             } else Utils.logI(button.context, getString(R.string.incorrectRequest))
         }
     }
