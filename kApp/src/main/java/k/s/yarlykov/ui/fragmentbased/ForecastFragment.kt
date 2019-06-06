@@ -1,7 +1,5 @@
 package k.s.yarlykov.ui.fragmentbased
 
-import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.IBinder
@@ -33,7 +31,7 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
             }
         }
 
-        fun create(binder: IBinder, city: String, index: Int): ForecastFragment {
+        fun create(binder: IBinder?, city: String, index: Int): ForecastFragment {
             return ForecastFragment().apply {
                 arguments = Bundle().also { bundle ->
                     bundle.putBinder(binderBundleKey, binder)
@@ -50,6 +48,7 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        getServiceBinder()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -57,10 +56,13 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
         return inflater.inflate(R.layout.city_forecast_fragment, container, false)
     }
 
+    var viewFragment: View? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        forecastService.requestForecast(this, getCity(), getCountry())
+        viewFragment = view
+        forecastService?.requestForecast(this, getCity(), getCountry())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -99,8 +101,9 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
     }
 
     private fun getServiceBinder() {
-        forecastService = (arguments!!
-                .getBinder(binderBundleKey) as RestForecastService.ServiceBinder).service
+        forecastService =
+                (arguments!!.getBinder(binderBundleKey) as RestForecastService.ServiceBinder)
+                        .service
     }
 
     private fun getPlace(): String? {
@@ -117,17 +120,21 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
         return arr[1]
     }
 
-    private fun getIndex(): Int {
+    fun getIndex(): Int {
         return arguments!!.getInt(indexBundleKey, 0)
     }
 
-    private fun getForecast(): CityForecast {
-        return arguments!!.getSerializable(forecastBundleKey) as CityForecast
-    }
+    fun renderForecast(forecast: CityForecast, isOnline: Boolean, icon: Bitmap?) {
 
-    fun renderForecast(forecast: CityForecast, isOnline: Boolean, icon: Bitmap) {
+        val drawableId = if (isOnline) R.drawable.green_circle else R.drawable.red_circle
+        onlineStatus.setBackgroundResource(drawableId)
+
         // Set Weather image
-        ivSkyF.setImageResource(forecast.imgId)
+        if (icon != null) {
+            ivSkyF.setImageBitmap(icon)
+        } else {
+            ivSkyF.setImageResource(forecast.imgId)
+        }
 
         // Set City (Uppercase first letter)
         tvCityF.text = forecast.city.capitalize()
@@ -136,13 +143,16 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
         tvTemperatureF.text = String.format("%+2d \u2103", forecast.temperature)
 
         // Set Wind
-        tvWindF.text = String.format("%2d %s", forecast.wind, getResources().getString(R.string.infoWind))
+        tvWindF.text = String.format("%.1f %s", forecast.wind, getResources().getString(R.string.infoWind))
 
         // Set Humidity
         tvHumidityF.text = String.format("%2d %%", forecast.humidity)
 
         // Set Pressure
         tvPressureF.text = String.format("%4d %s", forecast.getPressure(isRu()), getResources().getString(R.string.infoPressure))
+
+        pbfContainer.visibility = View.GONE
+        forecastContainer.visibility = View.VISIBLE
     }
 
     // Эмуляция длительной работы в AsyncTask
@@ -151,12 +161,13 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
     }
 
     private fun AlertNoData() {
-        AlertDialog.Builder(context!!).apply {
-            setTitle(getString(R.string.connectivity_alert))
-            setView(layoutInflater.inflate(R.layout.no_data_dialog, this))
-            setPositiveButton(getString(R.string.buttonClose)) { dialog, which -> dialog.dismiss() }
-            show()
-        }
+        val builder = AlertDialog.Builder(context!!)
+        builder.setTitle(getString(R.string.connectivity_alert))
 
+        val view = layoutInflater.inflate(R.layout.no_data_dialog, viewFragment as ViewGroup)
+        builder.setView(view)
+
+        builder.setPositiveButton(getString(R.string.buttonClose)) { dialog, which -> dialog.dismiss() }
+        builder.show()
     }
 }

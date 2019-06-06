@@ -18,7 +18,6 @@ class ForecastActivityFr : AppCompatActivity() {
 
     companion object {
         private val EXTRA_FORECAST = ForecastActivityFr::class.java.simpleName + ".extra.FORECAST"
-
         val cityBundleKey = "cityKey"
         val binderBundleKey = "binderKey"
         val indexBundleKey = "indexKey"
@@ -30,7 +29,7 @@ class ForecastActivityFr : AppCompatActivity() {
             context?.startActivity(intent)
         }
 
-        fun start(context: Context?, binder: IBinder, city: String, index: Int) {
+        fun start(context: Context?, binder: IBinder?, city: String, index: Int) {
             context?.startActivity(Intent(context, ForecastActivityFr::class.java).also {intent ->
                 intent.putExtras(Bundle().also {bundle ->
                     bundle.putBinder(binderBundleKey, binder)

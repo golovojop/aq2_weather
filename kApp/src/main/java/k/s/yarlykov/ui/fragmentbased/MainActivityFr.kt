@@ -22,7 +22,6 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import k.s.yarlykov.R
-import k.s.yarlykov.services.ForecastService
 import k.s.yarlykov.services.RestForecastService
 import kotlinx.android.synthetic.main.activity_main_app_bar.*
 import kotlinx.android.synthetic.main.activity_main_drawer.*

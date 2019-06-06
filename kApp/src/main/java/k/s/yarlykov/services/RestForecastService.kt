@@ -3,8 +3,6 @@ package k.s.yarlykov.services
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Binder
@@ -12,10 +10,8 @@ import android.os.IBinder
 import k.s.yarlykov.data.domain.CityForecast
 import k.s.yarlykov.data.domain.Forecast
 import k.s.yarlykov.data.network.api.OpenWeatherProvider
-import k.s.yarlykov.data.network.model.WeatherModel
 import k.s.yarlykov.data.network.model.WeatherResponseModel
 import k.s.yarlykov.util.Utils
-
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback

@@ -124,10 +124,10 @@ class CitiesFragment : ListFragment() {
                     .findFragmentById(R.id.rightFrame) as ForecastFragment?
 
             if (forecastFragment == null || forecastFragment.getIndex() != selectedPosition) {
-//                forecastFragment = ForecastFragment.create(forecastSource, citySelected, selectedPosition)
+                forecastFragment = ForecastFragment.create(forecastSource, citySelected, selectedPosition)
 
                 val ft = fragmentManager!!.beginTransaction()
-//                ft.replace(R.id.rightFrame, forecastFragment)
+                ft.replace(R.id.rightFrame, forecastFragment)
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 ft.commit()
             }
