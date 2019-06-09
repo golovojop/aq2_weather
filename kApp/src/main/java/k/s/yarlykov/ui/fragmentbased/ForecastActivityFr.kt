@@ -52,7 +52,7 @@ class ForecastActivityFr : AppCompatActivity() {
                 val service = getBinder(binderBundleKey)
                 val city = getString(cityBundleKey)
                 val index = getInt(indexBundleKey)
-                val forecastFragment = ForecastFragment.create(service, city, index)
+                val forecastFragment = ForecastFragment.create(service, city!!, index)
                 supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.rightFrame, forecastFragment).commit()

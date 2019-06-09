@@ -1,35 +1,18 @@
 package k.s.yarlykov.data.domain
 
-import java.util.*
+import java.io.Serializable
 
-class CityForecast(imgId: Int,
-                   temperature: Int,
-                   wind: Float,
-                   humidity: Int,
-                   pressureMm: Int,
-                   val city: String,
-                   val timeStamp: Long = Date().time):
-        Forecast(imgId, temperature, wind, humidity, pressureMm) {
+data class CityForecast(val id: Int,
+                    val city: String,
+                    val country: String,
+                    val temperature: Int,
+                    val icon: Int,
+                    val wind: Float,
+                    val humidity: Int,
+                    val pressure: Int) : Serializable {
 
-    constructor(f: Forecast,
-                city: String):
-            this(f.imgId, f.temperature, f.wind, f.humidity, f.pressureMm, city)
+    fun mmToMb(mm: Int) = (mm * 1.333f).toInt()
+    fun mbToMm(mb: Int) = (mb * 0.75006f).toInt()
+    fun getPressure(isMm: Boolean) = if (isMm) pressure else mmToMb(pressure)
 
-    constructor(f: Forecast,
-                city: String,
-                timeStamp: Long):
-            this(f.imgId, f.temperature, f.wind, f.humidity, f.pressureMm, city, timeStamp)
-
-    companion object {
-        enum class MeteoData {
-            WIND, HUMIDITY, PRESSURE
-        }
-    }
-
-    override fun getPressure(isMm: Boolean): Int {
-        if (pressureMm != EMPTY_VAL.toInt()) {
-            return if (isMm) pressureMm else mmToMb(pressureMm)
-        }
-        return EMPTY_VAL.toInt()
-    }
 }

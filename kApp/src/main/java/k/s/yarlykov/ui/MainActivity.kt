@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViews()
-        setOnClickRequestButton()
+//        setOnClickRequestButton()
     }
 
     private fun initViews() {
@@ -23,19 +23,19 @@ class MainActivity : AppCompatActivity() {
         chbPressure.isChecked = true
     }
 
-    private fun setOnClickRequestButton() {
-        btnRequest.setOnClickListener{ button ->
-            val city: String = etCity.text.toString()
-
-            if(city.length > 1) {
-                val requiredMeteoData: MutableSet<CityForecast.Companion.MeteoData> = mutableSetOf()
-
-                if(chbWind.isChecked) requiredMeteoData.add(CityForecast.Companion.MeteoData.WIND)
-                if(chbHumidity.isChecked) requiredMeteoData.add(CityForecast.Companion.MeteoData.HUMIDITY)
-                if(chbPressure.isChecked) requiredMeteoData.add(CityForecast.Companion.MeteoData.PRESSURE)
-
-//                ForecastActivity.start(button.context, ForecastProvider.getForecastCustom(city, requiredMeteoData))
-            } else Utils.logI(button.context, getString(R.string.incorrectRequest))
-        }
-    }
+//    private fun setOnClickRequestButton() {
+//        btnRequest.setOnClickListener{ button ->
+//            val city: String = etCity.text.toString()
+//
+//            if(city.length > 1) {
+//                val requiredMeteoData: MutableSet<CityForecast.Companion.MeteoData> = mutableSetOf()
+//
+//                if(chbWind.isChecked) requiredMeteoData.add(CityForecast.Companion.MeteoData.WIND)
+//                if(chbHumidity.isChecked) requiredMeteoData.add(CityForecast.Companion.MeteoData.HUMIDITY)
+//                if(chbPressure.isChecked) requiredMeteoData.add(CityForecast.Companion.MeteoData.PRESSURE)
+//
+////                ForecastActivity.start(button.context, ForecastProvider.getForecastCustom(city, requiredMeteoData))
+//            } else Utils.logI(button.context, getString(R.string.incorrectRequest))
+//        }
+//    }
 }
