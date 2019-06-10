@@ -83,7 +83,6 @@ class RestForecastService : Service() {
                     override fun onFailure(call: Call<WeatherResponseModel>, t: Throwable) {
 //                        receiver.onForecastOffline(loadForecast(city))
                         receiver.onForecastOffline(dbLoadForecast(db, city))
-
                     }
                 })
     }

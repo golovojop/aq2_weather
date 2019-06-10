@@ -13,8 +13,8 @@ class DBHelper(
         SQLiteOpenHelper(context, db, factory, version) {
 
     companion object {
-        private val DB_NAME = "meteo.db"
-        private val DB_VERSION = 1
+        private const val DB_NAME = "meteo.db"
+        private const val DB_VERSION = 1
 
         fun create(context: Context): DBHelper = DBHelper(context,
                 DB_NAME, null, DB_VERSION)
