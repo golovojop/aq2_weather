@@ -2,6 +2,7 @@ package j.s.yarlykov.ui.fragmentbased;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -22,8 +23,8 @@ import android.widget.TextView;
 import java.util.Formatter;
 
 import j.s.yarlykov.R;
+import j.s.yarlykov.data.db.DBHelper;
 import j.s.yarlykov.data.domain.CityForecast;
-import j.s.yarlykov.data.domain.Forecast;
 import j.s.yarlykov.services.RestForecastService;
 import j.s.yarlykov.ui.fragmentbased.history.HistoryActivity;
 import j.s.yarlykov.util.Utils;
@@ -40,9 +41,9 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     private LinearLayout pbfContainer, forecastContainer;
     private RestForecastService forecastService;
     private ImageView ivSky;
-    private Context context;
     private View vStatus;
-    private final long TTL = 1 * 1000;
+    private SQLiteDatabase dataBase;
+
 
     public static ForecastFragment create(IBinder binder, String city, int index) {
         ForecastFragment fragment = new ForecastFragment();
@@ -59,7 +60,7 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
+        dataBase = new DBHelper(context).getWritableDatabase();
     }
 
     @Override
@@ -81,7 +82,7 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        forecastService.requestForecast(this, getCity(), getCountry());
+        forecastService.requestForecast(this, getCity(), getCountry(), dataBase);
     }
 
     @Override
@@ -101,20 +102,26 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     }
 
     @Override
-    public void onForecastOnline(Forecast forecast, Bitmap icon) {
-        renderForecast((CityForecast) forecast, true, icon);
+    public void onForecastOnline(CityForecast forecast, Bitmap icon) {
+        renderForecast(forecast, true, icon);
     }
 
     @Override
-    public void onForecastOffline(Forecast forecast) {
+    public void onForecastOffline(CityForecast forecast) {
         if (forecast != null) {
-            renderForecast((CityForecast) forecast, false, null);
+            renderForecast(forecast, false, null);
         } else {
             vStatus.setBackgroundResource(android.R.color.transparent);
             pbfContainer.setVisibility(View.GONE);
             forecastContainer.setVisibility(View.GONE);
             AlertNoData();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        dataBase.close();
     }
 
     private void initViews(View parent) {
@@ -172,7 +179,7 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
         if (icon != null) {
             ivSky.setImageBitmap(icon);
         } else {
-            ivSky.setImageResource(forecast.getImgId());
+            ivSky.setImageResource(forecast.getIcon());
         }
 
         //Set City (Uppercase first letter)
