@@ -99,6 +99,11 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        dataBase.apply { close() }
+    }
+
     private fun initViews() {
         pbfContainer.visibility = (View.VISIBLE)
         forecastContainer.visibility = (View.GONE)
