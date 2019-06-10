@@ -30,11 +30,6 @@ class CitiesFragment : ListFragment() {
         }
     }
 
-    interface ForecastSource {
-        fun getForecastById(id: Int): CityForecast
-        fun getForecastByCity(city: String): CityForecast?
-    }
-
     private  val selectedPositionKey = "SelectedCity"
     private  val KEY_IMAGE_ID = "image"
     private  val KEY_CITY = "city"

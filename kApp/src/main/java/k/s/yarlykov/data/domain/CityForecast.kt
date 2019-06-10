@@ -14,5 +14,4 @@ data class CityForecast(val id: Int,
     fun mmToMb(mm: Int) = (mm * 1.333f).toInt()
     fun mbToMm(mb: Int) = (mb * 0.75006f).toInt()
     fun getPressure(isMm: Boolean) = if (isMm) pressure else mmToMb(pressure)
-
 }
