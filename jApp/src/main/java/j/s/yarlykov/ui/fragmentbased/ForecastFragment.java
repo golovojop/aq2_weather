@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.Formatter;
 
 import j.s.yarlykov.R;
@@ -267,12 +268,24 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
                     public void onResponse(@NonNull Call<FcmResponseModel> call,
                                            @NonNull Response<FcmResponseModel> response) {
                         Utils.logI(this, "FCM sent successfully");
+//                        Utils.logI(this, response.body().success.toString());
+                        okhttp3.Response resp = response.raw();
+                        Utils.logI(this, "send Push result code: " + resp.code());
+                        Utils.logI(this, "Response headers: " + resp.headers().toString());
+                        Utils.logI(this, resp.networkResponse().toString());
+
+//                        try {
+//                            Utils.logI(this, resp.networkResponse().toString());
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
 
                     }
 
                     @Override
                     public void onFailure(Call<FcmResponseModel> call, Throwable t) {
-                        Utils.logI(this, "FCM sent successfully");
+                        Utils.logI(this, "FCM sent failure");
+                        Utils.logI(this, t.getMessage());
                     }
                 });
 

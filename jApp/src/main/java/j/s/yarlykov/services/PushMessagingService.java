@@ -36,6 +36,11 @@ public class PushMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
+        if(remoteMessage == null) {
+            Utils.logI(this, "onMessageReceived: remoteMessage = null");
+            return;
+        }
+
         /**
          * Должен прилететь вот такой json
          * 	    {

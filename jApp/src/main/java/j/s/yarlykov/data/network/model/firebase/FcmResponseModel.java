@@ -20,5 +20,18 @@ public class FcmResponseModel {
     public Integer canonicalIds;
     @SerializedName("results")
     @Expose
-    public List<FcmResultModel> results = null;
+    public List<FcmResultModel> results;
+
+    public FcmResponseModel(Integer multicastId, Integer success, Integer failure,
+                            Integer canonicalIds, List<FcmResultModel> results) {
+        this.multicastId = multicastId;
+        this.success = success;
+        this.failure = failure;
+        this.canonicalIds = canonicalIds;
+        this.results = results;
+    }
+
+    public String showResponse() {
+        return String.format("multicastId: %d\nsuccess: %d\nfailure: %d", multicastId, success, failure);
+    }
 }

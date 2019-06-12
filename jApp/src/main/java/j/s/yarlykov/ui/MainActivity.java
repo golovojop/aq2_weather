@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        subcribePushNotifications();
+
 
         isLandscape = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
@@ -270,6 +272,7 @@ public class MainActivity extends AppCompatActivity
 
     // Подписка на прием Push в топик "weather"
     private void subcribePushNotifications() {
+        Utils.logI(this, "subcribePushNotifications");
         FirebaseMessaging.getInstance().subscribeToTopic("weather")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
