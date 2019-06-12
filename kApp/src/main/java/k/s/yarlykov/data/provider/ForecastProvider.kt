@@ -1,8 +1,18 @@
 package k.s.yarlykov.data.provider
 
 import k.s.yarlykov.R
-import k.s.yarlykov.data.domain.Forecast
-import java.util.*
+import java.io.Serializable
+
+class Forecast (
+        val imgId: Int,
+        internal var temperature: Int,
+        internal var wind: Float,
+        internal var humidity: Int,
+        internal var pressureMm: Int) : Serializable {
+
+    fun mmToMb(mm: Int) = (mm * 1.333f).toInt()
+    fun mbToMm(mb: Int) = (mb * 0.75006f).toInt()
+}
 
 object ForecastProvider {
 
@@ -20,10 +30,5 @@ object ForecastProvider {
         var index = Math.abs(num)
         if (index >= forecasts.size) index = forecasts.size % index
         return forecasts[index]
-    }
-
-    private fun index(): Int {
-        val randomForecast = Random()
-        return randomForecast.nextInt(forecasts.size)
     }
 }

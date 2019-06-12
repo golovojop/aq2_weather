@@ -3,12 +3,13 @@ package k.s.yarlykov.services
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Binder
 import android.os.IBinder
+import k.s.yarlykov.data.db.TabForecast
 import k.s.yarlykov.data.domain.CityForecast
-import k.s.yarlykov.data.domain.Forecast
 import k.s.yarlykov.data.network.api.OpenWeatherProvider
 import k.s.yarlykov.data.network.model.WeatherResponseModel
 import k.s.yarlykov.util.Utils
@@ -20,18 +21,18 @@ import retrofit2.Response
 class RestForecastService : Service() {
 
     // Для работы с SharedPreferences
+    private val country = "country"
     private val temperature = "temp"
+    private val iconId = "icon"
     private val wind = "wind"
     private val pressure = "pressure"
     private val humidity = "humidity"
-    private val timeStamp = "time"
-    private val iconId = "icon"
 
     private val mBinder = ServiceBinder()
 
     interface RestForecastReceiver {
-        fun onForecastOnline(forecastOnline: Forecast, icon: Bitmap)
-        fun onForecastOffline(forecastOffline: Forecast?)
+        fun onForecastOnline(forecastOnline: CityForecast, icon: Bitmap)
+        fun onForecastOffline(forecastOffline: CityForecast?)
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -44,8 +45,9 @@ class RestForecastService : Service() {
     }
 
     // Запросить текущий прогноз погоды для города city
-    fun requestForecast(receiver: RestForecastService.RestForecastReceiver,
-                        city: String, country: String) {
+    fun requestForecast(receiver: RestForecastReceiver,
+                        city: String, country: String,
+                        db: SQLiteDatabase) {
 
         OpenWeatherProvider.api.loadWeather(
                 "$city,$country",
@@ -60,28 +62,35 @@ class RestForecastService : Service() {
                             val model: WeatherResponseModel? = response.body()
 
                             val cf = CityForecast(
-                                    fetchIconId(applicationContext, model!!.weather!![0].icon),
+                                    0,
+                                    model!!.name!!,
+                                    model.sys!!.country!!,
                                     model.main!!.temp.toInt(),
+                                    fetchIconId(applicationContext, model.weather!![0].icon),
                                     model.wind!!.speed,
                                     model.main!!.humidity,
-                                    model.main!!.pressure,
-                                    model.name!!)
-                            saveForecast(cf)
-                            requestIcon(receiver, model.weather!![0].icon!!, cf)
+                                    model.main!!.pressure
+                            )
+
+                            dbSaveForecast(db, cf)
+//                            saveForecast(cf)
+                            requestIcon(receiver, model.weather!![0].icon!!, cf, db)
                         } else {
                             onFailure(call, Throwable(response.message()))
                         }
                     }
 
                     override fun onFailure(call: Call<WeatherResponseModel>, t: Throwable) {
-                        receiver.onForecastOffline(loadForecast(city))
+//                        receiver.onForecastOffline(loadForecast(city))
+                        receiver.onForecastOffline(dbLoadForecast(db, city))
                     }
                 })
     }
 
     // Получить иконку погоды
-    private fun requestIcon(receiver: RestForecastService.RestForecastReceiver,
-                            icon: String, cf: CityForecast) {
+    private fun requestIcon(receiver: RestForecastReceiver,
+                            icon: String, cf: CityForecast,
+                            db: SQLiteDatabase) {
 
         val call = OpenWeatherProvider.api
                 .fetchIcon("https://openweathermap.org/img/w/${icon}.png")
@@ -95,7 +104,8 @@ class RestForecastService : Service() {
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                receiver.onForecastOffline(loadForecast(cf.city))
+//                receiver.onForecastOffline(loadForecast(cf.city))
+                receiver.onForecastOffline(dbLoadForecast(db, cf.city))
             }
         })
     }
@@ -108,17 +118,27 @@ class RestForecastService : Service() {
                 context.packageName)
     }
 
+    private fun dbSaveForecast(db: SQLiteDatabase, cf: CityForecast) {
+        if(TabForecast.editForecast(cf, db) == 0) {
+            TabForecast.addForecast(cf, db)
+        }
+    }
+
+    private fun dbLoadForecast(db: SQLiteDatabase, city: String) : CityForecast? =
+        TabForecast.getCityForecast(city, db)
+
+
     // Сохранить прогноз в SharedPreferences
     private fun saveForecast(cf: CityForecast) {
         val shPrefs = getSharedPreferences(cf.city, Context.MODE_PRIVATE)
         val editor = shPrefs.edit()
 
-        editor.putLong(timeStamp, cf.timeStamp)
+        editor.putString(country, cf.country)
         editor.putInt(temperature, cf.temperature)
+        editor.putInt(iconId, cf.icon)
         editor.putFloat(wind, cf.wind)
-        editor.putInt(pressure, cf.getPressure(Utils.isRu()))
         editor.putInt(humidity, cf.humidity)
-        editor.putInt(iconId, cf.imgId)
+        editor.putInt(pressure, cf.getPressure(Utils.isRu()))
         editor.apply()
     }
 
@@ -126,15 +146,16 @@ class RestForecastService : Service() {
     private fun loadForecast(city: String): CityForecast? {
         val shPrefs = getSharedPreferences(city, Context.MODE_PRIVATE)
 
-        return if (shPrefs.contains(timeStamp)) {
+        return if (shPrefs.contains(country)) {
             CityForecast(
-                    shPrefs.getInt(iconId, 0),
+                    0,
+                    city,
+                    shPrefs.getString(country, "ru")!!,
                     shPrefs.getInt(temperature, 0),
+                    shPrefs.getInt(iconId, 0),
                     shPrefs.getFloat(wind, 0f),
                     shPrefs.getInt(humidity, 0),
-                    shPrefs.getInt(pressure, 0),
-                    city,
-                    shPrefs.getLong(timeStamp, 0))
+                    shPrefs.getInt(pressure, 0))
         } else null
     }
 }

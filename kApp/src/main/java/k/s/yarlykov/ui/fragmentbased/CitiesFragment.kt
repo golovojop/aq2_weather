@@ -1,7 +1,6 @@
 package k.s.yarlykov.ui.fragmentbased
 
 import android.content.res.Configuration
-import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.app.FragmentTransaction
@@ -15,8 +14,6 @@ import android.widget.ListView
 import android.widget.SimpleAdapter
 import k.s.yarlykov.R
 import k.s.yarlykov.data.domain.CityForecast
-import k.s.yarlykov.data.domain.Forecast
-import k.s.yarlykov.services.ForecastService
 import java.util.*
 
 class CitiesFragment : ListFragment() {
@@ -31,11 +28,6 @@ class CitiesFragment : ListFragment() {
                 }
             }
         }
-    }
-
-    interface ForecastSource {
-        fun getForecastById(id: Int): Forecast
-        fun getForecastByCity(city: String): Forecast?
     }
 
     private  val selectedPositionKey = "SelectedCity"

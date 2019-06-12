@@ -4,11 +4,8 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import k.s.yarlykov.data.domain.Forecast
-import k.s.yarlykov.data.provider.ForecastProvider
-import k.s.yarlykov.ui.fragmentbased.CitiesFragment
 
-class ForecastService: Service(), CitiesFragment.ForecastSource {
+class ForecastService: Service() {
 
     val mBinder = ServiceBinder()
 
@@ -20,6 +17,4 @@ class ForecastService: Service(), CitiesFragment.ForecastSource {
         return mBinder
     }
 
-    override fun getForecastById(id: Int): Forecast = ForecastProvider.getForecastByIndex(id)
-    override fun getForecastByCity(city: String): Forecast? = null
 }

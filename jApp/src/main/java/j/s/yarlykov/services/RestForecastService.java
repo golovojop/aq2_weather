@@ -5,14 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 
+import j.s.yarlykov.data.db.TabForecast;
 import j.s.yarlykov.data.domain.CityForecast;
-import j.s.yarlykov.data.domain.Forecast;
 import j.s.yarlykov.data.network.api.OpenWeatherProvider;
 import j.s.yarlykov.data.network.model.WeatherResponseModel;
 import j.s.yarlykov.util.Utils;
@@ -24,21 +25,22 @@ import retrofit2.Response;
 public class RestForecastService extends Service {
 
     // Для работы с SharedPreferences
+    private final String country = "country";
     private final String temperature = "temp";
     private final String wind = "wind";
     private final String pressure = "pressure";
     private final String humidity = "humidity";
-    private final String timeStamp = "time";
     private final String iconId = "icon";
 
     private WeatherResponseModel model = null;
 
     private final IBinder mBinder = new RestForecastService.ServiceBinder();
 
+    // Интерфейс должен быть реализован фрагментом, чтобы получать
+    // результаты запросов
     public interface RestForecastReceiver {
-        void onForecastOnline(Forecast forecastOnline, Bitmap icon);
-
-        void onForecastOffline(Forecast forecastOffline);
+        void onForecastOnline(CityForecast forecastOnline, Bitmap icon);
+        void onForecastOffline(CityForecast forecastOffline);
     }
 
     @Override
@@ -59,7 +61,8 @@ public class RestForecastService extends Service {
 
     // Запросить теукщий прогноз погоды для города city
     public void requestForecast(final RestForecastService.RestForecastReceiver receiver,
-                                final String city, final String country) {
+                                final String city, final String country,
+                                final SQLiteDatabase db) {
 
         OpenWeatherProvider.getInstance().getApi().loadWeather(
                 city + "," + country,
@@ -75,13 +78,16 @@ public class RestForecastService extends Service {
                             model = response.body();
                             CityForecast cf = new CityForecast(
                                     model.name,
-                                    fetchIconId(getApplicationContext(), model.weather[0].icon),
+                                    model.sys.country,
                                     (int) model.main.temp,
+                                    fetchIconId(getApplicationContext(), model.weather[0].icon),
                                     model.wind.speed,
                                     model.main.humidity,
                                     model.main.pressure);
-                            saveForecast(cf);
-                            requestIcon(receiver, model.weather[0].icon, cf);
+
+//                            spSaveForecast(cf);
+                            dbSaveForecast(cf, db);
+                            requestIcon(receiver, model.weather[0].icon, cf, db);
 
                         } else {
                             onFailure(call, new Throwable(response.message()));
@@ -90,14 +96,16 @@ public class RestForecastService extends Service {
 
                     @Override
                     public void onFailure(Call<WeatherResponseModel> call, Throwable t) {
-                        receiver.onForecastOffline(loadForecast(city));
+//                        receiver.onForecastOffline(spLoadForecast(city));
+                        receiver.onForecastOffline(dbLoadForecast(city, db));
                     }
                 });
     }
 
     // Получить иконку погоды
     private void requestIcon(final RestForecastService.RestForecastReceiver receiver,
-                             final String icon, final CityForecast cf) {
+                             final String icon, final CityForecast cf,
+                             final SQLiteDatabase db) {
 
         Call<ResponseBody> call = OpenWeatherProvider.getInstance().getApi()
                 .fetchIcon(String.format("https://openweathermap.org/img/w/%s.png", icon));
@@ -113,7 +121,8 @@ public class RestForecastService extends Service {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                receiver.onForecastOffline(loadForecast(cf.getCity()));
+//                receiver.onForecastOffline(spLoadForecast(cf.getCity()));
+                receiver.onForecastOffline(dbLoadForecast(cf.getCity(), db));
             }
         });
     }
@@ -126,31 +135,49 @@ public class RestForecastService extends Service {
                 context.getPackageName());
     }
 
+    /**
+     * Методы для работы с SQLite
+     */
+    private void dbSaveForecast(CityForecast cf, SQLiteDatabase db) {
+        if(TabForecast.editForecast(cf, db) == 0) {
+            TabForecast.addForecast(cf, db);
+        }
+    }
+
+    private CityForecast dbLoadForecast(String city, SQLiteDatabase db) {
+        return TabForecast.getCityForecast(city, db);
+    }
+
+    /**
+     * Методы для работы с SharedPreferences
+     */
+
     // Сохранить прогноз в SharedPreferences
-    private void saveForecast(CityForecast cf) {
+    private void spSaveForecast(CityForecast cf) {
         SharedPreferences shPrefs = getSharedPreferences(cf.getCity(), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shPrefs.edit();
 
-        editor.putLong(timeStamp, cf.getTimestamp());
+        editor.putString(country, cf.getCountry());
         editor.putInt(temperature, cf.getTemperature());
+        editor.putInt(iconId, cf.getIcon());
         editor.putFloat(wind, cf.getWind());
-        editor.putInt(pressure, cf.getPressure(Utils.isRu()));
         editor.putInt(humidity, cf.getHumidity());
-        editor.putInt(iconId, cf.getImgId());
+        editor.putInt(pressure, cf.getPressure(Utils.isRu()));
         editor.apply();
     }
 
     // Загрузить прогноз из SharedPreferences
-    private CityForecast loadForecast(String city) {
+    private CityForecast spLoadForecast(String city) {
         SharedPreferences shPrefs = getSharedPreferences(city, Context.MODE_PRIVATE);
-        if (shPrefs.contains(timeStamp)) {
+        if (shPrefs.contains(country)) {
+
             return new CityForecast(city,
-                    shPrefs.getInt(iconId, 0),
+                    shPrefs.getString(country, "ru"),
                     shPrefs.getInt(temperature, 0),
+                    shPrefs.getInt(iconId, 0),
                     shPrefs.getFloat(wind, 0f),
                     shPrefs.getInt(humidity, 0),
-                    shPrefs.getInt(pressure, 0),
-                    shPrefs.getLong(timeStamp, 0));
+                    shPrefs.getInt(pressure, 0));
         }
         return null;
     }

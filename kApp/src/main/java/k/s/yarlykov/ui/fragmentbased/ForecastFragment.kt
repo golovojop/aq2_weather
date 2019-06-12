@@ -1,5 +1,7 @@
 package k.s.yarlykov.ui.fragmentbased
 
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.IBinder
@@ -7,14 +9,16 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.view.*
 import k.s.yarlykov.R
+import k.s.yarlykov.data.db.DBHelper
 import k.s.yarlykov.data.domain.CityForecast
-import k.s.yarlykov.data.domain.Forecast
 import k.s.yarlykov.services.RestForecastService
 import k.s.yarlykov.ui.fragmentbased.history.HistoryActivity
 import k.s.yarlykov.util.Utils.isRu
 import kotlinx.android.synthetic.main.city_forecast_fragment.*
 
 class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
+
+    lateinit var dataBase: SQLiteDatabase
 
     companion object {
         val forecastBundleKey = "forecastKey"
@@ -44,6 +48,11 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
 
     private var forecastService: RestForecastService? = null
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        dataBase = DBHelper.create(context!!).writableDatabase
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -58,7 +67,7 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        forecastService?.requestForecast(this, getCity(), getCountry())
+        forecastService?.requestForecast(this, getCity(), getCountry(), dataBase)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -75,19 +84,24 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onForecastOnline(forecast: Forecast, icon: Bitmap) {
-        renderForecast(forecast as CityForecast, true, icon)
+    override fun onForecastOnline(forecastOnline: CityForecast, icon: Bitmap) {
+        renderForecast(forecastOnline, true, icon)
     }
 
-    override fun onForecastOffline(forecast: Forecast?) {
-        if (forecast != null) {
-            renderForecast(forecast as CityForecast, false, null)
+    override fun onForecastOffline(forecastOffline: CityForecast?) {
+        if (forecastOffline != null) {
+            renderForecast(forecastOffline, false, null)
         } else {
             onlineStatus.setBackgroundResource(android.R.color.transparent)
             pbfContainer.visibility = View.GONE
             forecastContainer.visibility = View.GONE
             AlertNoData()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dataBase.apply { close() }
     }
 
     private fun initViews() {
@@ -129,7 +143,7 @@ class ForecastFragment : Fragment(), RestForecastService.RestForecastReceiver {
         if (icon != null) {
             ivSkyF.setImageBitmap(icon)
         } else {
-            ivSkyF.setImageResource(forecast.imgId)
+            ivSkyF.setImageResource(forecast.icon)
         }
 
         // Set City (Uppercase first letter)
