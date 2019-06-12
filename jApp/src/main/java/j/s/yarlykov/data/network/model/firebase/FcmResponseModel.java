@@ -1,4 +1,4 @@
-package j.s.yarlykov.data.network.model;
+package j.s.yarlykov.data.network.model.firebase;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
@@ -21,3 +21,4 @@ public class FcmResponseModel {
     @SerializedName("results")
     @Expose
     public List<FcmResultModel> results = null;
+}

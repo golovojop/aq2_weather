@@ -1,8 +1,10 @@
 package j.s.yarlykov.ui;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -22,6 +24,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -44,6 +55,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String F_KEY = "F_KEY";
+    private static final String SP_FCM_DATA = "SP_FCM_DATA";
+    private static final String SP_FCM_TOKEN = "token";
+
     private FrameLayout rightFrame;
     private boolean isLandscape, isBound;
     private ServiceConnection serviceConnection;
@@ -52,6 +66,19 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
+
+        // Инициализировать Firebase, сохранить токен приложения
+        FirebaseApp.initializeApp(getApplicationContext());
+        FirebaseInstanceId
+                .getInstance()
+                .getInstanceId()
+                .addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                saveFirebaseToken(instanceIdResult.getToken());
+            }
+        });
+
 
         isLandscape = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
@@ -239,5 +266,33 @@ public class MainActivity extends AppCompatActivity
         }
 
         ft.addToBackStack(null).commit();
+    }
+
+    // Подписка на прием Push в топик "weather"
+    private void subcribePushNotifications() {
+        FirebaseMessaging.getInstance().subscribeToTopic("weather")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "subscribed";
+                        if (!task.isSuccessful()) {
+                            msg += " failed";
+                        }
+                        Utils.logI(this, msg);
+                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void saveFirebaseToken(String token) {
+        SharedPreferences shPrefs = getSharedPreferences(SP_FCM_DATA, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shPrefs.edit();
+        editor.putString(SP_FCM_TOKEN, token);
+        editor.apply();
+    }
+
+    private String readFirebaseToken() {
+        SharedPreferences shPrefs = getSharedPreferences(SP_FCM_DATA, Context.MODE_PRIVATE);
+        return shPrefs.getString(SP_FCM_TOKEN, "");
     }
 }

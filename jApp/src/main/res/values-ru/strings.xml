@@ -24,6 +24,7 @@
     <string name="today">Сегодня</string>
     <string name="last_week">Архив погоды</string>
     <string name="addHistory">Добавить</string>
+    <string name="share">Отправить</string>
 
     <!-- Feedback Form -->
     <string name="feedBackInvitation">Оставьте свой отзыв</string>

@@ -30,6 +30,7 @@
     <string name="today">Today</string>
     <string name="last_week">Past days</string>
     <string name="addHistory">Add</string>
+    <string name="share">Share</string>
 
     <!-- Feedback Form -->
     <string name="feedBackInvitation">Type your feedback here</string>
