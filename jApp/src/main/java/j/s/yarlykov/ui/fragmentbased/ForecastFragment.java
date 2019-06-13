@@ -20,14 +20,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.Formatter;
 
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.db.DBHelper;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.data.network.api.FirebaseProvider;
-import j.s.yarlykov.data.network.model.WeatherResponseModel;
 import j.s.yarlykov.data.network.model.firebase.FcmResponseModel;
 import j.s.yarlykov.data.network.model.firebase.PushDataModel;
 import j.s.yarlykov.data.network.model.firebase.PushMessageModel;
@@ -45,7 +43,10 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     public static final String placeBundleKey = "cityKey";
     public static final String binderBundleKey = "binderKey";
     public static final String indexBundleKey = "indexKey";
-    public static final String appsTopic = "/topics/weather";
+
+    public static final String fcmTopic = "/topics/weather";
+    public static final String fcmKey = "key=AIzaSyBWI-ySOo3LMex1e-y27jBmLHhO6VRTydQ";
+    public static final String fcmMimeType = "application/json";
 
     private TextView tvCity, tvTemperature, tvWind, tvHumidity, tvPressure;
     private LinearLayout pbfContainer, forecastContainer;
@@ -249,41 +250,36 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
         builder.show();
     }
 
+    // Отправить Push-сообщение
     private void pushForecast() {
-        Utils.logI(this, "pushForecast");
-
-
-        if(lastForecast == null) return;
+        if (lastForecast == null) return;
 
         PushDataModel pdm = PushDataModel.createFrom(lastForecast);
         FirebaseProvider
                 .getInstance()
                 .getApi()
                 .sendPushNotification(
-                        "key=AIzaSyBWI-ySOo3LMex1e-y27jBmLHhO6VRTydQ",
-                        "application/json",
-                        new PushMessageModel(appsTopic, pdm))
-                .enqueue(new Callback<FcmResponseModel>(){
+                        fcmKey,
+                        fcmMimeType,
+                        new PushMessageModel(fcmTopic, pdm))
+                .enqueue(new Callback<FcmResponseModel>() {
                     @Override
                     public void onResponse(@NonNull Call<FcmResponseModel> call,
                                            @NonNull Response<FcmResponseModel> response) {
-                        Utils.logI(this, "FCM sent successfully");
-//                        Utils.logI(this, response.body().success.toString());
-                        okhttp3.Response resp = response.raw();
-                        Utils.logI(this, "send Push result code: " + resp.code());
-                        Utils.logI(this, "Response headers: " + resp.headers().toString());
-                        Utils.logI(this, resp.networkResponse().toString());
+                        okhttp3.Response rawResp = response.raw();
 
-//                        try {
-//                            Utils.logI(this, resp.networkResponse().toString());
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-
+                        // Debug
+                        if(rawResp.networkResponse() != null) {
+                            Utils.logI(this, "FCM sent successfully");
+                            Utils.logI(this, "Operation result code: " + rawResp.code());
+                            Utils.logI(this, "Response headers: " + rawResp.headers().toString());
+                            Utils.logI(this, rawResp.networkResponse().toString());
+                        }
                     }
 
                     @Override
-                    public void onFailure(Call<FcmResponseModel> call, Throwable t) {
+                    public void onFailure(@NonNull Call<FcmResponseModel> call,
+                                          @NonNull Throwable t) {
                         Utils.logI(this, "FCM sent failure");
                         Utils.logI(this, t.getMessage());
                     }

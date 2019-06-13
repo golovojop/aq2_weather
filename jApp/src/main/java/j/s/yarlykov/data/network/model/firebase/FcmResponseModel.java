@@ -30,8 +30,4 @@ public class FcmResponseModel {
         this.canonicalIds = canonicalIds;
         this.results = results;
     }
-
-    public String showResponse() {
-        return String.format("multicastId: %d\nsuccess: %d\nfailure: %d", multicastId, success, failure);
-    }
 }

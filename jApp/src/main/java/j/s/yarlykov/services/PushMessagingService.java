@@ -22,15 +22,6 @@ import j.s.yarlykov.R;
 import j.s.yarlykov.ui.MainActivity;
 import j.s.yarlykov.util.Utils;
 
-/**
- * Legacy Server Key
- * AIzaSyBWI-ySOo3LMex1e-y27jBmLHhO6VRTydQ
- *
- * API Key for web app (видимо для сервера рассылающего Push)
- * AIzaSyD_2KJ1O7QM7vZ9nu3hRoW-SoKDUx7Sk3U
- *
- */
-
 public class PushMessagingService extends FirebaseMessagingService {
 
     @Override
@@ -53,20 +44,15 @@ public class PushMessagingService extends FirebaseMessagingService {
          * 		}
          */
         StringBuilder sb = new StringBuilder();
-        List<String> keys = Arrays.asList(
-                "city",
-                "country",
-                "temperature",
-                "wind",
-                "humidity",
-                "pressure");
 
         if (remoteMessage.getData().size() > 0) {
             Map<String, String> data = remoteMessage.getData();
 
-            for(String k : keys) {
+            for(String key : data.keySet()) {
                 try {
-                    sb.append(String.format("%s: %s\n", k, data.get(k)));
+                    sb.append(String.format("'%s: %s' ", key, data.get(key)));
+                    Utils.logI(this, "onMessageReceived: " + key + ":" + data.get(key));
+
                 } catch (NullPointerException exc) {
                     exc.printStackTrace();
                 }
@@ -80,11 +66,6 @@ public class PushMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             Utils.logI(this, "Notification received");
         }
-    }
-
-    @Override
-    public void onNewToken(String token) {
-        sendRegistrationToServer(token);
     }
 
     private void makeNotification(Context context, String messageBody) {
@@ -108,18 +89,14 @@ public class PushMessagingService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Since android Oreo notification channel is needed.
+        // Notification channel (Android Oreo ++)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,
-                    "Channel human readable title",
+                    "Channel " + channelId,
                     NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }
 
         notificationManager.notify(0, notificationBuilder.build());
-    }
-
-    private void sendRegistrationToServer(String token) {
-        Toast.makeText(getApplicationContext(), token, Toast.LENGTH_SHORT).show();
     }
 }

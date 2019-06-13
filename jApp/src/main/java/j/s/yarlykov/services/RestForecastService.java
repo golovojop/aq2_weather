@@ -15,7 +15,7 @@ import android.support.annotation.NonNull;
 import j.s.yarlykov.data.db.TabForecast;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.data.network.api.OpenWeatherProvider;
-import j.s.yarlykov.data.network.model.WeatherResponseModel;
+import j.s.yarlykov.data.network.model.openweather.WeatherResponseModel;
 import j.s.yarlykov.util.Utils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;

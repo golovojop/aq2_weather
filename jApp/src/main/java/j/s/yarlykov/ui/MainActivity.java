@@ -1,5 +1,6 @@
 package j.s.yarlykov.ui;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -272,17 +274,15 @@ public class MainActivity extends AppCompatActivity
 
     // Подписка на прием Push в топик "weather"
     private void subcribePushNotifications() {
-        Utils.logI(this, "subcribePushNotifications");
         FirebaseMessaging.getInstance().subscribeToTopic("weather")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         String msg = "subscribed";
                         if (!task.isSuccessful()) {
-                            msg += " failed";
+                            msg = "not " + msg;
                         }
-                        Utils.logI(this, msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        Utils.logI(this, String.format("subcribePushNotifications: %s", msg));
                     }
                 });
     }
@@ -298,4 +298,5 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences shPrefs = getSharedPreferences(SP_FCM_DATA, Context.MODE_PRIVATE);
         return shPrefs.getString(SP_FCM_TOKEN, "");
     }
+
 }
