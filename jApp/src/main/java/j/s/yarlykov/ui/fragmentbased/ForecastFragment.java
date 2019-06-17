@@ -25,9 +25,16 @@ import java.util.Formatter;
 import j.s.yarlykov.R;
 import j.s.yarlykov.data.db.DBHelper;
 import j.s.yarlykov.data.domain.CityForecast;
+import j.s.yarlykov.data.network.api.FirebaseProvider;
+import j.s.yarlykov.data.network.model.firebase.FcmResponseModel;
+import j.s.yarlykov.data.network.model.firebase.PushDataModel;
+import j.s.yarlykov.data.network.model.firebase.PushMessageModel;
 import j.s.yarlykov.services.RestForecastService;
 import j.s.yarlykov.ui.fragmentbased.history.HistoryActivity;
 import j.s.yarlykov.util.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static j.s.yarlykov.util.Utils.isRu;
 
@@ -37,12 +44,17 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     public static final String binderBundleKey = "binderKey";
     public static final String indexBundleKey = "indexKey";
 
+    public static final String fcmTopic = "/topics/weather";
+    public static final String fcmKey = "key=AIzaSyBWI-ySOo3LMex1e-y27jBmLHhO6VRTydQ";
+    public static final String fcmMimeType = "application/json";
+
     private TextView tvCity, tvTemperature, tvWind, tvHumidity, tvPressure;
     private LinearLayout pbfContainer, forecastContainer;
     private RestForecastService forecastService;
     private ImageView ivSky;
     private View vStatus;
     private SQLiteDatabase dataBase;
+    private CityForecast lastForecast;
 
 
     public static ForecastFragment create(IBinder binder, String city, int index) {
@@ -96,6 +108,8 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
             case R.id.actionWeek:
                 loadHistory();
                 break;
+            case R.id.actionShare:
+                pushForecast();
             default:
         }
         return super.onOptionsItemSelected(item);
@@ -103,12 +117,14 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
 
     @Override
     public void onForecastOnline(CityForecast forecast, Bitmap icon) {
+        lastForecast = forecast;
         renderForecast(forecast, true, icon);
     }
 
     @Override
     public void onForecastOffline(CityForecast forecast) {
         if (forecast != null) {
+            lastForecast = forecast;
             renderForecast(forecast, false, null);
         } else {
             vStatus.setBackgroundResource(android.R.color.transparent);
@@ -232,5 +248,42 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
             }
         });
         builder.show();
+    }
+
+    // Отправить Push-сообщение
+    private void pushForecast() {
+        if (lastForecast == null) return;
+
+        PushDataModel pdm = PushDataModel.createFrom(lastForecast);
+        FirebaseProvider
+                .getInstance()
+                .getApi()
+                .sendPushNotification(
+                        fcmKey,
+                        fcmMimeType,
+                        new PushMessageModel(fcmTopic, pdm))
+                .enqueue(new Callback<FcmResponseModel>() {
+                    @Override
+                    public void onResponse(@NonNull Call<FcmResponseModel> call,
+                                           @NonNull Response<FcmResponseModel> response) {
+                        okhttp3.Response rawResp = response.raw();
+
+                        // Debug
+                        if(rawResp.networkResponse() != null) {
+                            Utils.logI(this, "FCM sent successfully");
+                            Utils.logI(this, "Operation result code: " + rawResp.code());
+                            Utils.logI(this, "Response headers: " + rawResp.headers().toString());
+                            Utils.logI(this, rawResp.networkResponse().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<FcmResponseModel> call,
+                                          @NonNull Throwable t) {
+                        Utils.logI(this, "FCM sent failure");
+                        Utils.logI(this, t.getMessage());
+                    }
+                });
+
     }
 }

@@ -27,7 +27,8 @@ public class Utils {
     public static String capitalize(String text) {
         StringBuilder sb = new StringBuilder();
         for(String s : text.split("\\s")) {
-            sb.append(s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase());
+            String tmp = s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+            sb.append(tmp);
             sb.append(" ");
         }
         return sb.toString().trim();

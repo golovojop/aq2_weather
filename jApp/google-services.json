@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "441379822643",
+    "firebase_url": "https://jweather-geekbrains.firebaseio.com",
+    "project_id": "jweather-geekbrains",
+    "storage_bucket": "jweather-geekbrains.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441379822643:android:9502f740c7ab3363",
+        "android_client_info": {
+          "package_name": "j.s.yarlykov"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "441379822643-720tlab8r2qr1rcb1gmrn9u62aghtjlf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByLxr2pZddb1EtYJCdb1rW1KjYLCdMNa8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "441379822643-720tlab8r2qr1rcb1gmrn9u62aghtjlf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

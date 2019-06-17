@@ -1,6 +1,6 @@
 package j.s.yarlykov.data.network.api;
 
-import j.s.yarlykov.data.network.model.WeatherResponseModel;
+import j.s.yarlykov.data.network.model.openweather.WeatherResponseModel;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;

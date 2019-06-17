@@ -1,34 +1,41 @@
 package j.s.yarlykov.ui;
 
+import android.Manifest;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import j.s.yarlykov.R;
-import j.s.yarlykov.data.domain.CityForecast;
-import j.s.yarlykov.data.provider.ForecastProvider;
 import j.s.yarlykov.services.RestForecastService;
 import j.s.yarlykov.ui.fragmentbased.CitiesFragment;
 import j.s.yarlykov.ui.fragmentbased.DevInfoFragment;
@@ -38,20 +45,38 @@ import j.s.yarlykov.ui.fragmentbased.SensorsFragment;
 import j.s.yarlykov.ui.fragmentbased.TemperatureSensorFragment;
 import j.s.yarlykov.util.Utils;
 
-import static j.s.yarlykov.data.domain.CityForecast.*;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String F_KEY = "F_KEY";
+    private static final String SP_FCM_DATA = "SP_FCM_DATA";
+    private static final String SP_FCM_TOKEN = "token";
+
     private FrameLayout rightFrame;
     private boolean isLandscape, isBound;
     private ServiceConnection serviceConnection;
+    private final int permissionRequestCode = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
+
+        // Инициализировать Firebase, сохранить токен приложения
+        FirebaseApp.initializeApp(getApplicationContext());
+        FirebaseInstanceId
+                .getInstance()
+                .getInstanceId()
+                .addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                    @Override
+                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                        saveFirebaseToken(instanceIdResult.getToken());
+                    }
+                });
+
+        subcribePushNotifications();
+
+        requestSmsPermissions();
 
         isLandscape = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
@@ -190,6 +215,21 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if(requestCode == permissionRequestCode) {
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getApplicationContext(), "Спасибо!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "Извините, апп без данного разрешения может работать неправильно",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void initSideMenu(Toolbar toolbar) {
         DrawerLayout drawer = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navView);
@@ -239,5 +279,51 @@ public class MainActivity extends AppCompatActivity
         }
 
         ft.addToBackStack(null).commit();
+    }
+
+    // Подписка на прием Push в топик "weather"
+    private void subcribePushNotifications() {
+        FirebaseMessaging.getInstance().subscribeToTopic("weather")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "subscribed";
+                        if (!task.isSuccessful()) {
+                            msg = "not " + msg;
+                        }
+                        Utils.logI(this, String.format("subcribePushNotifications: %s", msg));
+                    }
+                });
+    }
+
+    private void saveFirebaseToken(String token) {
+        SharedPreferences shPrefs = getSharedPreferences(SP_FCM_DATA, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shPrefs.edit();
+        editor.putString(SP_FCM_TOKEN, token);
+        editor.apply();
+    }
+
+    private String readFirebaseToken() {
+        SharedPreferences shPrefs = getSharedPreferences(SP_FCM_DATA, Context.MODE_PRIVATE);
+        return shPrefs.getString(SP_FCM_TOKEN, "");
+    }
+
+    private void requestSmsPermissions() {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                (!smsRcvGranted() || !smsSendGranted())) {
+            final String[] permissions =
+                    new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
+            ActivityCompat.requestPermissions(this, permissions, permissionRequestCode);
+        }
+    }
+
+    private boolean smsRcvGranted() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean smsSendGranted() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                == PackageManager.PERMISSION_GRANTED;
     }
 }
