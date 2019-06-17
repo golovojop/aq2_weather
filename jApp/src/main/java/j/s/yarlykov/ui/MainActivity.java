@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -36,6 +37,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import j.s.yarlykov.R;
+import j.s.yarlykov.data.provider.GeoProvider;
 import j.s.yarlykov.services.RestForecastService;
 import j.s.yarlykov.ui.fragmentbased.CitiesFragment;
 import j.s.yarlykov.ui.fragmentbased.DevInfoFragment;
@@ -55,7 +57,9 @@ public class MainActivity extends AppCompatActivity
     private FrameLayout rightFrame;
     private boolean isLandscape, isBound;
     private ServiceConnection serviceConnection;
-    private final int permissionRequestCode = 123;
+    private GeoProvider geoProvider;
+    private final int REQUEST_PERM_SMS = 101;
+    private final int REQUEST_PERM_LOCATION = 102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +78,13 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        subcribePushNotifications();
-
+        subsribePushNotifications();
         requestSmsPermissions();
+
+        GeoProvider.GeoProviderHelper.init(getApplicationContext(),
+                (LocationManager) getSystemService(LOCATION_SERVICE));
+        geoProvider = GeoProvider.GeoProviderHelper.getProvider();
+        requestLocationPermissions();
 
         isLandscape = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
@@ -219,14 +227,24 @@ public class MainActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if(requestCode == permissionRequestCode) {
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getApplicationContext(), "Спасибо!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getApplicationContext(),
-                        "Извините, апп без данного разрешения может работать неправильно",
-                        Toast.LENGTH_SHORT).show();
-            }
+
+        switch (requestCode) {
+            case REQUEST_PERM_SMS:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(), "Спасибо!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Извините, апп без данного разрешения может работать неправильно",
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case REQUEST_PERM_LOCATION:
+                if (grantResults.length == 2 &&
+                        (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+                    // Пермиссия дана
+                    geoProvider.requestLocation();
+                }
+                break;
         }
     }
 
@@ -282,7 +300,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Подписка на прием Push в топик "weather"
-    private void subcribePushNotifications() {
+    private void subsribePushNotifications() {
         FirebaseMessaging.getInstance().subscribeToTopic("weather")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -291,7 +309,7 @@ public class MainActivity extends AppCompatActivity
                         if (!task.isSuccessful()) {
                             msg = "not " + msg;
                         }
-                        Utils.logI(this, String.format("subcribePushNotifications: %s", msg));
+                        Utils.logI(this, String.format("subsribePushNotifications: %s", msg));
                     }
                 });
     }
@@ -308,12 +326,25 @@ public class MainActivity extends AppCompatActivity
         return shPrefs.getString(SP_FCM_TOKEN, "");
     }
 
+    private void requestLocationPermissions() {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                    },
+                    REQUEST_PERM_LOCATION);
+        }
+    }
+
     private void requestSmsPermissions() {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 (!smsRcvGranted() || !smsSendGranted())) {
-            final String[] permissions =
-                    new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS};
-            ActivityCompat.requestPermissions(this, permissions, permissionRequestCode);
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            Manifest.permission.RECEIVE_SMS,
+                            Manifest.permission.SEND_SMS},
+                    REQUEST_PERM_SMS);
         }
     }
 

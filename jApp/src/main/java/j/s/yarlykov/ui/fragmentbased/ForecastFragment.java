@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.nio.channels.GatheringByteChannel;
 import java.util.Formatter;
 
 import j.s.yarlykov.R;
@@ -29,6 +31,7 @@ import j.s.yarlykov.data.network.api.FirebaseProvider;
 import j.s.yarlykov.data.network.model.firebase.FcmResponseModel;
 import j.s.yarlykov.data.network.model.firebase.PushDataModel;
 import j.s.yarlykov.data.network.model.firebase.PushMessageModel;
+import j.s.yarlykov.data.provider.GeoProvider;
 import j.s.yarlykov.services.RestForecastService;
 import j.s.yarlykov.ui.fragmentbased.history.HistoryActivity;
 import j.s.yarlykov.util.Utils;
@@ -55,7 +58,6 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     private View vStatus;
     private SQLiteDatabase dataBase;
     private CityForecast lastForecast;
-
 
     public static ForecastFragment create(IBinder binder, String city, int index) {
         ForecastFragment fragment = new ForecastFragment();
@@ -94,7 +96,16 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        forecastService.requestForecast(this, getCity(), getCountry(), dataBase);
+        GeoProvider provider = GeoProvider.GeoProviderHelper.getProvider();
+
+        if(getIndex() == 0 && provider.getLastLocation() != null) {
+            forecastService.requestGeoForecast(this,
+                    (int)provider.getLastLocation().getLatitude(),
+                    (int)provider.getLastLocation().getLongitude(),
+                    dataBase);
+        } else {
+            forecastService.requestForecast(this, getCity(), getCountry(), dataBase);
+        }
     }
 
     @Override

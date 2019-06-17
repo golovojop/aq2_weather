@@ -60,13 +60,13 @@
     <string name="check_connection">Город не найден или сервер недоступен</string>
 
     <string-array name="cities">
+        <item>Текущее место</item>
         <item>Москва</item>
         <item>Санкт Петербург</item>
         <item>Новосибирск</item>
         <item>Самара</item>
         <item>Пенза</item>
         <item>Тбилиси</item>
-        <item>Екатеринбург</item>
     </string-array>
 
 </resources>
