@@ -99,7 +99,7 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
         GeoProvider provider = GeoProvider.GeoProviderHelper.getProvider();
 
         if(getIndex() == 0 && provider.getLastLocation() != null) {
-            forecastService.requestGeoForecast(this,
+            forecastService.requestForecast(this,
                     (int)provider.getLastLocation().getLatitude(),
                     (int)provider.getLastLocation().getLongitude(),
                     dataBase);

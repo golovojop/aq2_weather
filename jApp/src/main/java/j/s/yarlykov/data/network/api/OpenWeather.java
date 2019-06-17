@@ -1,7 +1,6 @@
 package j.s.yarlykov.data.network.api;
 
 import j.s.yarlykov.data.network.model.openweather.WeatherResponseModel;
-import j.s.yarlykov.data.network.model.openweather.geo.GeoWeatherResponseModel;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -15,7 +14,7 @@ public interface OpenWeather {
                                            @Query("units") String units);
 
     @GET("data/2.5/weather")
-    Call<GeoWeatherResponseModel> loadGeoWeather(
+    Call<WeatherResponseModel> loadGeoWeather(
             @Query("lat") int lat,
             @Query("lon") int lon,
             @Query("units") String units,

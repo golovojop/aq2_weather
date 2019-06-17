@@ -16,7 +16,6 @@ import j.s.yarlykov.data.db.TabForecast;
 import j.s.yarlykov.data.domain.CityForecast;
 import j.s.yarlykov.data.network.api.OpenWeatherProvider;
 import j.s.yarlykov.data.network.model.openweather.WeatherResponseModel;
-import j.s.yarlykov.data.network.model.openweather.geo.GeoWeatherResponseModel;
 import j.s.yarlykov.util.Utils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -34,7 +33,6 @@ public class RestForecastService extends Service {
     private final String iconId = "icon";
 
     private WeatherResponseModel model = null;
-    private GeoWeatherResponseModel geoModel = null;
 
     private final IBinder mBinder = new RestForecastService.ServiceBinder();
 
@@ -61,7 +59,7 @@ public class RestForecastService extends Service {
         }
     }
 
-    // Запросить теукщий прогноз погоды для города city
+    // Запросить текущий прогноз по имени города (city)
     public void requestForecast(final RestForecastService.RestForecastReceiver receiver,
                                 final String city, final String country,
                                 final SQLiteDatabase db) {
@@ -87,7 +85,6 @@ public class RestForecastService extends Service {
                                     model.main.humidity,
                                     model.main.pressure);
 
-//                            spSaveForecast(cf);
                             dbSaveForecast(cf, db);
                             requestIcon(receiver, model.weather[0].icon, cf, db);
 
@@ -98,40 +95,39 @@ public class RestForecastService extends Service {
 
                     @Override
                     public void onFailure(Call<WeatherResponseModel> call, Throwable t) {
-//                        receiver.onForecastOffline(spLoadForecast(city));
                         receiver.onForecastOffline(dbLoadForecast(city, db));
                     }
                 });
     }
 
-    // Запросить теукщий прогноз погоды для города city
-    public void requestGeoForecast(final RestForecastService.RestForecastReceiver receiver,
+    // Запросить текущий прогноз погоды по координатам
+    public void requestForecast(final RestForecastService.RestForecastReceiver receiver,
                                 final int lat, final int lon,
                                 final SQLiteDatabase db) {
 
         OpenWeatherProvider.getInstance().getApi()
                 .loadGeoWeather(
-                        lat, lon, "metric", "2173331fd3e3226666b27e71abc27974")
-                .enqueue(new Callback<GeoWeatherResponseModel>() {
+                        lat, lon,
+                        "metric", "2173331fd3e3226666b27e71abc27974")
+                .enqueue(new Callback<WeatherResponseModel>() {
                     @Override
-                    public void onResponse(@NonNull Call<GeoWeatherResponseModel> call,
-                                           @NonNull Response<GeoWeatherResponseModel> response) {
+                    public void onResponse(@NonNull Call<WeatherResponseModel> call,
+                                           @NonNull Response<WeatherResponseModel> response) {
 
                         // Code 404: body() == null; isSuccessful() == false
                         if (response.body() != null && response.isSuccessful()) {
-                            geoModel = response.body();
+                            model = response.body();
                             CityForecast cf = new CityForecast(
-                                    geoModel.name,
-                                    geoModel.sys.country,
-                                    (int) geoModel.main.temp,
-                                    fetchIconId(getApplicationContext(), geoModel.weather.get(0).icon),
-                                    geoModel.wind.speed,
-                                    geoModel.main.humidity,
-                                    geoModel.main.pressure);
+                                    model.name,
+                                    model.sys.country,
+                                    (int) model.main.temp,
+                                    fetchIconId(getApplicationContext(), model.weather[0].icon),
+                                    model.wind.speed,
+                                    model.main.humidity,
+                                    model.main.pressure);
 
-//                            spSaveForecast(cf);
                             dbSaveForecast(cf, db);
-                            requestIcon(receiver, geoModel.weather.get(0).icon, cf, db);
+                            requestIcon(receiver, model.weather[0].icon, cf, db);
 
                         } else {
                             onFailure(call, new Throwable(response.message()));
@@ -139,7 +135,7 @@ public class RestForecastService extends Service {
                     }
 
                     @Override
-                    public void onFailure(Call<GeoWeatherResponseModel> call, Throwable t) {
+                    public void onFailure(Call<WeatherResponseModel> call, Throwable t) {
                         receiver.onForecastOffline(dbLoadForecast("local", db));
                     }
                 });
