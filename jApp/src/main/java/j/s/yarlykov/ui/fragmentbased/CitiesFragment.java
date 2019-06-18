@@ -19,7 +19,10 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -130,6 +133,17 @@ public class CitiesFragment extends ListFragment {
                 showForecast();
             }
         });
+
+        View firstItem = sAdapter.getView(0, null, listView);
+        ImageView iv = firstItem.findViewById(R.id.ivArms);
+        iv.setImageResource(R.drawable.blue);
+        final Animation animationRotateCenter = AnimationUtils.loadAnimation(
+                getContext(), R.anim.rotate_center);
+        iv.startAnimation(animationRotateCenter);
+
+
+
+
     }
 
     private void showForecast(){

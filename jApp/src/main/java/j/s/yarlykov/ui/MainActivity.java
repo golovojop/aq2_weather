@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -78,12 +79,13 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
+        // Подписаться на сообщения в топик приложения
         subsribePushNotifications();
+
+        // Запросить разрешение на работу с SMS
         requestSmsPermissions();
 
-        GeoProvider.GeoProviderHelper.init(getApplicationContext(),
-                (LocationManager) getSystemService(LOCATION_SERVICE));
-        geoProvider = GeoProvider.GeoProviderHelper.getProvider();
+        // Запросить разрешение на геолокацию
         requestLocationPermissions();
 
         isLandscape = getResources().getConfiguration().orientation
@@ -227,7 +229,6 @@ public class MainActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
         switch (requestCode) {
             case REQUEST_PERM_SMS:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -240,8 +241,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case REQUEST_PERM_LOCATION:
                 if (grantResults.length == 2 &&
-                        (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-                    // Пермиссия дана
+                        (grantResults[0] == PackageManager.PERMISSION_GRANTED
+                                || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
                     geoProvider.requestLocation();
                 }
                 break;
@@ -282,7 +283,7 @@ public class MainActivity extends AppCompatActivity
 
         if (isLandscape) {
             // Если прилетел фрагмент со списком городов, то сделать
-            // видимым правый фрейм и для вывода фрагмента с прогнозом по городу
+            // видимым правый фрейм для вывода фрагмента с прогнозом по городу
             if (leftFragment instanceof CitiesFragment) {
                 ft.replace(R.id.leftFrame, leftFragment, leftFragment.getClass().getCanonicalName());
 
@@ -301,7 +302,7 @@ public class MainActivity extends AppCompatActivity
 
     // Подписка на прием Push в топик "weather"
     private void subsribePushNotifications() {
-        FirebaseMessaging.getInstance().subscribeToTopic("weather")
+        FirebaseMessaging.getInstance().subscribeToTopic(getString(R.string.topic))
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -327,13 +328,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void requestLocationPermissions() {
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    },
-                    REQUEST_PERM_LOCATION);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                        },
+                        REQUEST_PERM_LOCATION);
+            }
+
+        } else {
+            GeoProvider.GeoProviderHelper.init(
+                    LocationServices.getFusedLocationProviderClient(this),
+                    (LocationManager) getSystemService(LOCATION_SERVICE));
+            geoProvider = GeoProvider.GeoProviderHelper.getProvider();
+            geoProvider.requestLocation();
         }
     }
 

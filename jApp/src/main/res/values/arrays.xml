@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer-array name="armsImages">
-        <item>@drawable/gps</item><!-- GPS -->
+        <item>@drawable/blue</item><!-- GPS -->
         <item>@drawable/msc</item><!-- герб Москвы -->
         <item>@drawable/spb</item><!-- герб Санкт-Петербурга -->
         <item>@drawable/nsk</item><!-- герб Новосибирска -->

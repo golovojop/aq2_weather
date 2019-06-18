@@ -68,6 +68,9 @@
     <string name="connectivity_alert">No response</string>
     <string name="check_connection">Place not found or server unavailable</string>
 
+    <!-- Firebase -->
+    <string name="topic" translatable="false">weather</string>
+
     <string-array name="cities">
         <item>Current place</item>
         <item>Moscow</item>
