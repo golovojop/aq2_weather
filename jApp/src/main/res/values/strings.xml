@@ -62,7 +62,7 @@
     <string name="text_avatar">Student</string>
 
     <!-- ProgressBar header-->
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading&#8230;</string>
 
     <!-- Internet connection -->
     <string name="connectivity_alert">No response</string>
@@ -70,6 +70,10 @@
 
     <!-- Firebase -->
     <string name="topic" translatable="false">weather</string>
+
+    <!-- GPS -->
+    <string name="gpsAcquiring">Acquiring Satellite&#8230;</string>
+    <string name="gpsAcquired">Current location</string>
 
     <string-array name="cities">
         <item>Current place</item>

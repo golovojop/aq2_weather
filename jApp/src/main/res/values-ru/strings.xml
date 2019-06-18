@@ -53,11 +53,15 @@
     <string name="text_avatar">Студент</string>
 
     <!-- ProgressBar header-->
-    <string name="loading">Загружаю...</string>
+    <string name="loading">Загружаю&#8230;</string>
 
     <!-- Internet connection -->
     <string name="connectivity_alert">Нет ответа</string>
     <string name="check_connection">Город не найден или сервер недоступен</string>
+
+    <string name="gpsAcquiring">Определение координат&#8230;</string>
+    <string name="gpsAcquired">Текущее место</string>
+
 
     <string-array name="cities">
         <item>Текущее место</item>

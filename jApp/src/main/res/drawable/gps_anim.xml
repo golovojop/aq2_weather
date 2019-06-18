@@ -1,0 +1,7 @@
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/gps_1" android:duration="250"/>
+    <item android:drawable="@drawable/gps_2" android:duration="250"/>
+    <item android:drawable="@drawable/gps_3" android:duration="250"/>
+</animation-list>
