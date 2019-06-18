@@ -10,6 +10,7 @@ package j.s.yarlykov.ui.fragmentbased;
 
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -19,20 +20,22 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import j.s.yarlykov.R;
+import j.s.yarlykov.data.provider.GeoProvider;
 
-public class CitiesFragment extends ListFragment {
+public class CitiesFragment extends ListFragment implements Observer {
 
     private boolean isLandscape;
     private int selectedPosition = 0;
@@ -43,6 +46,7 @@ public class CitiesFragment extends ListFragment {
     private final String KEY_CITY = "city";
     private final static String KEY_BINDER = "binder";
     private IBinder forecastSource = null;
+    private View listHeader;
 
     public static CitiesFragment create(IBinder binder) {
         CitiesFragment fragment = new CitiesFragment();
@@ -94,6 +98,27 @@ public class CitiesFragment extends ListFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        GeoProvider geoProvider = GeoProvider.GeoProviderHelper.getProvider();
+
+        if(geoProvider.getLastLocation() == null) {
+            geoProvider.addObserver(this);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        GeoProvider.GeoProviderHelper.getProvider().deleteObserver(this);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        stopAnimation(listHeader);
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(selectedPositionKey, selectedPosition);
         super.onSaveInstanceState(outState);
@@ -106,7 +131,7 @@ public class CitiesFragment extends ListFragment {
 
         Map<String, Object> map;
 
-        for(int i = 0; i < cities.length; i++) {
+        for(int i = 1; i < cities.length; i++) {
             map = new HashMap<>();
             map.put(KEY_IMAGE_ID, images.getResourceId(i, 0));
             map.put(KEY_CITY, cities[i]);
@@ -124,6 +149,9 @@ public class CitiesFragment extends ListFragment {
                 from,
                 to);
 
+        // Установить кликабельный header
+        listView.addHeaderView(createHeader(cities[0]));
+        // Подключить адаптер
         setListAdapter(sAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -133,17 +161,39 @@ public class CitiesFragment extends ListFragment {
                 showForecast();
             }
         });
+    }
 
-        View firstItem = sAdapter.getView(0, null, listView);
-        ImageView iv = firstItem.findViewById(R.id.ivArms);
-        iv.setImageResource(R.drawable.blue);
-        final Animation animationRotateCenter = AnimationUtils.loadAnimation(
-                getContext(), R.anim.rotate_center);
-        iv.startAnimation(animationRotateCenter);
+    private View createHeader(String text) {
+        listHeader = getLayoutInflater().inflate(R.layout.cities_list_item, null);
+        ((TextView)listHeader.findViewById(R.id.tvCity)).setText(text);
 
+        if(GeoProvider.GeoProviderHelper.getProvider().getLastLocation() == null) {
+            startAnimation(listHeader);
+        } else {
+            stopAnimation(listHeader);
+        }
+        return listHeader;
+    }
 
+    private void startAnimation(View header) {
+        ImageView image = header.findViewById(R.id.ivArms);
+        TextView tv = header.findViewById(R.id.tvCity);
+        image.setBackgroundResource(R.drawable.gps_anim);
+        tv.setText(getText(R.string.gpsAcquiring));
+        AnimationDrawable animation = (AnimationDrawable)image.getBackground();
+        animation.start();
+    }
 
+    private void stopAnimation(View header) {
+        ImageView image = header.findViewById(R.id.ivArms);
+        TextView tv = header.findViewById(R.id.tvCity);
 
+        if(image.getBackground() instanceof AnimationDrawable) {
+            AnimationDrawable animation = (AnimationDrawable)image.getBackground();
+            animation.stop();
+        }
+        tv.setText(getText(R.string.gpsAcquired));
+        image.setBackgroundResource(R.drawable.gps_3);
     }
 
     private void showForecast(){

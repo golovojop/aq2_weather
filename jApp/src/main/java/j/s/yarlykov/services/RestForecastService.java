@@ -95,7 +95,9 @@ public class RestForecastService extends Service {
 
                     @Override
                     public void onFailure(Call<WeatherResponseModel> call, Throwable t) {
-                        receiver.onForecastOffline(dbLoadForecast(city, db));
+                        if(receiver != null) {
+                            receiver.onForecastOffline(dbLoadForecast(city, db));
+                        }
                     }
                 });
     }
@@ -127,7 +129,9 @@ public class RestForecastService extends Service {
                                     model.main.pressure);
 
                             dbSaveForecast(cf, db);
-                            requestIcon(receiver, model.weather[0].icon, cf, db);
+                            if (receiver != null) {
+                                requestIcon(receiver, model.weather[0].icon, cf, db);
+                            }
 
                         } else {
                             onFailure(call, new Throwable(response.message()));
@@ -136,7 +140,9 @@ public class RestForecastService extends Service {
 
                     @Override
                     public void onFailure(Call<WeatherResponseModel> call, Throwable t) {
-                        receiver.onForecastOffline(dbLoadForecast("local", db));
+                        if (receiver != null) {
+                            receiver.onForecastOffline(dbLoadForecast("local", db));
+                        }
                     }
                 });
     }
@@ -155,13 +161,17 @@ public class RestForecastService extends Service {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.body() != null && response.isSuccessful()) {
                     Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
-                    receiver.onForecastOnline(cf, bmp);
+                    if (receiver != null) {
+                        receiver.onForecastOnline(cf, bmp);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                receiver.onForecastOffline(dbLoadForecast(cf.getCity(), db));
+                if (receiver != null) {
+                    receiver.onForecastOffline(dbLoadForecast(cf.getCity(), db));
+                }
             }
         });
     }

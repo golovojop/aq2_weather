@@ -1,26 +1,23 @@
 package j.s.yarlykov.data.provider;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-public class GeoProvider {
+import java.util.Observable;
+
+public class GeoProvider extends Observable {
     private LocationManager manager;
     private Location lastLocation = null;
     private FusedLocationProviderClient client;
 
-    private GeoProvider(FusedLocationProviderClient client, LocationManager manager) {
+    private GeoProvider(FusedLocationProviderClient client,
+                        LocationManager manager) {
         this.manager = manager;
         this.client = client;
     }
@@ -30,22 +27,21 @@ public class GeoProvider {
     }
 
     public void requestLocation() {
-
         // Сначала попробовать получить location из кеша системы
         try {
             client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     lastLocation = location;
+                    setChanged();
+                    notifyObservers(location);
                 }
             });
         } catch (SecurityException e) {
             e.printStackTrace();
         }
 
-        if(lastLocation != null) return;
-
-        // Или запросить текущее расположение через активного провайдера
+        // Затем запросить текущее расположение через активного провайдера
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE);
         String provider = manager.getBestProvider(criteria, true);
@@ -56,6 +52,8 @@ public class GeoProvider {
                     @Override
                     public void onLocationChanged(Location location) {
                         lastLocation = location;
+                        setChanged();
+                        notifyObservers(location);
                     }
 
                     @Override
@@ -77,7 +75,8 @@ public class GeoProvider {
     public static class GeoProviderHelper {
         private static GeoProvider provider = null;
 
-        public static void init(FusedLocationProviderClient client, LocationManager manager) {
+        public static void init(FusedLocationProviderClient client,
+                                LocationManager manager) {
             if (provider == null) {
                 provider = new GeoProvider(client, manager);
             }

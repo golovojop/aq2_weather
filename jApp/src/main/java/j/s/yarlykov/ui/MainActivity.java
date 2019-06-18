@@ -85,7 +85,8 @@ public class MainActivity extends AppCompatActivity
         // Запросить разрешение на работу с SMS
         requestSmsPermissions();
 
-        // Запросить разрешение на геолокацию
+        // Запросить разрешение на геолокацию и запустить геолокацию
+        // если разрешения предоставлены
         requestLocationPermissions();
 
         isLandscape = getResources().getConfiguration().orientation

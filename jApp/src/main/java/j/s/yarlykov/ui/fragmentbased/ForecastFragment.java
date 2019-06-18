@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -21,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.nio.channels.GatheringByteChannel;
 import java.util.Formatter;
 
 import j.s.yarlykov.R;
@@ -295,6 +293,5 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
                         Utils.logI(this, t.getMessage());
                     }
                 });
-
     }
 }
