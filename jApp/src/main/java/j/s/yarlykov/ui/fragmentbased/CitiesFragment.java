@@ -193,7 +193,7 @@ public class CitiesFragment extends ListFragment implements Observer {
             animation.stop();
         }
         tv.setText(getText(R.string.gpsAcquired));
-        image.setBackgroundResource(R.drawable.gps_3);
+        image.setBackgroundResource(R.drawable.gps_ok);
     }
 
     private void showForecast(){

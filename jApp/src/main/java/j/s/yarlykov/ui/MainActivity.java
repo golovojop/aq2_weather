@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
                 });
 
         // Подписаться на сообщения в топик приложения
-        subsribePushNotifications();
+        subscribePushNotifications();
 
         // Запросить разрешение на работу с SMS
         requestSmsPermissions();
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (menu != null) {
-            cleanUpMenu(menu, R.id.actionWeek);
+            cleanUpMenu(menu, R.id.actionWeek, R.id.actionShare);
         }
         return true;
     }
@@ -261,7 +261,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Метод требуется для того, чтобы убрать ненужные меню
-    // при портретной ориентации.
+    // при портретной ориентации. ID ненужных пунктов меню
+    // передаем аргументом items
     private void cleanUpMenu(Menu menu, int... items) {
         boolean isPortrait = getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_PORTRAIT;
@@ -302,7 +303,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Подписка на прием Push в топик "weather"
-    private void subsribePushNotifications() {
+    private void subscribePushNotifications() {
         FirebaseMessaging.getInstance().subscribeToTopic(getString(R.string.topic))
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -311,7 +312,7 @@ public class MainActivity extends AppCompatActivity
                         if (!task.isSuccessful()) {
                             msg = "not " + msg;
                         }
-                        Utils.logI(this, String.format("subsribePushNotifications: %s", msg));
+                        Utils.logI(this, String.format("subscribePushNotifications: %s", msg));
                     }
                 });
     }

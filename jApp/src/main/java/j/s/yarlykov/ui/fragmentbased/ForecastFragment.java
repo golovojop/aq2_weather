@@ -56,6 +56,7 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     private View vStatus;
     private SQLiteDatabase dataBase;
     private CityForecast lastForecast;
+    private AlertDialog alertDialog;
 
     public static ForecastFragment create(IBinder binder, String city, int index) {
         ForecastFragment fragment = new ForecastFragment();
@@ -139,14 +140,17 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
             vStatus.setBackgroundResource(android.R.color.transparent);
             pbfContainer.setVisibility(View.GONE);
             forecastContainer.setVisibility(View.GONE);
-            AlertNoData();
+            alertDialog = AlertNoData();
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        dataBase.close();
+        if(alertDialog != null) {
+            alertDialog.dismiss();
+        }
+//        dataBase.close();
     }
 
     private void initViews(View parent) {
@@ -196,6 +200,9 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
     // Отрисовать прогноз на экране
     private void renderForecast(CityForecast forecast, boolean isOnline, Bitmap icon) {
 
+        Context context = getContext();
+        if(context == null) return;
+
         // Для онлайн прогноза - зеленый индикатор, иначе красный.
         int drawableId = isOnline ? R.drawable.green_circle : R.drawable.red_circle;
         vStatus.setBackgroundResource(drawableId);
@@ -219,7 +226,7 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
 
         // Set Wind
         fmt = new Formatter();
-        fmt.format("%.1f %s", forecast.getWind(), getResources().getString(R.string.infoWind));
+        fmt.format("%.1f %s", forecast.getWind(), context.getString(R.string.infoWind));
         tvWind.setText(fmt.toString());
         fmt.close();
 
@@ -243,20 +250,26 @@ public class ForecastFragment extends Fragment implements RestForecastService.Re
         HistoryActivity.start(requireContext(), tvCity.getText().toString());
     }
 
-    private void AlertNoData() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(getString(R.string.connectivity_alert));
+    private AlertDialog AlertNoData() {
+
+        Context context = getContext();
+        if(context == null) return null;
 
         View view = getLayoutInflater().inflate(R.layout.no_data_dialog, null);
-        builder.setView(view);
 
-        builder.setPositiveButton(getString(R.string.buttonClose), new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(getString(R.string.connectivity_alert))
+                .setView(view)
+                .setPositiveButton(getString(R.string.buttonClose), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-        builder.show();
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        return dialog;
     }
 
     // Отправить Push-сообщение
